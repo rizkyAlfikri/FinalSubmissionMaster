@@ -5,7 +5,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dicoding.picodiploma.submission4.R;
+import com.dicoding.picodiploma.finalsubmission.R;
 
 
 public class ItemClickSupport {

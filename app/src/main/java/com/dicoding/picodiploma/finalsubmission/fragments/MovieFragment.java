@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +18,12 @@ import android.widget.ProgressBar;
 
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieAdapter;
+import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenreResponse;
+import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenres;
+import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.viewmodels.MovieViewModel;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +31,6 @@ import butterknife.ButterKnife;
 
 public class MovieFragment extends Fragment {
     private MovieAdapter movieAdapter;
-    private MovieViewModel movieViewModel;
     @BindView(R.id.rv_movie)
     RecyclerView rvMovie;
     @BindView(R.id.progress_bar)
@@ -37,7 +43,7 @@ public class MovieFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_movie, container, false);
@@ -48,7 +54,32 @@ public class MovieFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        rvMovie.setLayoutManager(new LinearLayoutManager(view.getContext()));
         progressBar.setVisibility(View.VISIBLE);
+        rvMovie.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        rvMovie.setHasFixedSize(true);
+        movieAdapter = new MovieAdapter(view.getContext());
+        rvMovie.setAdapter(movieAdapter);
+
+        MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        movieViewModel.getMovieFromRetrofit().observe(this, getMovieData);
+
+        movieViewModel.getMovieGenreRetrofit().observe(this, getMovieGenreData);
     }
+
+    private final Observer<List<MovieResults>> getMovieData = new Observer<List<MovieResults>>() {
+        @Override
+        public void onChanged(List<MovieResults> movieResults) {
+            movieAdapter.setListMovie(movieResults);
+            movieAdapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
+        }
+    };
+
+    private final Observer<List<MovieGenres>> getMovieGenreData = new Observer<List<MovieGenres>>() {
+        @Override
+        public void onChanged(List<MovieGenres> movieGenres) {
+            movieAdapter.setListGenreMovie(movieGenres);
+            movieAdapter.notifyDataSetChanged();
+        }
+    };
 }

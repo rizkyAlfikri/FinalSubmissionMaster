@@ -1,6 +1,7 @@
 package com.dicoding.picodiploma.finalsubmission.models.moviemodels;
 
-import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
 public class MovieResponse {
@@ -12,7 +13,7 @@ public class MovieResponse {
 	private int totalPages;
 
 	@SerializedName("results")
-	private ArrayList<MovieResults> results;
+	private List<MovieResults> results;
 
 	@SerializedName("total_results")
 	private int totalResults;
@@ -33,11 +34,11 @@ public class MovieResponse {
 		return totalPages;
 	}
 
-	public void setResults(ArrayList<MovieResults> results){
+	public void setResults(List<MovieResults> results){
 		this.results = results;
 	}
 
-	public ArrayList<MovieResults> getResults(){
+	public List<MovieResults> getResults(){
 		return results;
 	}
 

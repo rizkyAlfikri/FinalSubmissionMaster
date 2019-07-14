@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -25,7 +26,7 @@ public class MovieResults implements Parcelable {
     private String title;
 
     @SerializedName("genre_ids")
-    private ArrayList<Integer> genreIds;
+    private List<Integer> genreIds;
 
     @SerializedName("poster_path")
     private String posterPath;
@@ -88,11 +89,11 @@ public class MovieResults implements Parcelable {
         return title;
     }
 
-    public void setGenreIds(ArrayList<Integer> genreIds) {
+    public void setGenreIds(List<Integer> genreIds) {
         this.genreIds = genreIds;
     }
 
-    public ArrayList<Integer> getGenreIds() {
+    public List<Integer> getGenreIds() {
         return genreIds;
     }
 
