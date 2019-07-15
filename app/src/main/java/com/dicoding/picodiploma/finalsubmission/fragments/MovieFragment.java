@@ -63,7 +63,7 @@ public class MovieFragment extends Fragment {
         MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
         movieViewModel.getMovieFromRetrofit().observe(this, getMovieData);
 
-        movieViewModel.getMovieGenreRetrofit().observe(this, getMovieGenreData);
+//        movieViewModel.getMovieGenreRetrofit().observe(this, getMovieGenreData);
     }
 
     private final Observer<List<MovieResults>> getMovieData = new Observer<List<MovieResults>>() {
@@ -74,12 +74,12 @@ public class MovieFragment extends Fragment {
             progressBar.setVisibility(View.GONE);
         }
     };
-
-    private final Observer<List<MovieGenres>> getMovieGenreData = new Observer<List<MovieGenres>>() {
-        @Override
-        public void onChanged(List<MovieGenres> movieGenres) {
-            movieAdapter.setListGenreMovie(movieGenres);
-            movieAdapter.notifyDataSetChanged();
-        }
-    };
+//
+//    private final Observer<List<MovieGenres>> getMovieGenreData = new Observer<List<MovieGenres>>() {
+//        @Override
+//        public void onChanged(List<MovieGenres> movieGenres) {
+//            movieAdapter.setListGenreMovie(movieGenres);
+//            movieAdapter.notifyDataSetChanged();
+//        }
+//    };
 }

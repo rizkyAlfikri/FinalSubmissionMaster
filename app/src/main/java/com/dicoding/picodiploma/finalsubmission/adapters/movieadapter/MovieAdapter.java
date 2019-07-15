@@ -55,7 +55,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         holder.txtTitle.setText(listMovie.get(position).getTitle());
-        holder.txtGenre.setText(String.valueOf(holder.getGenres(listMovie.get(position).getGenreIds())));
+        holder.txtGenre.setText(String.valueOf(listMovie.get(position).getGenreIds()));
         holder.txtRate.setText(String.valueOf(listMovie.get(position).getVoteAverage()));
         String urlPhoto = Config.IMAGE_URL_BASE_PATH + listMovie.get(position).getPosterPath();
         Glide.with(context)

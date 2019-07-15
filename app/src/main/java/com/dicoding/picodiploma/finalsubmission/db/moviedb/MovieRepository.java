@@ -54,19 +54,19 @@ public class MovieRepository {
         return listMovie;
     }
 
-    public MutableLiveData<List<MovieGenres>> getMovieGenreRetrofit() {
-        MutableLiveData<List<MovieGenres>> listGenreMovie = new MutableLiveData<>();
-        apiService.getMovieGenreApi(Config.API_KEY).enqueue(new Callback<MovieGenreResponse>() {
-            @Override
-            public void onResponse(Call<MovieGenreResponse> call, Response<MovieGenreResponse> response) {
-                listGenreMovie.postValue(response.body().getGenres());
-            }
-
-            @Override
-            public void onFailure(Call<MovieGenreResponse> call, Throwable t) {
-
-            }
-        });
-        return listGenreMovie;
-    }
+//    public MutableLiveData<List<MovieGenres>> getMovieGenreRetrofit() {
+//        MutableLiveData<List<MovieGenres>> listGenreMovie = new MutableLiveData<>();
+//        apiService.getMovieGenreApi(Config.API_KEY).enqueue(new Callback<MovieGenreResponse>() {
+//            @Override
+//            public void onResponse(Call<MovieGenreResponse> call, Response<MovieGenreResponse> response) {
+//                listGenreMovie.postValue(response.body().getGenres());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<MovieGenreResponse> call, Throwable t) {
+//
+//            }
+//        });
+//        return listGenreMovie;
+//    }
 }

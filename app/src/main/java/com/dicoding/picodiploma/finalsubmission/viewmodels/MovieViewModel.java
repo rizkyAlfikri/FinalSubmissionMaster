@@ -13,19 +13,19 @@ import java.util.List;
 public class MovieViewModel extends ViewModel {
     private MutableLiveData<List<MovieResults>> listMovie;
     private MovieRepository movieRepository;
-    private MutableLiveData<List<MovieGenres>> listGenreMovie;
+//    private MutableLiveData<List<MovieGenres>> listGenreMovie;
 
     public MovieViewModel() {
         movieRepository = MovieRepository.getInstance();
         listMovie = movieRepository.getMovieFromRetrofit();
-        listGenreMovie = movieRepository.getMovieGenreRetrofit();
+//        listGenreMovie = movieRepository.getMovieGenreRetrofit();
     }
 
     public LiveData<List<MovieResults>> getMovieFromRetrofit() {
         return listMovie;
     }
 
-    public LiveData<List<MovieGenres>> getMovieGenreRetrofit() {
-        return listGenreMovie;
-    }
+//    public LiveData<List<MovieGenres>> getMovieGenreRetrofit() {
+//        return listGenreMovie;
+//    }
 }
