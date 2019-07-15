@@ -20,14 +20,12 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
                     " %s TEXT NOT NULL," +
                     " %s TEXT NOT NULL," +
                     " %s TEXT NOT NULL," +
-                    " %s TEXT NOT NULL," +
                     " %s TEXT NOT NULL)",
             MovieDatabaseContract.MOVIE_TABLE_NAME,
             MovieDatabaseContract.MovieColumns.ID,
             MovieDatabaseContract.MovieColumns.TITLE,
             MovieDatabaseContract.MovieColumns.OVERVIEW,
             MovieDatabaseContract.MovieColumns.LANGUAGE,
-            MovieDatabaseContract.MovieColumns.GENRE,
             MovieDatabaseContract.MovieColumns.POSTER,
             MovieDatabaseContract.MovieColumns.DATE,
             MovieDatabaseContract.MovieColumns.POPULAR,

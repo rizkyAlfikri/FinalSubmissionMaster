@@ -5,14 +5,14 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieHelper;
-import com.dicoding.picodiploma.finalsubmission.fragments.MovieFragment;
+import com.dicoding.picodiploma.finalsubmission.fragments.FavoriteMovieFragment;
 
-import java.util.logging.Handler;
 
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.AUTHORITY;
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.CONTENT_URI;
@@ -76,7 +76,7 @@ public class MovieProvider extends ContentProvider {
                 break;
         }
         getContext().getContentResolver().notifyChange(CONTENT_URI,
-                new MovieFragment().DataObserver(new Handler(), getContext()));
+                new FavoriteMovieFragment.DataObserver(new Handler(), getContext()));
         return Uri.parse(CONTENT_URI + "/" + added);
     }
 
@@ -92,7 +92,7 @@ public class MovieProvider extends ContentProvider {
                 deleted = 0;
                 break;
         }
-        getContext().getContentResolver().notifyChange(CONTENT_URI, new MovieFragment().DataObserver(new Handler(), getContext()));
+        getContext().getContentResolver().notifyChange(CONTENT_URI, new FavoriteMovieFragment.DataObserver(new Handler(), getContext()));
         return deleted;
     }
 

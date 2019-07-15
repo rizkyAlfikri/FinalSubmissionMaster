@@ -1,12 +1,18 @@
 package com.dicoding.picodiploma.finalsubmission.models.moviemodels;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract;
 import com.google.gson.annotations.SerializedName;
+
+import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.getColumnDouble;
+import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.getColumnInt;
+import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.getColumnString;
 
 public class MovieResults implements Parcelable {
 
@@ -19,8 +25,8 @@ public class MovieResults implements Parcelable {
     @SerializedName("title")
     private String title;
 
-    @SerializedName("genre_ids")
-    private List<Integer> genreIds;
+//    @SerializedName("genre_ids")
+//    private List<Integer> genreIds;
 
     @SerializedName("poster_path")
     private String posterPath;
@@ -64,13 +70,13 @@ public class MovieResults implements Parcelable {
         return title;
     }
 
-    public void setGenreIds(List<Integer> genreIds) {
-        this.genreIds = genreIds;
-    }
-
-    public List<Integer> getGenreIds() {
-        return genreIds;
-    }
+//    public void setGenreIds(List<Integer> genreIds) {
+//        this.genreIds = genreIds;
+//    }
+//
+//    public List<Integer> getGenreIds() {
+//        return genreIds;
+//    }
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
@@ -120,6 +126,34 @@ public class MovieResults implements Parcelable {
         return voteCount;
     }
 
+    public MovieResults(String overview, String originalLanguage, String title, String posterPath,
+                        String releaseDate, double voteAverage, double popularity,
+                        int id, int voteCount) {
+
+        this.overview = overview;
+        this.originalLanguage = originalLanguage;
+        this.title = title;
+//        this.genreIds = genreIds;
+        this.posterPath = posterPath;
+        this.releaseDate = releaseDate;
+        this.voteAverage = voteAverage;
+        this.popularity = popularity;
+        this.id = id;
+        this.voteCount = voteCount;
+    }
+
+    public MovieResults(Cursor cursor) {
+        this.overview = getColumnString(cursor, MovieDatabaseContract.MovieColumns.OVERVIEW);
+        this.originalLanguage = getColumnString(cursor, MovieDatabaseContract.MovieColumns.LANGUAGE);
+        this.title = getColumnString(cursor, MovieDatabaseContract.MovieColumns.TITLE);
+        this.posterPath = getColumnString(cursor, MovieDatabaseContract.MovieColumns.POSTER);
+        this.releaseDate = getColumnString(cursor, MovieDatabaseContract.MovieColumns.DATE);
+        this.voteAverage = getColumnDouble(cursor, MovieDatabaseContract.MovieColumns.VOTE_AVERAGE);
+        this.popularity = getColumnDouble(cursor, MovieDatabaseContract.MovieColumns.POPULAR);
+        this.id = getColumnInt(cursor, MovieDatabaseContract.MovieColumns.ID);
+        this.voteCount = getColumnInt(cursor, MovieDatabaseContract.MovieColumns.VOTE_COUNT);
+
+    }
 
     @Override
     public String toString() {
@@ -128,7 +162,7 @@ public class MovieResults implements Parcelable {
                         "overview = '" + overview + '\'' +
                         ",original_language = '" + originalLanguage + '\'' +
                         ",title = '" + title + '\'' +
-                        ",genre_ids = '" + genreIds + '\'' +
+//                        ",genre_ids = '" + genreIds + '\'' +
                         ",poster_path = '" + posterPath + '\'' +
                         ",release_date = '" + releaseDate + '\'' +
                         ",vote_average = '" + voteAverage + '\'' +
@@ -148,7 +182,7 @@ public class MovieResults implements Parcelable {
         dest.writeString(this.overview);
         dest.writeString(this.originalLanguage);
         dest.writeString(this.title);
-        dest.writeList(this.genreIds);
+//        dest.writeList(this.genreIds);
         dest.writeString(this.posterPath);
         dest.writeString(this.releaseDate);
         dest.writeDouble(this.voteAverage);
@@ -164,8 +198,8 @@ public class MovieResults implements Parcelable {
         this.overview = in.readString();
         this.originalLanguage = in.readString();
         this.title = in.readString();
-        this.genreIds = new ArrayList<Integer>();
-        in.readList(this.genreIds, Integer.class.getClassLoader());
+//        this.genreIds = new ArrayList<Integer>();
+//        in.readList(this.genreIds, Integer.class.getClassLoader());
         this.posterPath = in.readString();
         this.releaseDate = in.readString();
         this.voteAverage = in.readDouble();
