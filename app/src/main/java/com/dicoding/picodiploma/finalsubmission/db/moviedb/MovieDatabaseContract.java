@@ -8,8 +8,8 @@ import java.util.List;
 
 public class MovieDatabaseContract {
     public static final String AUTHORITY = "com.dicoding.picodiploma.finalsubmission";
-    public static final String MOVIE_TABLE_NAME = "tableMovie";
     private static final String SCHEME = "content";
+    public static final String MOVIE_TABLE_NAME = "tableMovie";
 
     private MovieDatabaseContract(){}
 
@@ -19,7 +19,7 @@ public class MovieDatabaseContract {
             .build();
 
     public static final class MovieColumns implements BaseColumns {
-        public static final String MOVIE_TABLE_NAME = "tableMovie";
+        static final String MOVIE_TABLE_NAME = "tableMovie";
         public static final String ID = "id";
         public static final String TITLE = "title";
         public static final String OVERVIEW = "overview";

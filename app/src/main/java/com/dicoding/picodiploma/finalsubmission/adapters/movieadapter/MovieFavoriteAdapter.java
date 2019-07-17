@@ -17,14 +17,14 @@ import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.utils.Config;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MovieFavoriteAdapter extends RecyclerView.Adapter<MovieFavoriteAdapter.MovieViewHolder> {
     private Context context;
-    private ArrayList<MovieResults> listMovie;
+    private ArrayList<MovieResults> listMovie = new ArrayList<>();
 
     public MovieFavoriteAdapter(Context context) {
         this.context = context;

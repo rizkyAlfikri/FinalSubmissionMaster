@@ -1,6 +1,8 @@
 package com.dicoding.picodiploma.finalsubmission.fragments;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,15 +20,19 @@ import android.widget.ProgressBar;
 
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieAdapter;
+import com.dicoding.picodiploma.finalsubmission.detailactivity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenreResponse;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenres;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
+import com.dicoding.picodiploma.finalsubmission.utils.ItemClickSupport;
 import com.dicoding.picodiploma.finalsubmission.viewmodels.MovieViewModel;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.CONTENT_URI;
 
 
 public class MovieFragment extends Fragment {
@@ -72,6 +78,16 @@ public class MovieFragment extends Fragment {
             movieAdapter.setListMovie(movieResults);
             movieAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
+            ItemClickSupport.addTo(rvMovie).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                @Override
+                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                    Uri uri = Uri.parse(CONTENT_URI + "/" + movieResults.get(position).getId());
+                    Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
+                    intent.setData(uri);
+                    intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, movieResults.get(position));
+                    startActivity(intent);
+                }
+            });
         }
     };
 //

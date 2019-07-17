@@ -11,4 +11,14 @@
     <string name="action_horror_comedy">Action, Horror, Comedy</string>
     <string name="favorite_tv">Favorite Tv</string>
     <string name="favorite_movies">Favorite Movies</string>
+    <string name="overview">Overview</string>
+    <string name="original_language">Original Language</string>
+    <string name="favorite">Favorite</string>
+    <string name="watchlist">Watchlist</string>
+    <string name="unfavorite">Unfavorite</string>
+    <string name="no_data">There is no data for now</string>
+    <string name="snackbar_delete">Are you sure want to delete this ?</string>
+    <string name="undo">Undo</string>
+    <string name="add_favorite">has added to your favorite list</string>
+    <string name="delete_favorite">has deleted from your favorite list</string>
 </resources>

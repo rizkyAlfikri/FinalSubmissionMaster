@@ -32,6 +32,7 @@ public class MovieProvider extends ContentProvider {
         sUriMatcher.addURI(AUTHORITY, MOVIE_TABLE_NAME + "/#", MOVIE_ID);
     }
 
+
     @Override
     public boolean onCreate() {
         movieHelper = MovieHelper.getInstance(getContext());

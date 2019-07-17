@@ -1,10 +1,11 @@
 package com.dicoding.picodiploma.finalsubmission.fragments;
 
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -20,16 +21,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.dicoding.picodiploma.finalsubmission.LoadCallback;
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieFavoriteAdapter;
+import com.dicoding.picodiploma.finalsubmission.detailactivity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
-import com.google.android.material.snackbar.Snackbar;
+import com.dicoding.picodiploma.finalsubmission.utils.ItemClickSupport;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -39,11 +43,17 @@ import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCu
 
 public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     private MovieFavoriteAdapter favoriteAdapter;
-    private static HandlerThread handlerThread;
+    private ArrayList<MovieResults> listMovie;
     @BindView(R.id.rv_movie)
     RecyclerView rvMovie;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
+    @BindString(R.string.no_data)
+    String noData;
+    @BindString(R.string.snackbar_delete)
+    String snackbarDelete;
+    @BindString(R.string.undo)
+    String undo;
 
     public FavoriteMovieFragment() {
         // Required empty public constructor
@@ -64,33 +74,50 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         rvMovie.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rvMovie.setHasFixedSize(true);
 
-        handlerThread = new HandlerThread("DataObserver");
+        HandlerThread handlerThread = new HandlerThread("DataObserver");
         handlerThread.start();
         Handler handler = new Handler(handlerThread.getLooper());
         DataObserver myObserver = new DataObserver(handler, view.getContext());
-        getContext().getContentResolver().registerContentObserver(CONTENT_URI, true, myObserver);
+
+        if (getContext() != null) {
+            getContext().getContentResolver().registerContentObserver(CONTENT_URI, true, myObserver);
+        }
 
         favoriteAdapter = new MovieFavoriteAdapter(view.getContext());
         rvMovie.setAdapter(favoriteAdapter);
 
         new LoadMovieAsynTask(getContext(), this).execute();
+
+
+        ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
+            Uri uri = Uri.parse(CONTENT_URI + "/" + listMovie.get(position).getId());
+            Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
+            intent.setData(uri);
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
     public void preExecute() {
-        getActivity().runOnUiThread(()
-                -> progressBar.setVisibility(View.VISIBLE));
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(()
+                    -> progressBar.setVisibility(View.VISIBLE));
+        }
     }
 
     @Override
     public void postExecute(Cursor cursor) {
         progressBar.setVisibility(View.GONE);
-
-        ArrayList<MovieResults> listMovie = mapCursorToArrayList(cursor);
+        listMovie = mapCursorToArrayList(cursor);
         if (listMovie.size() > 0) {
             favoriteAdapter.setListMovie(listMovie);
         } else {
-            showSnackbarMessage();
+            showToastMessage();
         }
     }
 
@@ -122,8 +149,8 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         }
     }
 
-    private void showSnackbarMessage() {
-        Snackbar.make(rvMovie, "Tidak ada data saat ini", Snackbar.LENGTH_LONG).show();
+    private void showToastMessage() {
+        Toast.makeText(rvMovie.getContext(), noData, Toast.LENGTH_LONG).show();
     }
 
     public static class DataObserver extends ContentObserver {
@@ -140,4 +167,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
             new LoadMovieAsynTask(context, (LoadCallback) context).execute();
         }
     }
+
+
 }
