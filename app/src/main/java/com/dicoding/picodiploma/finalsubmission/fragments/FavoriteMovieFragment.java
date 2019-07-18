@@ -8,13 +8,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.view.LayoutInflater;
@@ -22,6 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicoding.picodiploma.finalsubmission.LoadCallback;
 import com.dicoding.picodiploma.finalsubmission.R;
@@ -38,12 +37,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.CONTENT_URI;
+import static com.dicoding.picodiploma.finalsubmission.detailactivity.DetailMovieActivity.EXTRA_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCursorToArrayList;
 
 
 public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     private MovieFavoriteAdapter favoriteAdapter;
     private ArrayList<MovieResults> listMovie;
+    private final int REQUEST_UPDATE = 101;
+    public static final int RESULT_ADD = 301;
+    public static final int RESULT_DELETE = 201;
     @BindView(R.id.rv_movie)
     RecyclerView rvMovie;
     @BindView(R.id.progress_bar)
@@ -73,7 +76,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         ButterKnife.bind(this, view);
         rvMovie.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rvMovie.setHasFixedSize(true);
-
         HandlerThread handlerThread = new HandlerThread("DataObserver");
         handlerThread.start();
         Handler handler = new Handler(handlerThread.getLooper());
@@ -93,13 +95,25 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
             Uri uri = Uri.parse(CONTENT_URI + "/" + listMovie.get(position).getId());
             Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
             intent.setData(uri);
-            startActivity(intent);
+            intent.putExtra(DetailMovieActivity.EXTRA_POSITION, position);
+            startActivityForResult(intent, REQUEST_UPDATE);
         });
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_UPDATE) {
+            if (resultCode == RESULT_DELETE) {
+                int position = data.getIntExtra(DetailMovieActivity.EXTRA_POSITION, 0);
+                favoriteAdapter.removeItem(position);
+                Toast.makeText(getContext(), "Satu item berhasil di hapus", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_ADD) {
+                MovieResults movieResults = data.getParcelableExtra(EXTRA_MOVIE);
+                favoriteAdapter.addItem(movieResults);
+                rvMovie.smoothScrollToPosition(favoriteAdapter.getItemCount() - 1);
+            }
+        }
     }
 
     @Override

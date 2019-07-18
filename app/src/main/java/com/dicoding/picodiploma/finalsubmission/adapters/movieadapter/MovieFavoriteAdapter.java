@@ -36,6 +36,17 @@ public class MovieFavoriteAdapter extends RecyclerView.Adapter<MovieFavoriteAdap
         notifyDataSetChanged();
     }
 
+    public void addItem(MovieResults movieResults) {
+        this.listMovie.add(movieResults);
+        notifyItemInserted(listMovie.size() - 1);
+    }
+
+    public void removeItem(int position) {
+        this.listMovie.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, listMovie.size());
+    }
+
     @NonNull
     @Override
     public MovieFavoriteAdapter.MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

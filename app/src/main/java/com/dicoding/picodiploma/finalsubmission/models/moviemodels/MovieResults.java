@@ -4,8 +4,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.NonNull;
 
 import com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract;
 import com.google.gson.annotations.SerializedName;
@@ -142,6 +141,7 @@ public class MovieResults implements Parcelable {
         this.voteCount = voteCount;
     }
 
+
     public MovieResults(Cursor cursor) {
         this.overview = getColumnString(cursor, MovieDatabaseContract.MovieColumns.OVERVIEW);
         this.originalLanguage = getColumnString(cursor, MovieDatabaseContract.MovieColumns.LANGUAGE);
@@ -155,6 +155,7 @@ public class MovieResults implements Parcelable {
 
     }
 
+    @NonNull
     @Override
     public String toString() {
         return

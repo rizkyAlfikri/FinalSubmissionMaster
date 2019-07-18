@@ -21,4 +21,7 @@
     <string name="undo">Undo</string>
     <string name="add_favorite">has added to your favorite list</string>
     <string name="delete_favorite">has deleted from your favorite list</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="movie_favorite_widget">MOVIE FAVORITE WIDGET</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.dicoding.picodiploma.finalsubmission.detailactivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,12 +24,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.CONTENT_URI;
+import static com.dicoding.picodiploma.finalsubmission.fragments.FavoriteMovieFragment.RESULT_ADD;
+import static com.dicoding.picodiploma.finalsubmission.fragments.FavoriteMovieFragment.RESULT_DELETE;
 import static com.dicoding.picodiploma.finalsubmission.utils.ContentValueHelper.getContentValue;
 
 public class DetailMovieActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_MOVIE = "extra_movie";
+    public static final String EXTRA_POSITION = "extra_position";
     private MovieResults movieResults;
     private Uri uri;
+    private int position;
     private boolean isFavorite = false;
 
     @BindView(R.id.txt_overview)
@@ -79,6 +84,7 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
 
         if (movieResults != null) {
             isFavorite = true;
+            position = getIntent().getIntExtra(EXTRA_MOVIE, 0);
         } else {
             isFavorite = false;
             movieResults = getIntent().getParcelableExtra(EXTRA_MOVIE);
@@ -127,6 +133,9 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
             getContentResolver().insert(CONTENT_URI, values);
             Toast.makeText(this, movieResults.getTitle() + " " + addFavorite, Toast.LENGTH_SHORT).show();
             isFavorite = true;
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_MOVIE, movieResults);
+            setResult(RESULT_ADD, intent);
         } else {
             Glide.with(this)
                     .load(R.drawable.ic_favorite_border_black_24dp)
@@ -136,6 +145,9 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
             getContentResolver().delete(uri, null, null);
             Toast.makeText(this, movieResults.getTitle() + " " + deleteFavorite, Toast.LENGTH_SHORT).show();
             isFavorite = false;
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_MOVIE, position);
+            setResult(RESULT_DELETE, intent);
         }
     }
 
