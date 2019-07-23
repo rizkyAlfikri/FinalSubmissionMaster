@@ -35,6 +35,13 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
 
     @Override
     public void onCreate() {
+
+        cursor = context.getContentResolver().query(CONTENT_URI
+                , null
+                , null
+                , null
+                , null);
+
     }
 
     @Override
@@ -72,11 +79,11 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
 
     @Override
     public RemoteViews getViewAt(int position) {
+        RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.movie_widget_item);
         MovieResults movieResults = getMoviePosition(position);
         String urlPhoto = Config.IMAGE_URL_BASE_PATH + movieResults.getPosterPath();
-        RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.movie_widget_item);
-        rv.setTextViewText(R.id.txt_title, movieResults.getTitle());
-        rv.setTextViewText(R.id.txt_rate, String.valueOf(movieResults.getVoteAverage()));
+        CharSequence title = movieResults.getTitle();
+        CharSequence rate = String.valueOf(movieResults.getVoteAverage());
         try {
             Bitmap bmp = Glide.with(context)
                     .asBitmap()
@@ -85,6 +92,8 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
                     .submit()
                     .get();
             rv.setImageViewBitmap(R.id.img_photo, bmp);
+            rv.setTextViewText(R.id.txt_title, title);
+            rv.setTextViewText(R.id.txt_rate, rate);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }

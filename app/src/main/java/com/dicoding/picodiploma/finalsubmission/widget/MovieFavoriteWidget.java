@@ -14,6 +14,7 @@ import com.dicoding.picodiploma.finalsubmission.R;
 
 public class MovieFavoriteWidget extends AppWidgetProvider {
     private static final String TOAST_ACTION = "com.dicoding.picodiploma.finalsubmission.TOAST_ACTION";
+    private static final String TOAST_UPDATE = "com.dicoding.picodiploma.finalsubmission.TOAST_UPDATE";
     public static final String EXTRA_ITEM = "com.dicoding.picodiploma.finalsubmission.EXTRA_ITEM";
 
     private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
@@ -33,7 +34,9 @@ public class MovieFavoriteWidget extends AppWidgetProvider {
         PendingIntent toastPendingIntent = PendingIntent.getBroadcast(
                 context, 0, toastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.stack_view, toastPendingIntent);
-
+        updateWidgetFavorite(context);
+        Intent widgetUpdateIntent = new Intent(context, StackWidgetService.class);
+        context.startService(widgetUpdateIntent);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -54,6 +57,12 @@ public class MovieFavoriteWidget extends AppWidgetProvider {
                 Toast.makeText(context, "Touched View" + viewIndex, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    static void updateWidgetFavorite(Context context) {
+        Intent updateIntent = new Intent(context, MovieFavoriteWidget.class);
+        updateIntent.setAction(TOAST_UPDATE);
+        context.sendBroadcast(updateIntent);
     }
 }
 

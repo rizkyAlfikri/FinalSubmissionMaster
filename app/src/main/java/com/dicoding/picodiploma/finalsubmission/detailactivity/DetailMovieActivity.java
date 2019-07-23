@@ -1,5 +1,7 @@
 package com.dicoding.picodiploma.finalsubmission.detailactivity;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.utils.Config;
+import com.dicoding.picodiploma.finalsubmission.widget.MovieFavoriteWidget;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import butterknife.BindString;
@@ -70,6 +73,7 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_detail_movie);
         ButterKnife.bind(this);
 
+        position = getIntent().getIntExtra(EXTRA_POSITION, 0);
         uri = getIntent().getData();
 
         if (uri != null) {
@@ -81,10 +85,8 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
             }
         }
 
-
         if (movieResults != null) {
             isFavorite = true;
-            position = getIntent().getIntExtra(EXTRA_MOVIE, 0);
         } else {
             isFavorite = false;
             movieResults = getIntent().getParcelableExtra(EXTRA_MOVIE);
@@ -123,6 +125,9 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_MOVIE, movieResults);
+        intent.putExtra(EXTRA_MOVIE, position);
         if (!isFavorite) {
             Glide.with(this)
                     .load(R.drawable.ic_favorite_black_24dp)
@@ -133,9 +138,12 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
             getContentResolver().insert(CONTENT_URI, values);
             Toast.makeText(this, movieResults.getTitle() + " " + addFavorite, Toast.LENGTH_SHORT).show();
             isFavorite = true;
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_MOVIE, movieResults);
             setResult(RESULT_ADD, intent);
+
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+            ComponentName thisWidget = new ComponentName(getApplicationContext(), MovieFavoriteWidget.class);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.stack_view);
         } else {
             Glide.with(this)
                     .load(R.drawable.ic_favorite_border_black_24dp)
@@ -145,9 +153,12 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
             getContentResolver().delete(uri, null, null);
             Toast.makeText(this, movieResults.getTitle() + " " + deleteFavorite, Toast.LENGTH_SHORT).show();
             isFavorite = false;
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_MOVIE, position);
             setResult(RESULT_DELETE, intent);
+
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+            ComponentName thisWidget = new ComponentName(getApplicationContext(), MovieFavoriteWidget.class);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.stack_view);
         }
     }
 

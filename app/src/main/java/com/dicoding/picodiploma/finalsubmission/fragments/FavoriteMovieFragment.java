@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,6 +48,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     private final int REQUEST_UPDATE = 101;
     public static final int RESULT_ADD = 301;
     public static final int RESULT_DELETE = 201;
+    private int posisi;
     @BindView(R.id.rv_movie)
     RecyclerView rvMovie;
     @BindView(R.id.progress_bar)
@@ -98,6 +100,18 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
             intent.putExtra(DetailMovieActivity.EXTRA_POSITION, position);
             startActivityForResult(intent, REQUEST_UPDATE);
         });
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, 0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                posisi = viewHolder.getAdapterPosition();
+            }
+        });
     }
 
     @Override
@@ -106,7 +120,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         if (requestCode == REQUEST_UPDATE) {
             if (resultCode == RESULT_DELETE) {
                 int position = data.getIntExtra(DetailMovieActivity.EXTRA_POSITION, 0);
-                favoriteAdapter.removeItem(position);
+                favoriteAdapter.removeItem(posisi);
                 Toast.makeText(getContext(), "Satu item berhasil di hapus", Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_ADD) {
                 MovieResults movieResults = data.getParcelableExtra(EXTRA_MOVIE);

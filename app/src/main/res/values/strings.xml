@@ -24,4 +24,22 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="movie_favorite_widget">MOVIE FAVORITE WIDGET</string>
+    <string name="favorite_no_data">Your favorite movie list is empty</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="notifications">Notifications</string>
+    <string name="general">General</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="daily_date">Daily reminder movie</string>
+    <string name="daily_reminder">Daily reminder app</string>
+    <string name="summary_app">The application will always send notifications to you every 8 am</string>
+    <string name="summary_date">The application will always send notifications to you about the film that will air today at 7 am</string>
+    <string name="settings">Settings</string>
 </resources>

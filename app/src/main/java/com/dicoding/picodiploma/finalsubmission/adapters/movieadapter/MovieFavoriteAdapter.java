@@ -44,7 +44,7 @@ public class MovieFavoriteAdapter extends RecyclerView.Adapter<MovieFavoriteAdap
     public void removeItem(int position) {
         this.listMovie.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, listMovie.size());
+        notifyItemRangeChanged(position, getItemCount());
     }
 
     @NonNull

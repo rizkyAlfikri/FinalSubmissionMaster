@@ -16,18 +16,6 @@
             android:layout_weight="9"
             android:loopViews="true"/>
 
-        <TextView
-            android:id="@+id/banner_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@color/colorPrimaryDark"
-            android:text="@string/movie_favorite_widget"
-            android:textAlignment="center"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
     </LinearLayout>
 
     <TextView
@@ -35,8 +23,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="@color/colorAccent"
-        android:text="@string/favorite_movies"
+        android:background="#80000000"
+        android:gravity="center"
+        android:text="@string/favorite_no_data"
         android:textAlignment="center"
         android:textColor="#ffffff"
         android:textSize="20sp"
