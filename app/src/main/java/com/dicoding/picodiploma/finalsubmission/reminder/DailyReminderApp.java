@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.finalsubmission.utils;
+package com.dicoding.picodiploma.finalsubmission.reminder;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -18,41 +18,24 @@ import androidx.core.app.NotificationCompat;
 
 import com.dicoding.picodiploma.finalsubmission.R;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
-public class AlarmReceiver extends BroadcastReceiver {
-    public static final String TYPE_REMINDER_APP = "ReminderApp";
-    public static final String TYPE_REMINDER_MOVIE = "ReminderMovie";
-    public static final String EXTRA_MESSAGE = "message";
-    public static final String EXTRA_TYPE = "type";
-
+public class DailyReminderApp extends BroadcastReceiver {
     private final int ID_APP = 100;
-    private final int ID_MOVIE = 101;
 
-    private String TIME_FORMAT = "HH:mm";
-
-    public AlarmReceiver() {
+    public DailyReminderApp() {
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String type = intent.getStringExtra(EXTRA_TYPE);
-        String message = intent.getStringExtra(EXTRA_MESSAGE);
-
-        String title = type.equalsIgnoreCase(TYPE_REMINDER_APP) ? TYPE_REMINDER_APP : TYPE_REMINDER_MOVIE;
-        int notifId = type.equalsIgnoreCase(TYPE_REMINDER_APP) ? ID_APP : ID_MOVIE;
-
-        showToast(context, title, message);
-        showReminderNotification(context, title, message, notifId);
+          showReminderNotification(context);
     }
 
-    private void showReminderNotification(Context context, String title, String message, int notifyId) {
+    private void showReminderNotification(Context context) {
         String CHANNEL_ID = "Channel_1";
-        String CHANNEL_NAME = "Reminder Channel";
+        String CHANNEL_NAME = "Reminder Channel App";
+        String title = context.getString(R.string.reminder_app_title);
+        String message = context.getString(R.string.reminder_app_message);
 
         NotificationManager notificationManager
                 = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -81,61 +64,36 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Notification notification = builder.build();
         if (notificationManager != null) {
-            notificationManager.notify(notifyId, notification);
+            notificationManager.notify(ID_APP, notification);
         }
     }
 
-    private void showToast(Context context, String title, String message) {
-        Toast.makeText(context, title + " : " + message, Toast.LENGTH_SHORT).show();
-    }
-
-    public void setReminderApp(Context context, String type, String time, String message) {
-        if (isTimeInvalid(time, TIME_FORMAT)) return;
-
+    public void setReminderApp(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        intent.putExtra(EXTRA_MESSAGE, message);
-        intent.putExtra(EXTRA_TYPE, type);
-
-        String[] timeArray = time.split(":");
-
+        Intent intent = new Intent(context, DailyReminderApp.class);
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeArray[0]));
-        calendar.set(Calendar.MINUTE, Integer.parseInt(timeArray[1]));
+        calendar.set(Calendar.HOUR_OF_DAY, 7);
+        calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, ID_APP, intent, 0);
         if (alarmManager != null) {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pendingIntent);
         }
 
         Toast.makeText(context, "Repeating App Set", Toast.LENGTH_SHORT).show();
     }
 
-    public void cancelReminder(Context context, String type) {
+    public void cancelReminderApp(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        int requestCode = type.equalsIgnoreCase(TYPE_REMINDER_APP) ? ID_APP : ID_MOVIE;
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, 0);
+        Intent intent = new Intent(context, DailyReminderApp.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, ID_APP, intent, 0);
         pendingIntent.cancel();
-
         if (alarmManager != null) {
             alarmManager.cancel(pendingIntent);
         }
 
         Toast.makeText(context, "Repeating Alarm dibatalkan", Toast.LENGTH_SHORT).show();
-    }
-
-
-
-    public boolean isTimeInvalid(String time, String format) {
-        try {
-            DateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
-            dateFormat.setLenient(false);
-            dateFormat.parse(time);
-            return false;
-        } catch (ParseException e) {
-            return true;
-        }
     }
 }

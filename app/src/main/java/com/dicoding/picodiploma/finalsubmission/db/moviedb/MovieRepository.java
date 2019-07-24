@@ -2,8 +2,6 @@ package com.dicoding.picodiploma.finalsubmission.db.moviedb;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenreResponse;
-import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenres;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResponse;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.network.ApiService;

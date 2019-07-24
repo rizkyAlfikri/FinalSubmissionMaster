@@ -42,4 +42,7 @@
     <string name="summary_app">The application will always send notifications to you every 8 am</string>
     <string name="summary_date">The application will always send notifications to you about the film that will air today at 7 am</string>
     <string name="settings">Settings</string>
+    <string name="reminder_app_title">Daily Reminder App</string>
+    <string name="reminder_app_message">Check Movie Catalog For Today</string>
+    <string name="reminder_movie_title">Daily Reminder Movie</string>
 </resources>

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -16,10 +15,9 @@ import com.dicoding.picodiploma.finalsubmission.fragments.FavoriteFragment;
 import com.dicoding.picodiploma.finalsubmission.fragments.HomeFragment;
 import com.dicoding.picodiploma.finalsubmission.fragments.MovieFragment;
 import com.dicoding.picodiploma.finalsubmission.fragments.TvShowFragment;
-import com.dicoding.picodiploma.finalsubmission.utils.AlarmReceiver;
+import com.dicoding.picodiploma.finalsubmission.reminder.DailyReminderMovie;
+import com.dicoding.picodiploma.finalsubmission.reminder.DailyReminderApp;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import static com.dicoding.picodiploma.finalsubmission.utils.AlarmReceiver.TYPE_REMINDER_APP;
 
 
 public class MainActivity extends AppCompatActivity implements LoadCallback {
@@ -66,19 +64,23 @@ public class MainActivity extends AppCompatActivity implements LoadCallback {
 
         SharedPreferences sharedPrefApp = PreferenceManager.getDefaultSharedPreferences(this);
         boolean isSharedPrefApp = sharedPrefApp.getBoolean("reminder_app", false);
-        AlarmReceiver alarmReceiver = new AlarmReceiver();
+        DailyReminderApp dailyReminderApp = new DailyReminderApp();
 
         if (isSharedPrefApp) {
-
-            alarmReceiver.setReminderApp(this, TYPE_REMINDER_APP,
-                    "22:40", "percobaan");
+            dailyReminderApp.setReminderApp(this);
         } else {
-            alarmReceiver.cancelReminder(this, TYPE_REMINDER_APP);
+            dailyReminderApp.cancelReminderApp(this);
         }
-        Toast.makeText(this, Boolean.toString(isSharedPrefApp), Toast.LENGTH_SHORT).show();
 
+        SharedPreferences sharedPrefMovie = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isSharedPrefMovie = sharedPrefMovie.getBoolean("reminder_movie", false);
+        DailyReminderMovie reminderMovie = new DailyReminderMovie();
 
-
+        if (isSharedPrefMovie) {
+            reminderMovie.setReminderMovie(this);
+        } else {
+            reminderMovie.cancelReminderMovie(this);
+        }
     }
 
     @Override
