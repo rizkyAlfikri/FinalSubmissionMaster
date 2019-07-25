@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieRepository;
-import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenres;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 
 import java.util.List;
@@ -18,11 +17,16 @@ public class MovieViewModel extends ViewModel {
     public MovieViewModel() {
         movieRepository = MovieRepository.getInstance();
         listMovie = movieRepository.getMovieFromRetrofit();
+
 //        listGenreMovie = movieRepository.getMovieGenreRetrofit();
     }
 
     public LiveData<List<MovieResults>> getMovieFromRetrofit() {
         return listMovie;
+    }
+
+    public LiveData<List<MovieResults>> getQueryMovie(String query) {
+        return movieRepository.getQueryMovie(query);
     }
 
 //    public LiveData<List<MovieGenres>> getMovieGenreRetrofit() {

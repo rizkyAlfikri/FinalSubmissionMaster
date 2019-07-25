@@ -14,4 +14,6 @@ public interface ApiService {
     @GET("genre/movie/list")
     Call<MovieGenreResponse> getMovieGenreApi(@Query("api_key") String apiKey);
 
+    @GET("search/movie")
+    Call<MovieResponse> getQueryMovie(@Query ("query") String query);
 }

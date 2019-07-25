@@ -45,4 +45,11 @@
     <string name="reminder_app_title">Daily Reminder App</string>
     <string name="reminder_app_message">Check Movie Catalog For Today</string>
     <string name="reminder_movie_title">Daily Reminder Movie</string>
+    <string name="repeating_app">Repeating App Set</string>
+    <string name="cancel_repeating_app">Repeating App is Canceled</string>
+    <string name="repeating_movie">Repeating Movie Set</string>
+    <string name="cancel_repeating_movie">Repeating Movie is Canceled</string>
+    <string name="release_today">is release today</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search Movie or Tv Show</string>
 </resources>

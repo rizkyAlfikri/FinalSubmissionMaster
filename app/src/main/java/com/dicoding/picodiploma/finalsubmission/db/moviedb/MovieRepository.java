@@ -1,10 +1,13 @@
 package com.dicoding.picodiploma.finalsubmission.db.moviedb;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResponse;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.network.ApiService;
+import com.dicoding.picodiploma.finalsubmission.network.RetrofitService;
 import com.dicoding.picodiploma.finalsubmission.utils.Config;
 
 import java.util.List;
@@ -12,8 +15,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieRepository {
     private ApiService apiService;
@@ -25,13 +26,7 @@ public class MovieRepository {
 
     public static MovieRepository getInstance() {
         if (repository == null) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Config.API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            repository = new MovieRepository(retrofit.create(ApiService.class));
-
+            repository = new MovieRepository(RetrofitService.createService(ApiService.class));
         }
         return repository;
     }
@@ -50,6 +45,26 @@ public class MovieRepository {
             }
         });
         return listMovie;
+    }
+
+    public MutableLiveData<List<MovieResults>> getQueryMovie(String queryResult) {
+        MutableLiveData<List<MovieResults>> listQueryMovie = new MutableLiveData<>();
+        apiService.getQueryMovie(queryResult).enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        listQueryMovie.setValue(response.body().getResults());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                Log.e("Failure", t.getMessage());
+            }
+        });
+        return listQueryMovie;
     }
 
 //    public MutableLiveData<List<MovieGenres>> getMovieGenreRetrofit() {

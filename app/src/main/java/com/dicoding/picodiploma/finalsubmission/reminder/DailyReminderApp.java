@@ -15,7 +15,9 @@ import android.os.Build;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
 
+import com.dicoding.picodiploma.finalsubmission.MainActivity;
 import com.dicoding.picodiploma.finalsubmission.R;
 
 import java.util.Calendar;
@@ -36,15 +38,23 @@ public class DailyReminderApp extends BroadcastReceiver {
         String CHANNEL_NAME = "Reminder Channel App";
         String title = context.getString(R.string.reminder_app_title);
         String message = context.getString(R.string.reminder_app_message);
+        Intent intent = new Intent(context, MainActivity.class);
+        int REQUST_CODE_APP = 110;
+
+        PendingIntent pendingIntent = TaskStackBuilder.create(context)
+                .addNextIntent(intent)
+                .getPendingIntent(REQUST_CODE_APP, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationManager notificationManager
                 = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_home_black_24dp))
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.baseline_notification_important_white_48dp))
                 .setContentTitle(title)
                 .setContentText(message)
+                .setContentIntent(pendingIntent)
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                 .setSound(alarmSound);
 
@@ -82,7 +92,7 @@ public class DailyReminderApp extends BroadcastReceiver {
                     AlarmManager.INTERVAL_DAY, pendingIntent);
         }
 
-        Toast.makeText(context, "Repeating App Set", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, context.getString(R.string.repeating_app), Toast.LENGTH_SHORT).show();
     }
 
     public void cancelReminderApp(Context context) {
@@ -94,6 +104,6 @@ public class DailyReminderApp extends BroadcastReceiver {
             alarmManager.cancel(pendingIntent);
         }
 
-        Toast.makeText(context, "Repeating Alarm dibatalkan", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, context.getString(R.string.cancel_repeating_app), Toast.LENGTH_SHORT).show();
     }
 }

@@ -2,7 +2,6 @@ package com.dicoding.picodiploma.finalsubmission.reminder;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,6 +26,7 @@ import com.dicoding.picodiploma.finalsubmission.detailactivity.DetailMovieActivi
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResponse;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.network.ApiService;
+import com.dicoding.picodiploma.finalsubmission.network.RetrofitService;
 import com.dicoding.picodiploma.finalsubmission.utils.Config;
 
 import java.text.SimpleDateFormat;
@@ -38,8 +38,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DailyReminderMovie extends BroadcastReceiver {
     private final int ID_MOVIE = 101;
@@ -60,12 +58,7 @@ public class DailyReminderMovie extends BroadcastReceiver {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateToday = sdf.format(date);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Config.API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService apiService = retrofit.create(ApiService.class);
+        ApiService apiService = RetrofitService.createService(ApiService.class);
 
         apiService.getMovieFromApi(Config.API_KEY).enqueue(new Callback<MovieResponse>() {
             @Override
@@ -94,6 +87,7 @@ public class DailyReminderMovie extends BroadcastReceiver {
     }
 
     private void showReminderNotifcation(Context context) {
+        int REQUST_CODE_MOVIE = 111;
         String CHANNEL_ID = "Channel_2";
         String CHANNEL_NAME = "Reminder Movie Date Channel";
         String title = context.getString(R.string.reminder_movie_title);
@@ -104,60 +98,6 @@ public class DailyReminderMovie extends BroadcastReceiver {
         NotificationManager notificationManager
                 = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.baseline_notification_important_white_48dp);
-
-        Notification notification = builder.build();
-
-        int numMovie;
-        if (listMovie.size() > 0) {
-            numMovie = listMovie.size();
-        } else {
-            numMovie = 0;
-        }
-
-        if (numMovie == 0) {
-            intent = new Intent(context, MainActivity.class);
-            pendingIntent = TaskStackBuilder.create(context)
-                    .addNextIntent(intent)
-                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            message = "There is no movie in release today";
-            builder.setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                    .setLargeIcon(bmp)
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                    .setSound(alarmSound)
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true);
-
-            if (notificationManager != null) {
-                notificationManager.notify(ID_MOVIE, notification);
-            }
-        } else {
-            intent = new Intent(context, DetailMovieActivity.class);
-            for (int i = 0; i < listMovie.size(); i++) {
-                intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, listMovie.get(i));
-                pendingIntent = TaskStackBuilder.create(context)
-                        .addNextIntent(intent)
-                        .getPendingIntent(i, PendingIntent.FLAG_UPDATE_CURRENT);
-                message = listMovie.get(i).getTitle() + " release today";
-                builder.setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                        .setLargeIcon(bmp)
-                        .setContentTitle(title)
-                        .setContentText(message)
-                        .setContentIntent(pendingIntent)
-                        .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000,})
-                        .setSound(alarmSound)
-                        .setAutoCancel(true);
-
-                if (notification != null) {
-                    notificationManager.notify(i, notification);
-                }
-            }
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME,
@@ -171,7 +111,59 @@ public class DailyReminderMovie extends BroadcastReceiver {
                 notificationManager.createNotificationChannel(channel);
             }
         }
+
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.baseline_notification_important_white_48dp);
+
+        int numMovie;
+        if (listMovie.size() > 0) {
+            numMovie = listMovie.size();
+        } else {
+            numMovie = 0;
+        }
+
+        if (numMovie == 0) {
+            intent = new Intent(context, MainActivity.class);
+            pendingIntent = TaskStackBuilder.create(context)
+                    .addNextIntent(intent)
+                    .getPendingIntent(REQUST_CODE_MOVIE, PendingIntent.FLAG_UPDATE_CURRENT);
+            message = "There is no movie in release today";
+            builder.setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                    .setLargeIcon(bmp)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                    .setSound(alarmSound)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+
+            if (notificationManager != null) {
+                notificationManager.notify(ID_MOVIE, builder.build());
+            }
+        } else {
+            intent = new Intent(context, DetailMovieActivity.class);
+            for (int i = 0; i < listMovie.size(); i++) {
+                intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, listMovie.get(i));
+                pendingIntent = TaskStackBuilder.create(context)
+                        .addNextIntent(intent)
+                        .getPendingIntent(i, PendingIntent.FLAG_UPDATE_CURRENT);
+                message = listMovie.get(i).getTitle() + " " + context.getString(R.string.release_today);
+                builder.setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                        .setLargeIcon(bmp)
+                        .setContentTitle(title)
+                        .setContentText(message)
+                        .setContentIntent(pendingIntent)
+                        .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                        .setSound(alarmSound)
+                        .setAutoCancel(true);
+                if (notificationManager != null) {
+                    notificationManager.notify(i, builder.build());
+                }
+            }
+        }
     }
+
 
     public void setReminderMovie(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -187,7 +179,7 @@ public class DailyReminderMovie extends BroadcastReceiver {
                     AlarmManager.INTERVAL_DAY, pendingIntent);
         }
 
-        Toast.makeText(context, "Repeating Movie is Set", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, context.getString(R.string.repeating_movie), Toast.LENGTH_SHORT).show();
     }
 
     public void cancelReminderMovie(Context context) {
@@ -199,8 +191,6 @@ public class DailyReminderMovie extends BroadcastReceiver {
             alarmManager.cancel(pendingIntent);
         }
 
-        Toast.makeText(context, "Repeating Movie Is canceled", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, context.getString(R.string.cancel_repeating_movie), Toast.LENGTH_SHORT).show();
     }
-
-
 }
