@@ -139,7 +139,7 @@ public class DailyReminderMovie extends BroadcastReceiver {
                     .setAutoCancel(true);
 
             if (notificationManager != null) {
-                notificationManager.notify(ID_MOVIE, builder.build());
+                notificationManager.notify(0, builder.build());
             }
         } else {
             intent = new Intent(context, DetailMovieActivity.class);

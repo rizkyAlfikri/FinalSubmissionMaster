@@ -1,7 +1,5 @@
 package com.dicoding.picodiploma.finalsubmission.db.moviedb;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResponse;
@@ -47,25 +45,25 @@ public class MovieRepository {
         return listMovie;
     }
 
-    public MutableLiveData<List<MovieResults>> getQueryMovie(String queryResult) {
-        MutableLiveData<List<MovieResults>> listQueryMovie = new MutableLiveData<>();
-        apiService.getQueryMovie(queryResult).enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        listQueryMovie.setValue(response.body().getResults());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Log.e("Failure", t.getMessage());
-            }
-        });
-        return listQueryMovie;
-    }
+//    public MutableLiveData<List<MovieResults>> getQueryMovie(String apiKey, String queryResult) {
+//        MutableLiveData<List<MovieResults>> listQueryMovie = new MutableLiveData<>();
+//        apiService.getQueryMovie(apiKey, queryResult).enqueue(new Callback<MovieResponse>() {
+//            @Override
+//            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+//                if (response.isSuccessful()) {
+//                    if (response.body() != null) {
+//                        listQueryMovie.setValue(response.body().getResults());
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<MovieResponse> call, Throwable t) {
+//                Log.e("Failure", t.getMessage());
+//            }
+//        });
+//        return listQueryMovie;
+//    }
 
 //    public MutableLiveData<List<MovieGenres>> getMovieGenreRetrofit() {
 //        MutableLiveData<List<MovieGenres>> listGenreMovie = new MutableLiveData<>();

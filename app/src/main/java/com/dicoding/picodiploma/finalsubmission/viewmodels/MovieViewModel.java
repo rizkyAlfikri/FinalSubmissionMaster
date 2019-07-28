@@ -25,9 +25,9 @@ public class MovieViewModel extends ViewModel {
         return listMovie;
     }
 
-    public LiveData<List<MovieResults>> getQueryMovie(String query) {
-        return movieRepository.getQueryMovie(query);
-    }
+//    public LiveData<List<MovieResults>> getQueryMovie(String apiKey, String query) {
+//        return movieRepository.getQueryMovie(apiKey, query);
+//    }
 
 //    public LiveData<List<MovieGenres>> getMovieGenreRetrofit() {
 //        return listGenreMovie;

@@ -220,4 +220,5 @@ public class MovieResults implements Parcelable {
             return new MovieResults[size];
         }
     };
+
 }

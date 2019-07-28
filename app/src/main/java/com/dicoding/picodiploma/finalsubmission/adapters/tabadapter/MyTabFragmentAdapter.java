@@ -2,6 +2,7 @@ package com.dicoding.picodiploma.finalsubmission.adapters.tabadapter;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,7 @@ public class MyTabFragmentAdapter extends FragmentPagerAdapter {
         this.context = context;
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int position) {
         switch (position) {
