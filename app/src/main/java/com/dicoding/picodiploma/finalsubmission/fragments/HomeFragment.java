@@ -1,9 +1,6 @@
 package com.dicoding.picodiploma.finalsubmission.fragments;
 
 
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,14 +12,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.SettingsActivity;
-import com.dicoding.picodiploma.finalsubmission.detailactivity.SearchMovieActivity;
-
-import static com.dicoding.picodiploma.finalsubmission.detailactivity.SearchMovieActivity.EXTRA_SEARCH;
 
 public class HomeFragment extends Fragment {
     public HomeFragment() {
@@ -47,36 +40,36 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        SearchManager searchManager;
-        if (getContext() != null) {
-            searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
-            if (searchManager != null) {
-                SearchView searchView = (SearchView) (menu.findItem(R.id.action_search)).getActionView();
-                if (getActivity() != null) {
-                    searchView.setSearchableInfo(searchManager.getSearchableInfo(
-                            new ComponentName(searchView.getContext(), SearchMovieActivity.class)));
-                }
-                searchView.setQueryHint(getString(R.string.search_hint));
-
-                SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        Intent searchMovieIntent = new Intent(getContext(), SearchMovieActivity.class);
-                        searchMovieIntent.putExtra(EXTRA_SEARCH, query);
-                        startActivity(searchMovieIntent);
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        return false;
-                    }
-                };
-
-                searchView.setOnQueryTextListener(queryTextListener);
-                super.onCreateOptionsMenu(menu, inflater);
-            }
-        }
+//        SearchManager searchManager;
+//        if (getContext() != null) {
+//            searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+//            if (searchManager != null) {
+//                SearchView searchView = (SearchView) (menu.findItem(R.id.action_search)).getActionView();
+//                if (getActivity() != null) {
+//                    searchView.setSearchableInfo(searchManager.getSearchableInfo(
+//                            new ComponentName(searchView.getContext(), SearchMovieActivity.class)));
+//                }
+//                searchView.setQueryHint(getString(R.string.search_hint));
+//
+//                SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+//                    @Override
+//                    public boolean onQueryTextSubmit(String query) {
+//                        Intent searchMovieIntent = new Intent(getContext(), SearchMovieActivity.class);
+//                        searchMovieIntent.putExtra(EXTRA_SEARCH, query);
+//                        startActivity(searchMovieIntent);
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public boolean onQueryTextChange(String newText) {
+//                        return false;
+//                    }
+//                };
+//
+//                searchView.setOnQueryTextListener(queryTextListener);
+//                super.onCreateOptionsMenu(menu, inflater);
+//            }
+//        }
     }
 
     @Override

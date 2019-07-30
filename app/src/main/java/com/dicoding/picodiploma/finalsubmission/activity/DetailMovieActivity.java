@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.finalsubmission.detailactivity;
+package com.dicoding.picodiploma.finalsubmission.activity;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -103,6 +103,8 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
                 .load(urlPhoto)
                 .apply(new RequestOptions())
                 .into(imgPhoto);
+
+        movieResults.setGenre(String.valueOf(movieResults.getGenreIds()));
 
 
 

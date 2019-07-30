@@ -22,7 +22,7 @@ import androidx.core.app.TaskStackBuilder;
 
 import com.dicoding.picodiploma.finalsubmission.MainActivity;
 import com.dicoding.picodiploma.finalsubmission.R;
-import com.dicoding.picodiploma.finalsubmission.detailactivity.DetailMovieActivity;
+import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResponse;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.network.ApiService;

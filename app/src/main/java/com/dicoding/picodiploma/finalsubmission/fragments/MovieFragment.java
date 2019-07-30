@@ -1,27 +1,26 @@
 package com.dicoding.picodiploma.finalsubmission.fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
-
 import com.dicoding.picodiploma.finalsubmission.R;
+import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieAdapter;
-import com.dicoding.picodiploma.finalsubmission.detailactivity.DetailMovieActivity;
-import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenreResponse;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenres;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.utils.ItemClickSupport;
@@ -47,7 +46,6 @@ public class MovieFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,16 +58,11 @@ public class MovieFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        progressBar.setVisibility(View.VISIBLE);
-        rvMovie.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        rvMovie.setHasFixedSize(true);
-        movieAdapter = new MovieAdapter(view.getContext());
-        rvMovie.setAdapter(movieAdapter);
+        init(view.getContext());
 
         MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
         movieViewModel.getMovieFromRetrofit().observe(this, getMovieData);
-
-//        movieViewModel.getMovieGenreRetrofit().observe(this, getMovieGenreData);
+        movieViewModel.getMovieGenre().observe(this, getGenreMovieData);
     }
 
     private final Observer<List<MovieResults>> getMovieData = new Observer<List<MovieResults>>() {
@@ -78,24 +71,29 @@ public class MovieFragment extends Fragment {
             movieAdapter.setListMovie(movieResults);
             movieAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
-            ItemClickSupport.addTo(rvMovie).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                @Override
-                public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                    Uri uri = Uri.parse(CONTENT_URI + "/" + movieResults.get(position).getId());
-                    Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
-                    intent.setData(uri);
-                    intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, movieResults.get(position));
-                    startActivity(intent);
-                }
+            ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
+                Uri uri = Uri.parse(CONTENT_URI + "/" + movieResults.get(position).getId());
+                Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
+                intent.setData(uri);
+                intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, movieResults.get(position));
+                startActivity(intent);
             });
         }
     };
-//
-//    private final Observer<List<MovieGenres>> getMovieGenreData = new Observer<List<MovieGenres>>() {
-//        @Override
-//        public void onChanged(List<MovieGenres> movieGenres) {
-//            movieAdapter.setListGenreMovie(movieGenres);
-//            movieAdapter.notifyDataSetChanged();
-//        }
-//    };
+
+    private final Observer<List<MovieGenres>> getGenreMovieData = new Observer<List<MovieGenres>>() {
+        @Override
+        public void onChanged(List<MovieGenres> movieGenres) {
+            movieAdapter.setListGenreMovie(movieGenres);
+            movieAdapter.notifyDataSetChanged();
+        }
+    };
+
+    private void init(Context context) {
+        progressBar.setVisibility(View.VISIBLE);
+        rvMovie.setLayoutManager(new GridLayoutManager(context, 2));
+        rvMovie.setHasFixedSize(true);
+        movieAdapter = new MovieAdapter(context);
+        rvMovie.setAdapter(movieAdapter);
+    }
 }

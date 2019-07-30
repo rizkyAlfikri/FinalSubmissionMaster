@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.dicoding.picodiploma.finalsubmission.fragments.FavoriteFragment;
-import com.dicoding.picodiploma.finalsubmission.fragments.HomeFragment;
 import com.dicoding.picodiploma.finalsubmission.fragments.MovieFragment;
 import com.dicoding.picodiploma.finalsubmission.fragments.TvShowFragment;
 import com.dicoding.picodiploma.finalsubmission.reminder.DailyReminderApp;
@@ -26,11 +25,6 @@ public class MainActivity extends AppCompatActivity implements LoadCallback {
                 Fragment fragment;
 
                 switch (item.getItemId()) {
-                    case R.id.navigation_home:
-                        fragment = new HomeFragment();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container_layout,
-                                fragment, fragment.getClass().getSimpleName()).commit();
-                        return true;
                     case R.id.navigation_movie:
                         fragment = new MovieFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.container_layout,
@@ -59,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements LoadCallback {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         if (savedInstanceState == null) {
-            navView.setSelectedItemId(R.id.navigation_home);
+            navView.setSelectedItemId(R.id.navigation_movie);
         }
 
         SharedPreferences sharedPrefApp = PreferenceManager.getDefaultSharedPreferences(this);

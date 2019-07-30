@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dicoding.picodiploma.finalsubmission.LoadCallback;
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieFavoriteAdapter;
-import com.dicoding.picodiploma.finalsubmission.detailactivity.DetailMovieActivity;
+import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.utils.ItemClickSupport;
 
@@ -38,7 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.CONTENT_URI;
-import static com.dicoding.picodiploma.finalsubmission.detailactivity.DetailMovieActivity.EXTRA_MOVIE;
+import static com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity.EXTRA_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCursorToArrayList;
 
 

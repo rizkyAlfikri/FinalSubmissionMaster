@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.DATE;
+import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.GENRE;
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.ID;
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.LANGUAGE;
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.OVERVIEW;
@@ -26,6 +27,7 @@ public class ContentValueHelper {
         values.put(POPULAR, movieResults.getPopularity());
         values.put(VOTE_AVERAGE, movieResults.getVoteAverage());
         values.put(VOTE_COUNT, movieResults.getVoteCount());
+        values.put(GENRE, movieResults.getGenre());
         return values;
     }
 }

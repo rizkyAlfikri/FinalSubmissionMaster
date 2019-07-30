@@ -7,6 +7,7 @@ import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import java.util.ArrayList;
 
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.DATE;
+import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.GENRE;
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.ID;
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.LANGUAGE;
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.OVERVIEW;
@@ -30,8 +31,9 @@ public class MappingHelper {
             double popularity = movieCursor.getDouble(movieCursor.getColumnIndexOrThrow(POPULAR));
             int id = movieCursor.getInt(movieCursor.getColumnIndexOrThrow(ID));
             int voteCount = movieCursor.getInt(movieCursor.getColumnIndexOrThrow(VOTE_COUNT));
+            String genre = movieCursor.getString(movieCursor.getColumnIndexOrThrow(GENRE));
             movieList.add(new MovieResults(overview, originalLanguage, title, posterPath,
-                    releaseDate, voteAverage, popularity, id, voteCount));
+                    releaseDate, voteAverage, popularity, id, voteCount, genre));
         }
         return movieList;
     }

@@ -8,11 +8,12 @@ import com.dicoding.picodiploma.finalsubmission.utils.Config;
 
 public class MovieDatabaseHelper extends SQLiteOpenHelper {
 
-    public static String DATABSE_NAME = Config.DB_MOVIE_NAME;
+    private static String DATABSE_NAME = Config.DB_MOVIE_NAME;
     private static final int DATABASE_VERSION = 1;
 
     private static final String SQL_CREATE_TABLE_MOVIE = String.format("CREATE TABLE %s"
                     + " (%s INTEGER PRIMARY KEY," +
+                    " %s TEXT NOT NULL," +
                     " %s TEXT NOT NULL," +
                     " %s TEXT NOT NULL," +
                     " %s TEXT NOT NULL," +
@@ -26,6 +27,7 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
             MovieDatabaseContract.MovieColumns.TITLE,
             MovieDatabaseContract.MovieColumns.OVERVIEW,
             MovieDatabaseContract.MovieColumns.LANGUAGE,
+            MovieDatabaseContract.MovieColumns.GENRE,
             MovieDatabaseContract.MovieColumns.POSTER,
             MovieDatabaseContract.MovieColumns.DATE,
             MovieDatabaseContract.MovieColumns.POPULAR,
@@ -33,7 +35,7 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
             MovieDatabaseContract.MovieColumns.VOTE_COUNT
     );
 
-    public MovieDatabaseHelper(Context context) {
+    MovieDatabaseHelper(Context context) {
         super(context, DATABSE_NAME, null, DATABASE_VERSION);
     }
 

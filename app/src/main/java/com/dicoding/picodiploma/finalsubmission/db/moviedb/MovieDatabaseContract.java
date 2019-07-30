@@ -4,8 +4,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import java.util.List;
-
 public class MovieDatabaseContract {
     public static final String AUTHORITY = "com.dicoding.picodiploma.finalsubmission";
     private static final String SCHEME = "content";
@@ -24,7 +22,7 @@ public class MovieDatabaseContract {
         public static final String TITLE = "title";
         public static final String OVERVIEW = "overview";
         public static final String LANGUAGE = "language";
-//        public static final String GENRE = "genre";
+        public static final String GENRE = "genre";
         public static final String POSTER = "poster";
         public static final String DATE = "date";
         public static final String POPULAR = "popular";
@@ -40,15 +38,7 @@ public class MovieDatabaseContract {
         return cursor.getInt(cursor.getColumnIndex(columnName));
     }
 
-    public static long getColumnLong(Cursor cursor, String columnName) {
-        return cursor.getLong(cursor.getColumnIndex(columnName));
-    }
-
     public static double getColumnDouble(Cursor cursor, String columnName) {
         return cursor.getDouble(cursor.getColumnIndex(columnName));
     }
-
-//    public static List<Integer> getColumnListInt(Cursor cursor, String columnName) {
-//        return columnName.getClass(cursor.getColumnIndex(columnName));
-//    }
 }
