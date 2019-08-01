@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -19,6 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicoding.picodiploma.finalsubmission.R;
+import com.dicoding.picodiploma.finalsubmission.SettingsActivity;
 import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenres;
@@ -36,6 +40,7 @@ import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseC
 
 public class MovieFragment extends Fragment {
     private MovieAdapter movieAdapter;
+    private List<MovieGenres> movieGenres;
     @BindView(R.id.rv_movie)
     RecyclerView rvMovie;
     @BindView(R.id.progress_bar)
@@ -54,21 +59,38 @@ public class MovieFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.settings) {
+            Intent settingIntent = new Intent(getContext(), SettingsActivity.class);
+            startActivity(settingIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
+        setHasOptionsMenu(true);
         init(view.getContext());
 
         MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-        movieViewModel.getMovieFromRetrofit().observe(this, getMovieData);
         movieViewModel.getMovieGenre().observe(this, getGenreMovieData);
+        movieViewModel.getMovieFromRetrofit().observe(this, getMovieData);
     }
 
     private final Observer<List<MovieResults>> getMovieData = new Observer<List<MovieResults>>() {
         @Override
         public void onChanged(List<MovieResults> movieResults) {
-            movieAdapter.setListMovie(movieResults);
+            movieAdapter.setListMovie(movieResults, movieGenres);
             movieAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
             ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
@@ -83,9 +105,8 @@ public class MovieFragment extends Fragment {
 
     private final Observer<List<MovieGenres>> getGenreMovieData = new Observer<List<MovieGenres>>() {
         @Override
-        public void onChanged(List<MovieGenres> movieGenres) {
-            movieAdapter.setListGenreMovie(movieGenres);
-            movieAdapter.notifyDataSetChanged();
+        public void onChanged(List<MovieGenres> movieGenresData) {
+            movieGenres = movieGenresData;
         }
     };
 

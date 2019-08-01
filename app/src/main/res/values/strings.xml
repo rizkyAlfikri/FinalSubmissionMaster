@@ -54,4 +54,20 @@
     <string name="search_hint">Search Movie or Tv Show</string>
     <string name="SearchMovieActivity">SearchMovieActivity</string>
     <string name="submit">Submit</string>
+    <string name="overview_test">"A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way  and ignites an out-of-control spiral toward oblivion.",</string>
+    <string name="duration">Duration :</string>
+    <string name="vote_average">Vote Average :</string>
+    <string name="review">Review</string>
+    <string name="videos">Videos</string>
+    <string name="detail">Detail</string>
+    <string name="video_trailer">Video Trailer</string>
+    <string name="author">Author :</string>
+    <string name="url">Url :</string>
+    <string name="content">Content :</string>
+    <string name="homepage">Homepage :</string>
+    <string name="status">Status :</string>
+    <string name="tagline">Tagline :</string>
+    <string name="popularity">Popularity :</string>
+    <string name="details">Details</string>
+    <string name="image_trailer">Image Trailer</string>
 </resources>

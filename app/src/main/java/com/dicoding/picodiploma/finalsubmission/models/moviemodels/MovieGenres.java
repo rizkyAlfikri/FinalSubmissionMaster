@@ -1,17 +1,17 @@
 package com.dicoding.picodiploma.finalsubmission.models.moviemodels;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class MovieGenres {
 
     @SerializedName("id")
-    @Expose
     private int id;
 
     @SerializedName("name")
-    @Expose
     private String name;
+
+    public MovieGenres() {
+    }
 
     public int getId() {
         return id;

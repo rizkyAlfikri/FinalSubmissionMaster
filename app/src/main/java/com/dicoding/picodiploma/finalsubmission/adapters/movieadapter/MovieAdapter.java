@@ -34,12 +34,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         this.context = context;
     }
 
-    public void setListMovie(List<MovieResults> listMovie) {
+    public void setListMovie(List<MovieResults> listMovie, List<MovieGenres> listGenreMovie) {
         this.listMovie = listMovie;
-        notifyDataSetChanged();
-    }
-
-    public void setListGenreMovie(List<MovieGenres> listGenreMovie) {
         this.listGenreMovie = listGenreMovie;
         notifyDataSetChanged();
     }
