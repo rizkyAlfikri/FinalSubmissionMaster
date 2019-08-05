@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.finalsubmission.fragments;
+package com.dicoding.picodiploma.finalsubmission.fragments.moviefragments;
 
 
 import android.content.Intent;
@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.main_movie, menu);
 //        SearchManager searchManager;
 //        if (getContext() != null) {
 //            searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);

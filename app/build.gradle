@@ -17,6 +17,8 @@ android {
         }
     }
     buildscript {
+        compileOptions.encoding = 'windows-1251' // write your encoding here
+        compileOptions.encoding = 'ISO-8859-1'
         repositories {
             google()
             jcenter()

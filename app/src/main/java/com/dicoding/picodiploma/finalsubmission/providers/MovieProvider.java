@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieHelper;
-import com.dicoding.picodiploma.finalsubmission.fragments.FavoriteMovieFragment;
+import com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteMovieFragment;
 
 
 import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.AUTHORITY;

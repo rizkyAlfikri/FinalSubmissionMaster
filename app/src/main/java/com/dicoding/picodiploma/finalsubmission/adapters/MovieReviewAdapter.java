@@ -20,9 +20,11 @@ import butterknife.ButterKnife;
 public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.MovieViewHolder> {
     private Context context;
     private List<MovieReview> listMovie;
+    private boolean isShowAll;
 
-    public MovieReviewAdapter(Context context) {
+    public MovieReviewAdapter(Context context, boolean isShowAll) {
         this.context = context;
+        this.isShowAll = isShowAll;
     }
 
     public void setListMovie(List<MovieReview> listMovie) {
@@ -39,14 +41,23 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull MovieReviewAdapter.MovieViewHolder holder, int position) {
-        holder.txtAuthor.setText(listMovie.get(position).getAuthor());
-        holder.txtContent.setText(listMovie.get(position).getContent());
+        if (isShowAll) {
+            holder.txtAuthor.setText(listMovie.get(position).getAuthor());
+            holder.txtContent.setText(listMovie.get(position).getContent());
+        } else {
+            holder.txtAuthor.setText(listMovie.get(position).getAuthor());
+            holder.txtContent.setText(listMovie.get(position).getContent());
+        }
     }
 
     @Override
     public int getItemCount() {
         if (listMovie != null) {
-            return listMovie.size();
+            if (isShowAll) {
+                return listMovie.size();
+            } else {
+                return 1;
+            }
         } else {
             return 0;
         }

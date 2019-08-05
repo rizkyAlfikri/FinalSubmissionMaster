@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.finalsubmission.fragments;
+package com.dicoding.picodiploma.finalsubmission.fragments.tvshowfragments;
 
 
 import android.os.Bundle;

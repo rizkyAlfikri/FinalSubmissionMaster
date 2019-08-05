@@ -51,7 +51,7 @@
     <string name="cancel_repeating_movie">Repeating Movie is Canceled</string>
     <string name="release_today">is release today</string>
     <string name="search">Search</string>
-    <string name="search_hint">Search Movie or Tv Show</string>
+    <string name="search_movie_hint">Search Movie</string>
     <string name="SearchMovieActivity">SearchMovieActivity</string>
     <string name="submit">Submit</string>
     <string name="overview_test">"A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way  and ignites an out-of-control spiral toward oblivion.",</string>
@@ -70,4 +70,5 @@
     <string name="popularity">Popularity :</string>
     <string name="details">Details</string>
     <string name="image_trailer">Image Trailer</string>
+    <string name="see_all">See All</string>
 </resources>
