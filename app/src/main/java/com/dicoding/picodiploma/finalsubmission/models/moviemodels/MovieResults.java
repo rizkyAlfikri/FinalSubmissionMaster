@@ -6,15 +6,15 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract;
+import com.dicoding.picodiploma.finalsubmission.db.DatabaseContract;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.getColumnDouble;
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.getColumnInt;
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.getColumnString;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.getColumnDouble;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.getColumnInt;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.getColumnString;
 
 public class MovieResults implements Parcelable {
 
@@ -157,16 +157,16 @@ public class MovieResults implements Parcelable {
 
 
     public MovieResults(Cursor cursor) {
-        this.overview = getColumnString(cursor, MovieDatabaseContract.MovieColumns.OVERVIEW);
-        this.originalLanguage = getColumnString(cursor, MovieDatabaseContract.MovieColumns.LANGUAGE);
-        this.title = getColumnString(cursor, MovieDatabaseContract.MovieColumns.TITLE);
-        this.posterPath = getColumnString(cursor, MovieDatabaseContract.MovieColumns.POSTER);
-        this.releaseDate = getColumnString(cursor, MovieDatabaseContract.MovieColumns.DATE);
-        this.voteAverage = getColumnDouble(cursor, MovieDatabaseContract.MovieColumns.VOTE_AVERAGE);
-        this.popularity = getColumnDouble(cursor, MovieDatabaseContract.MovieColumns.POPULAR);
-        this.id = getColumnInt(cursor, MovieDatabaseContract.MovieColumns.ID);
-        this.voteCount = getColumnInt(cursor, MovieDatabaseContract.MovieColumns.VOTE_COUNT);
-        this.genre = getColumnString(cursor, MovieDatabaseContract.MovieColumns.GENRE);
+        this.overview = getColumnString(cursor, DatabaseContract.MovieColumns.OVERVIEW);
+        this.originalLanguage = getColumnString(cursor, DatabaseContract.MovieColumns.LANGUAGE);
+        this.title = getColumnString(cursor, DatabaseContract.MovieColumns.TITLE);
+        this.posterPath = getColumnString(cursor, DatabaseContract.MovieColumns.POSTER);
+        this.releaseDate = getColumnString(cursor, DatabaseContract.MovieColumns.DATE);
+        this.voteAverage = getColumnDouble(cursor, DatabaseContract.MovieColumns.VOTE_AVERAGE);
+        this.popularity = getColumnDouble(cursor, DatabaseContract.MovieColumns.POPULAR);
+        this.id = getColumnInt(cursor, DatabaseContract.MovieColumns.ID);
+        this.voteCount = getColumnInt(cursor, DatabaseContract.MovieColumns.VOTE_COUNT);
+        this.genre = getColumnString(cursor, DatabaseContract.MovieColumns.GENRE);
 
     }
 

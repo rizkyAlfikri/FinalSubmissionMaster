@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -38,7 +37,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.CONTENT_URI;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 
 
 public class MovieFragment extends Fragment {
@@ -80,9 +79,7 @@ public class MovieFragment extends Fragment {
                     searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
                 }
 
-                searchView.setQueryHint(getString(R.string.search_movie_hint));
-
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
                         searchMovie(query);
@@ -91,7 +88,14 @@ public class MovieFragment extends Fragment {
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        searchMovie(newText);
+                        return false;
+                    }
+                };
+                searchView.setOnQueryTextListener(queryTextListener);
+
+                searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+                    @Override
+                    public boolean onClose() {
                         return true;
                     }
                 });
@@ -99,6 +103,8 @@ public class MovieFragment extends Fragment {
             super.onPrepareOptionsMenu(menu);
         }
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -132,7 +138,7 @@ public class MovieFragment extends Fragment {
             rvMovie.setAdapter(movieAdapter);
             progressBar.setVisibility(View.GONE);
             ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
-                Uri uri = Uri.parse(CONTENT_URI + "/" + movieResults.get(position).getId());
+                Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + movieResults.get(position).getId());
                 Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
                 intent.setData(uri);
                 intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, movieResults.get(position));
@@ -162,7 +168,7 @@ public class MovieFragment extends Fragment {
             movieAdapter.setListMovie(movieResults, movieGenres);
             movieAdapter.notifyDataSetChanged();
             ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
-                Uri uri = Uri.parse(CONTENT_URI + "/" + movieResults.get(position).getId());
+                Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + movieResults.get(position).getId());
                 Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
                 intent.setData(uri);
                 intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, movieResults.get(position));
@@ -173,8 +179,10 @@ public class MovieFragment extends Fragment {
 
 
     private void searchMovie(String query) {
-
-        FragmentManager fm = getChildFragmentManager();
-        movieViewModel.getQueryMovie(Config.API_KEY, query).observe(this, getQueryData);
+        if (query != null) {
+            movieViewModel.getQueryMovie(Config.API_KEY, query).observe(this, getQueryData);
+        } else {
+            movieViewModel.getMovieFromRetrofit().observe(this, getMovieData);
+        }
     }
 }

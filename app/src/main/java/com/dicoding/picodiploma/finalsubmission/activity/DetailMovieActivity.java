@@ -44,7 +44,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.CONTENT_URI;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteMovieFragment.RESULT_ADD;
 import static com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteMovieFragment.RESULT_DELETE;
 import static com.dicoding.picodiploma.finalsubmission.utils.ContentValueHelper.getContentValue;
@@ -174,7 +174,7 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
                         .into(imgFavorite);
 
                 ContentValues values = getContentValue(movieResults);
-                getContentResolver().insert(CONTENT_URI, values);
+                getContentResolver().insert(CONTENT_URI_MOVIE, values);
                 Toast.makeText(this, movieResults.getTitle() + " " +
                         getString(R.string.add_favorite), Toast.LENGTH_SHORT).show();
                 isFavorite = true;

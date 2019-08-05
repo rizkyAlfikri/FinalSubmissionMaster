@@ -4,16 +4,16 @@ import android.content.ContentValues;
 
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.DATE;
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.GENRE;
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.ID;
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.LANGUAGE;
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.OVERVIEW;
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.POPULAR;
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.POSTER;
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.TITLE;
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.VOTE_AVERAGE;
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.MovieColumns.VOTE_COUNT;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.DATE;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.GENRE;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.ID;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.LANGUAGE;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.OVERVIEW;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.POPULAR;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.POSTER;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.TITLE;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.VOTE_AVERAGE;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.VOTE_COUNT;
 
 public class ContentValueHelper {
     public static ContentValues getContentValue(MovieResults movieResults) {

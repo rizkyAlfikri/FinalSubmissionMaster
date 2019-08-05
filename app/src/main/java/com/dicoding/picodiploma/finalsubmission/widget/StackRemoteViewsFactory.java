@@ -18,7 +18,7 @@ import com.dicoding.picodiploma.finalsubmission.utils.Config;
 
 import java.util.concurrent.ExecutionException;
 
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.CONTENT_URI;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.widget.MovieFavoriteWidget.EXTRA_ITEM;
 
 public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
@@ -36,7 +36,7 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
     @Override
     public void onCreate() {
 
-        cursor = context.getContentResolver().query(CONTENT_URI
+        cursor = context.getContentResolver().query(CONTENT_URI_MOVIE
                 , null
                 , null
                 , null
@@ -52,7 +52,7 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
 
         final long identifyToken = Binder.clearCallingIdentity();
 
-        cursor = context.getContentResolver().query(CONTENT_URI
+        cursor = context.getContentResolver().query(CONTENT_URI_MOVIE
                 , null
                 , null
                 , null

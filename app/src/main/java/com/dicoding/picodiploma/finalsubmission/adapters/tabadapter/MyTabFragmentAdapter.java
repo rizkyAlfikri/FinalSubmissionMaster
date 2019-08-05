@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteMovieFragment;
-import com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteTvShowFragment;
+import com.dicoding.picodiploma.finalsubmission.fragments.tvshowfragments.FavoriteTvShowFragment;
 
 public class MyTabFragmentAdapter extends FragmentPagerAdapter {
     @StringRes

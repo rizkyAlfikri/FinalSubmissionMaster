@@ -5,6 +5,8 @@ import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenreRes
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResponse;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieReviewResponse;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieTrailerResponse;
+import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowGenreResponse;
+import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -29,4 +31,11 @@ public interface ApiService {
 
     @GET("movie/{movie_id}/reviews")
     Call<MovieReviewResponse> getMovieReviewApi(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
+
+
+    @GET("discover/tv")
+    Call<TvShowResponse> getTvFromApi(@Query("api_key") String apiKey);
+
+    @GET("genre/tv/list")
+    Call<TvShowGenreResponse> getTvGenreApi(@Query("api_key") String apiKey);
 }

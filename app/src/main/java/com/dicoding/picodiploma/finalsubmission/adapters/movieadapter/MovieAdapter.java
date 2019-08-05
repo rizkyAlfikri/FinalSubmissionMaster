@@ -53,8 +53,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         holder.txtRate.setText(String.valueOf(listMovie.get(position).getVoteAverage()));
         float rating = (float) (listMovie.get(position).getVoteAverage() / 2);
         holder.ratingBar.setRating(rating);
-        String genre = holder.getGenres(listMovie.get(position).getGenreIds());
-        holder.txtGenre.setText(genre);
+        if (listGenreMovie != null) {
+            String genre = holder.getGenres(listMovie.get(position).getGenreIds());
+            holder.txtGenre.setText(genre);
+        }
         String urlPhoto = Config.IMAGE_URL_BASE_PATH + listMovie.get(position).getPosterPath();
         Glide.with(context).load(urlPhoto).apply(new RequestOptions()).into(holder.imgPhoto);
 

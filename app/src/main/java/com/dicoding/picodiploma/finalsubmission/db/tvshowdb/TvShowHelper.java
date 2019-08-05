@@ -1,41 +1,40 @@
-package com.dicoding.picodiploma.finalsubmission.db.moviedb;
-
+package com.dicoding.picodiploma.finalsubmission.db.tvshowdb;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.dicoding.picodiploma.finalsubmission.db.DatabaseHelper;
 
-import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.ID;
-import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.MOVIE_TABLE_NAME;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.TV_TABLE_NAME;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.TvShowColumns.ID;
 
-public class MovieHelper {
-    private static final String DATABASE_TABEL = MOVIE_TABLE_NAME;
+public class TvShowHelper {
+    private static final String DATABASE_TABLE = TV_TABLE_NAME;
     private final DatabaseHelper databaseHelper;
-    private static MovieHelper INSTANCE;
+    private static TvShowHelper INSTANCE;
 
     private SQLiteDatabase database;
 
-    private MovieHelper(Context context) {
+    private TvShowHelper(Context context) {
         databaseHelper = new DatabaseHelper(context);
     }
 
-    public static MovieHelper getInstance(Context context) {
+    public static TvShowHelper getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (SQLiteOpenHelper.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new MovieHelper(context);
+                    INSTANCE = new TvShowHelper(context);
                 }
             }
         }
         return INSTANCE;
     }
 
-    public void open() throws SQLException {
+    public void open() throws SQLiteException {
         database = databaseHelper.getWritableDatabase();
     }
 
@@ -47,7 +46,7 @@ public class MovieHelper {
     }
 
     public Cursor queryByIdProvider(String id) {
-        return database.query(DATABASE_TABEL, null
+        return database.query(DATABASE_TABLE, null
                 , ID + " = ?"
                 , new String[]{id}
                 , null
@@ -57,7 +56,7 @@ public class MovieHelper {
     }
 
     public Cursor queryProvider() {
-        return database.query(DATABASE_TABEL
+        return database.query(DATABASE_TABLE
                 , null
                 , null
                 , null
@@ -67,10 +66,10 @@ public class MovieHelper {
     }
 
     public long insertProvider(ContentValues values) {
-        return database.insert(DATABASE_TABEL, null, values);
+        return database.insert(DATABASE_TABLE, null, values);
     }
 
     public int deleteProvider(String id) {
-        return database.delete(DATABASE_TABEL, ID + " = ?", new String[]{id});
+        return database.delete(DATABASE_TABLE, ID + " = ?", new String[]{id});
     }
 }

@@ -37,9 +37,9 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieDatabaseContract.CONTENT_URI;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity.EXTRA_MOVIE;
-import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCursorToArrayList;
+import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCursorToArrayListMovie;
 
 
 public class FavoriteMovieFragment extends Fragment implements LoadCallback {
@@ -84,7 +84,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         DataObserver myObserver = new DataObserver(handler, view.getContext());
 
         if (getContext() != null) {
-            getContext().getContentResolver().registerContentObserver(CONTENT_URI, true, myObserver);
+            getContext().getContentResolver().registerContentObserver(CONTENT_URI_MOVIE, true, myObserver);
         }
 
         favoriteAdapter = new MovieFavoriteAdapter(view.getContext());
@@ -94,7 +94,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
 
 
         ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
-            Uri uri = Uri.parse(CONTENT_URI + "/" + listMovie.get(position).getId());
+            Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + listMovie.get(position).getId());
             Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
             intent.setData(uri);
             intent.putExtra(DetailMovieActivity.EXTRA_POSITION, position);
@@ -141,7 +141,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     @Override
     public void postExecute(Cursor cursor) {
         progressBar.setVisibility(View.GONE);
-        listMovie = mapCursorToArrayList(cursor);
+        listMovie = mapCursorToArrayListMovie(cursor);
         if (listMovie.size() > 0) {
             favoriteAdapter.setListMovie(listMovie);
         } else {
@@ -167,7 +167,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         @Override
         protected Cursor doInBackground(Void... voids) {
             Context context = weakContext.get();
-            return context.getContentResolver().query(CONTENT_URI, null, null, null, null);
+            return context.getContentResolver().query(CONTENT_URI_MOVIE, null, null, null, null);
         }
 
         @Override

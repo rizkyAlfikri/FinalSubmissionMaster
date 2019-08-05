@@ -84,7 +84,7 @@ public class SearchMovieFragment extends Fragment {
                 SearchView searchView =
                         (SearchView) (menu.findItem(R.id.action_movie_search)).getActionView();
                 searchView.setQueryHint(getString(R.string.search_movie_hint));
-//                searchView.setQuery(queryBundle, true);
+                searchView.setQuery(queryBundle, true);
 
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override

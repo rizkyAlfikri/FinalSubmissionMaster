@@ -5,51 +5,45 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.dicoding.picodiploma.finalsubmission.db.moviedb.MovieHelper;
-import com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteMovieFragment;
-
+import com.dicoding.picodiploma.finalsubmission.db.tvshowdb.TvShowHelper;
 
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.AUTHORITY;
-import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
-import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MOVIE_TABLE_NAME;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_TV;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.TV_TABLE_NAME;
 
-public class MovieProvider extends ContentProvider {
-    private static final int MOVIE = 1;
-    private static final int MOVIE_ID = 2;
+public class TvShowProvider extends ContentProvider {
+    private static final int TV = 1;
+    private static final int TV_ID = 2;
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-    private MovieHelper movieHelper;
+    private TvShowHelper tvShowHelper;
 
     static {
-        //content://com.dicoding.picodiploma.finalsubmission/tableMovie
-        sUriMatcher.addURI(AUTHORITY, MOVIE_TABLE_NAME, MOVIE);
+        sUriMatcher.addURI(AUTHORITY, TV_TABLE_NAME, TV);
 
-        //content://com.dicoding.picodiploma.finalsubmission/tableMovie/id
-        sUriMatcher.addURI(AUTHORITY, MOVIE_TABLE_NAME + "/#", MOVIE_ID);
+        sUriMatcher.addURI(AUTHORITY, TV_TABLE_NAME + "/#", TV_ID);
     }
-
 
     @Override
     public boolean onCreate() {
-        movieHelper = MovieHelper.getInstance(getContext());
+        tvShowHelper = TvShowHelper.getInstance(getContext());
         return true;
     }
 
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        movieHelper.open();
+        tvShowHelper.open();
         Cursor cursor;
         switch (sUriMatcher.match(uri)) {
-            case MOVIE:
-                cursor = movieHelper.queryProvider();
+            case TV:
+                cursor = tvShowHelper.queryProvider();
                 break;
-            case MOVIE_ID:
-                cursor = movieHelper.queryByIdProvider(uri.getLastPathSegment());
+            case TV_ID:
+                cursor = tvShowHelper.queryByIdProvider(uri.getLastPathSegment());
                 break;
             default:
                 cursor = null;
@@ -58,6 +52,7 @@ public class MovieProvider extends ContentProvider {
         return cursor;
     }
 
+    @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
         return null;
@@ -66,34 +61,33 @@ public class MovieProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        movieHelper.open();
+        tvShowHelper.open();
         long added;
         switch (sUriMatcher.match(uri)) {
-            case MOVIE:
-                added = movieHelper.insertProvider(values);
+            case TV:
+                added = tvShowHelper.insertProvider(values);
                 break;
             default:
                 added = 0;
                 break;
         }
-        getContext().getContentResolver().notifyChange(CONTENT_URI_MOVIE,
-                new FavoriteMovieFragment.DataObserver(new Handler(), getContext()));
-        return Uri.parse(CONTENT_URI_MOVIE + "/" + added);
+//        getContext().getContentResolver().notifyChange(CONTENT_URI_TV, new FavoriteTvShowFragment().DataObserver(new Handler(), getContext()));
+        return Uri.parse(CONTENT_URI_TV + "/" + added);
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        movieHelper.open();
+        tvShowHelper.open();
         int deleted;
         switch (sUriMatcher.match(uri)) {
-            case MOVIE_ID:
-                deleted = movieHelper.deleteProvider(uri.getLastPathSegment());
+            case TV_ID:
+                deleted = tvShowHelper.deleteProvider(uri.getLastPathSegment());
                 break;
             default:
                 deleted = 0;
                 break;
         }
-        getContext().getContentResolver().notifyChange(CONTENT_URI_MOVIE, new FavoriteMovieFragment.DataObserver(new Handler(), getContext()));
+//        getContext().getContentResolver().notifyChange(CONTENT_URI_TV, new FavoriteTvShowFragment().DataObserver(new Handler(), getContext()));
         return deleted;
     }
 
