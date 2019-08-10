@@ -20,6 +20,7 @@ import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.Movie
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.VOTE_COUNT;
 
 public class MappingHelper {
+
     public static ArrayList<MovieResults> mapCursorToArrayListMovie(Cursor movieCursor) {
         ArrayList<MovieResults> movieList = new ArrayList<>();
 

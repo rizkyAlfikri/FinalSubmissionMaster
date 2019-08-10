@@ -3,14 +3,14 @@ package com.dicoding.picodiploma.finalsubmission.db.tvshowdb;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.dicoding.picodiploma.finalsubmission.db.DatabaseHelper;
 
-import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.TV_TABLE_NAME;
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.TvShowColumns.ID;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.TvShowColumns.TV_TABLE_NAME;
 
 public class TvShowHelper {
     private static final String DATABASE_TABLE = TV_TABLE_NAME;
@@ -34,7 +34,7 @@ public class TvShowHelper {
         return INSTANCE;
     }
 
-    public void open() throws SQLiteException {
+    public void open() throws SQLException {
         database = databaseHelper.getWritableDatabase();
     }
 

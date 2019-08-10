@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.ReviewMovieActivity"></activity>
+        <activity android:name=".activity.DetailTvShowActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -48,7 +48,8 @@
             android:authorities="com.dicoding.picodiploma.finalsubmission"
             android:exported="false"
             android:readPermission="com.dicoding.picodiploma.finalsubmission.READ_DATABASE"
-            android:writePermission="com.dicoding.picodiploma.finalsubmission.WRITE_DATABASE" />
+            android:writePermission="com.dicoding.picodiploma.finalsubmission.WRITE_DATABASE"
+            android:multiprocess="true"/>
 
         <service
             android:name=".widget.StackWidgetService"

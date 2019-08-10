@@ -1,6 +1,8 @@
 package com.dicoding.picodiploma.finalsubmission.fragments.tvshowfragments;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +18,19 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicoding.picodiploma.finalsubmission.R;
+import com.dicoding.picodiploma.finalsubmission.activity.DetailTvShowActivity;
 import com.dicoding.picodiploma.finalsubmission.adapters.tvshowadapter.TvShowAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowGenres;
 import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowResults;
+import com.dicoding.picodiploma.finalsubmission.utils.ItemClickSupport;
 import com.dicoding.picodiploma.finalsubmission.viewmodels.TvShowViewModel;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_TV;
 
 
 public class TvShowFragment extends Fragment {
@@ -69,6 +75,13 @@ public class TvShowFragment extends Fragment {
             tvShowAdapter.setListTv(tvShowResults);
             tvShowAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
+            ItemClickSupport.addTo(rvTvShow).setOnItemClickListener((recyclerView, position, v) -> {
+                Uri uri = Uri.parse(CONTENT_URI_TV + "/" + tvShowResults.get(position).getId());
+                Intent intent = new Intent(recyclerView.getContext(), DetailTvShowActivity.class);
+                intent.setData(uri);
+                intent.putExtra(DetailTvShowActivity.EXTRA_TV, tvShowResults.get(position));
+                startActivity(intent);
+            });
         }
     };
 

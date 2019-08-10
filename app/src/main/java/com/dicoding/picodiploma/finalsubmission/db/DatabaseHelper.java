@@ -11,6 +11,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DATABSE_NAME = Config.DB_MOVIE_NAME;
     private static final int DATABASE_VERSION = 1;
 
+    public DatabaseHelper(Context context) {
+        super(context, DATABSE_NAME, null, DATABASE_VERSION);
+    }
+
     private static final String SQL_CREATE_TABLE_MOVIE = String.format("CREATE TABLE %s"
                     + " (%s INTEGER PRIMARY KEY," +
                     " %s TEXT NOT NULL," +
@@ -59,9 +63,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             DatabaseContract.TvShowColumns.VOTE_COUNT
     );
 
-    public DatabaseHelper(Context context) {
-        super(context, DATABSE_NAME, null, DATABASE_VERSION);
-    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {

@@ -68,7 +68,7 @@ public class SearchMovieFragment extends Fragment {
         ButterKnife.bind(this, view);
         rvSearchMovie.setLayoutManager(new LinearLayoutManager(getContext()));
         rvSearchMovie.setHasFixedSize(true);
-        searchAdapter = new MovieFavoriteAdapter(getContext());
+        searchAdapter = new MovieFavoriteAdapter(getActivity());
         rvSearchMovie.setAdapter(searchAdapter);
         movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
     }

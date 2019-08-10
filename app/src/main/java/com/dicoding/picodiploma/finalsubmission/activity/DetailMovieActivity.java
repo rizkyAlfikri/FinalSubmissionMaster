@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dicoding.picodiploma.finalsubmission.R;
-import com.dicoding.picodiploma.finalsubmission.adapters.MovieReviewAdapter;
+import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieReviewAdapter;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieTrailerAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieDetail;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenres;
@@ -45,9 +44,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
-import static com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteMovieFragment.RESULT_ADD;
-import static com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteMovieFragment.RESULT_DELETE;
-import static com.dicoding.picodiploma.finalsubmission.utils.ContentValueHelper.getContentValue;
+import static com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteMovieFragment.RESULT_MOVIE_ADD;
+import static com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteMovieFragment.RESULT_MOVIE_DELETE;
+import static com.dicoding.picodiploma.finalsubmission.utils.ContentValueHelper.getContentValueMovie;
 
 public class DetailMovieActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_MOVIE = "extra_movie";
@@ -58,7 +57,6 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
     int movieId;
     private StringBuilder genreBuilder = new StringBuilder();
     private Uri uri;
-    private int position;
     private boolean isFavorite = false;
 
     @BindView(R.id.img_trailer)
@@ -103,8 +101,6 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
     TextView txtTagline;
     @BindView(R.id.linear_movie_trailer)
     FrameLayout frameMovieTrailer;
-    @BindView(R.id.include_review)
-    CardView cardMovieReview;
 
 
     @Override
@@ -115,7 +111,6 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
         String apiKey = Config.API_KEY;
         progressBar.setVisibility(View.VISIBLE);
         progressBar2.setVisibility(View.VISIBLE);
-        position = getIntent().getIntExtra(EXTRA_POSITION, 0);
         uri = getIntent().getData();
 
         if (uri != null) {
@@ -154,18 +149,17 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
         movieViewModel.getMovieTrailer(movieId, apiKey).observe(this, getMovieTrailerData);
         movieViewModel.getMovieReview(movieId, apiKey).observe(this, getMovieReviewData);
         imgFavorite.setOnClickListener(this);
-
-
     }
+
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.img_favorite) {
-
+            int position = getIntent().getIntExtra(EXTRA_POSITION, 0);
             movieResults.setGenre(genreBuilder.toString());
             Intent intent = new Intent();
             intent.putExtra(EXTRA_MOVIE, movieResults);
-            intent.putExtra(EXTRA_MOVIE, position);
+            intent.putExtra(EXTRA_POSITION, position);
 
             if (!isFavorite) {
                 Glide.with(this)
@@ -173,12 +167,12 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
                         .apply(new RequestOptions().override(36, 36))
                         .into(imgFavorite);
 
-                ContentValues values = getContentValue(movieResults);
+                ContentValues values = getContentValueMovie(movieResults);
                 getContentResolver().insert(CONTENT_URI_MOVIE, values);
                 Toast.makeText(this, movieResults.getTitle() + " " +
-                        getString(R.string.add_favorite), Toast.LENGTH_SHORT).show();
+                            getString(R.string.add_favorite), Toast.LENGTH_SHORT).show();
                 isFavorite = true;
-                setResult(RESULT_ADD, intent);
+                setResult(RESULT_MOVIE_ADD, intent);
                 autoUpdateWidget();
 
             } else {
@@ -191,13 +185,15 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
                 Toast.makeText(this, movieResults.getTitle() + " " +
                         getString(R.string.delete_favorite), Toast.LENGTH_SHORT).show();
                 isFavorite = false;
-                setResult(RESULT_DELETE, intent);
+                setResult(RESULT_MOVIE_DELETE, intent);
                 autoUpdateWidget();
             }
         }
     }
 
+
     private final Observer<MovieDetail> getMovieDetailData = this::loadMovieDetail;
+
 
     private final Observer<List<MovieTrailer>> getMovieTrailerData = new Observer<List<MovieTrailer>>() {
         @Override
@@ -207,30 +203,36 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
             progressBar2.setVisibility(View.GONE);
             openYoutubeTrailer(movieTrailers.get(0).getKey());
 
-            ItemClickSupport.addTo(rvMovieVideo).setOnItemClickListener((recyclerView, position, v) -> {
-                Intent appVideoIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("vnd.youtube:" + movieTrailers.get(position).getKey()));
-
-                Intent webVideoIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://www.youtube.com/watch?v=" + movieTrailers.get(position).getKey()));
-                try {
-                    startActivity(appVideoIntent);
-                } catch (ActivityNotFoundException ex) {
-                    startActivity(webVideoIntent);
-                }
-            });
+            ItemClickSupport.addTo(rvMovieVideo).setOnItemClickListener((recyclerView, position, v)
+                    -> openYoutubeMovieVideo(movieTrailers.get(position).getKey()));
         }
     };
+
 
     private final Observer<List<MovieReview>> getMovieReviewData = new Observer<List<MovieReview>>() {
         @Override
         public void onChanged(List<MovieReview> movieReviews) {
             reviewAdapter.setListMovie(movieReviews);
             reviewAdapter.notifyDataSetChanged();
-            ItemClickSupport.addTo(rvMovieReview).setOnItemClickListener(
-                    (recyclerView, position, v) -> showAllReview(movieId));
         }
     };
+
+
+    private void init() {
+        movieId = movieResults.getId();
+        rvMovieVideo.setLayoutManager(new LinearLayoutManager(this,
+                RecyclerView.HORIZONTAL,
+                false));
+
+        rvMovieVideo.setHasFixedSize(true);
+        trailerAdapter = new MovieTrailerAdapter(this);
+        rvMovieVideo.setAdapter(trailerAdapter);
+
+        rvMovieReview.setLayoutManager(new LinearLayoutManager(this));
+        rvMovieReview.setHasFixedSize(true);
+        reviewAdapter = new MovieReviewAdapter(this);
+        rvMovieReview.setAdapter(reviewAdapter);
+    }
 
 
     private void loadMovieDetail(MovieDetail movieDetailData) {
@@ -249,14 +251,14 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
         txtTagline.setText(movieDetailData.getTagline());
 
         for (int i = 0; i < movieDetailData.getGenres().size(); i++) {
-                MovieGenres movieGenres = movieDetailData.getGenres().get(i);
-                if (i < movieDetailData.getGenres().size() - 1) {
-                    txtGenre.append(movieGenres.getName() + ", ");
-                    genreBuilder.append(movieGenres.getName()).append(", ");
-                } else {
-                    txtGenre.append(movieGenres.getName());
-                    genreBuilder.append(movieGenres.getName());
-                }
+            MovieGenres movieGenres = movieDetailData.getGenres().get(i);
+            if (i < movieDetailData.getGenres().size() - 1) {
+                txtGenre.append(movieGenres.getName() + ", ");
+                genreBuilder.append(movieGenres.getName()).append(", ");
+            } else {
+                txtGenre.append(movieGenres.getName());
+                genreBuilder.append(movieGenres.getName());
+            }
         }
 
         String urlPhoto = Config.IMAGE_URL_BASE_PATH + movieDetailData.getPosterPath();
@@ -268,12 +270,27 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
     }
 
 
+    private void openYoutubeMovieVideo(String keyMovie) {
+        Intent appVideoIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("vnd.youtube:" + keyMovie));
+
+        Intent webVideoIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.youtube.com/watch?v=" + keyMovie));
+        try {
+            startActivity(appVideoIntent);
+        } catch (ActivityNotFoundException ex) {
+            startActivity(webVideoIntent);
+        }
+    }
+
+
     public void openYoutubeTrailer(String keyMovie) {
         String urlImage = "https://img.youtube.com/vi/" + keyMovie + "/hqdefault.jpg";
         Glide.with(getApplicationContext())
                 .load(urlImage)
                 .apply(new RequestOptions())
                 .into(imgTrailer);
+
         View view = LayoutInflater.from(this)
                 .inflate(R.layout.layout_movie_trailer, frameMovieTrailer, false);
 
@@ -289,16 +306,9 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
                 startActivity(webTrailerIntent);
             }
         });
-
         frameMovieTrailer.addView(view);
-
     }
 
-    private void showAllReview(int movieId) {
-        Intent reviewIntent = new Intent(this, ReviewMovieActivity.class);
-        reviewIntent.putExtra(ReviewMovieActivity.EXTRA_MOVIE_ID, movieId);
-        startActivity(reviewIntent);
-    }
 
     private void autoUpdateWidget() {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
@@ -306,22 +316,4 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.stack_view);
     }
-
-    private void init() {
-        movieId = movieResults.getId();
-        rvMovieVideo.setLayoutManager(new LinearLayoutManager(this,
-                RecyclerView.HORIZONTAL,
-                false));
-
-        rvMovieVideo.setHasFixedSize(true);
-        trailerAdapter = new MovieTrailerAdapter(this);
-        rvMovieVideo.setAdapter(trailerAdapter);
-
-        rvMovieReview.setLayoutManager(new LinearLayoutManager(this));
-        rvMovieReview.setHasFixedSize(true);
-        reviewAdapter = new MovieReviewAdapter(this, false);
-        rvMovieReview.setAdapter(reviewAdapter);
-    }
-
-
 }

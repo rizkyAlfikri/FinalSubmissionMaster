@@ -16,7 +16,8 @@
     <string name="favorite">Favorite</string>
     <string name="watchlist">Watchlist</string>
     <string name="unfavorite">Unfavorite</string>
-    <string name="no_data">There is no data for now</string>
+    <string name="no_data">There is no movie data for now</string>
+    <string name="no_data_tv">There is no tv show data for now</string>
     <string name="snackbar_delete">Are you sure want to delete this ?</string>
     <string name="undo">Undo</string>
     <string name="add_favorite">has added to your favorite list</string>
@@ -71,4 +72,10 @@
     <string name="details">Details</string>
     <string name="image_trailer">Image Trailer</string>
     <string name="see_all">See All</string>
+    <string name="number_of_seasons">Number of Seasons :</string>
+    <string name="number_of_episodes">Number of Episodes :</string>
+    <string name="language">Language :</string>
+    <string name="no_movie_review">There are still no reviews for this movie</string>
+    <string name="no_tv_review">There are still no reviews for this tv show</string>
+    <string name="delete_item">One item successfully deleted</string>
 </resources>

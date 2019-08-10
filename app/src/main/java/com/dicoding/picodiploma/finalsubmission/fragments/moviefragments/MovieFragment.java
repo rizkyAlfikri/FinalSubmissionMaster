@@ -64,11 +64,6 @@ public class MovieFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.main_movie, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         SearchManager searchManager;
         if (getContext() != null) {
             searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
@@ -82,34 +77,32 @@ public class MovieFragment extends Fragment {
                 SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
-                        searchMovie(query);
-                        return true;
+                        return false;
                     }
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
+                        searchMovie(newText);
                         return false;
                     }
                 };
                 searchView.setOnQueryTextListener(queryTextListener);
 
-                searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-                    @Override
-                    public boolean onClose() {
-                        return true;
-                    }
-                });
             }
-            super.onPrepareOptionsMenu(menu);
+            super.onCreateOptionsMenu(menu, inflater);
         }
     }
 
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.settings) {
+        if (id == R.id.action_setting) {
             Intent settingIntent = new Intent(getContext(), SettingsActivity.class);
             startActivity(settingIntent);
             return true;
@@ -179,10 +172,8 @@ public class MovieFragment extends Fragment {
 
 
     private void searchMovie(String query) {
-        if (query != null) {
             movieViewModel.getQueryMovie(Config.API_KEY, query).observe(this, getQueryData);
-        } else {
-            movieViewModel.getMovieFromRetrofit().observe(this, getMovieData);
+
         }
     }
-}
+

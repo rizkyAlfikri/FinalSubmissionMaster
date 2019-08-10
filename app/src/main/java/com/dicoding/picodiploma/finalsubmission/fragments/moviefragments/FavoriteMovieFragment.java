@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,16 +18,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicoding.picodiploma.finalsubmission.LoadCallback;
 import com.dicoding.picodiploma.finalsubmission.R;
-import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieFavoriteAdapter;
 import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
+import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieFavoriteAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
-import com.dicoding.picodiploma.finalsubmission.utils.ItemClickSupport;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -37,24 +34,21 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity.EXTRA_MOVIE;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCursorToArrayListMovie;
 
 
 public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     private MovieFavoriteAdapter favoriteAdapter;
     private ArrayList<MovieResults> listMovie;
-    private final int REQUEST_UPDATE = 101;
-    public static final int RESULT_ADD = 301;
-    public static final int RESULT_DELETE = 201;
-    private int posisi;
+    public static final int REQUEST_MOVIE_UPDATE = 101;
+    public static final int RESULT_MOVIE_ADD = 301;
+    public static final int RESULT_MOVIE_DELETE = 201;
     @BindView(R.id.rv_movie)
     RecyclerView rvMovie;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-    @BindString(R.string.no_data)
-    String noData;
     @BindString(R.string.snackbar_delete)
     String snackbarDelete;
     @BindString(R.string.undo)
@@ -76,6 +70,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
         rvMovie.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rvMovie.setHasFixedSize(true);
         HandlerThread handlerThread = new HandlerThread("DataObserver");
@@ -84,48 +79,37 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         DataObserver myObserver = new DataObserver(handler, view.getContext());
 
         if (getContext() != null) {
-            getContext().getContentResolver().registerContentObserver(CONTENT_URI_MOVIE, true, myObserver);
+            getContext().getContentResolver()
+                    .registerContentObserver(CONTENT_URI_MOVIE, true, myObserver);
         }
 
-        favoriteAdapter = new MovieFavoriteAdapter(view.getContext());
+        favoriteAdapter = new MovieFavoriteAdapter(getActivity());
         rvMovie.setAdapter(favoriteAdapter);
 
         new LoadMovieAsynTask(getContext(), this).execute();
 
 
-        ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
-            Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + listMovie.get(position).getId());
-            Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
-            intent.setData(uri);
-            intent.putExtra(DetailMovieActivity.EXTRA_POSITION, position);
-            startActivityForResult(intent, REQUEST_UPDATE);
-        });
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, 0) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                posisi = viewHolder.getAdapterPosition();
-            }
-        });
+//        ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
+//            Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + listMovie.get(position).getId());
+//            Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
+//            intent.setData(uri);
+//            intent.putExtra(DetailMovieActivity.EXTRA_POSITION, position);
+//            startActivityForResult(intent, REQUEST_MOVIE_UPDATE);
+//        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_UPDATE) {
-            if (resultCode == RESULT_DELETE) {
+        if (requestCode == REQUEST_MOVIE_UPDATE) {
+            if (resultCode == RESULT_MOVIE_DELETE) {
                 int position = data.getIntExtra(DetailMovieActivity.EXTRA_POSITION, 0);
-                favoriteAdapter.removeItem(posisi);
-                Toast.makeText(getContext(), "Satu item berhasil di hapus", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_ADD) {
+                favoriteAdapter.removeItem(position);
+
+                Toast.makeText(getContext(), getString(R.string.delete_item), Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_MOVIE_ADD) {
                 MovieResults movieResults = data.getParcelableExtra(EXTRA_MOVIE);
                 favoriteAdapter.addItem(movieResults);
-                rvMovie.smoothScrollToPosition(favoriteAdapter.getItemCount() - 1);
             }
         }
     }
@@ -144,6 +128,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         listMovie = mapCursorToArrayListMovie(cursor);
         if (listMovie.size() > 0) {
             favoriteAdapter.setListMovie(listMovie);
+
         } else {
             showToastMessage();
         }
@@ -167,7 +152,8 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         @Override
         protected Cursor doInBackground(Void... voids) {
             Context context = weakContext.get();
-            return context.getContentResolver().query(CONTENT_URI_MOVIE, null, null, null, null);
+            return context.getContentResolver().query(CONTENT_URI_MOVIE,
+                    null, null, null, null);
         }
 
         @Override
@@ -178,7 +164,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     }
 
     private void showToastMessage() {
-        Toast.makeText(rvMovie.getContext(), noData, Toast.LENGTH_LONG).show();
+        Toast.makeText(rvMovie.getContext(), getString(R.string.no_data), Toast.LENGTH_LONG).show();
     }
 
     public static class DataObserver extends ContentObserver {
@@ -195,6 +181,4 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
             new LoadMovieAsynTask(context, (LoadCallback) context).execute();
         }
     }
-
-
 }

@@ -1,6 +1,5 @@
 package com.dicoding.picodiploma.finalsubmission.db.moviedb;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,9 +11,11 @@ import com.dicoding.picodiploma.finalsubmission.db.DatabaseHelper;
 
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.ID;
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.MOVIE_TABLE_NAME;
+import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.TvShowColumns.TV_TABLE_NAME;
 
 public class MovieHelper {
     private static final String DATABASE_TABEL = MOVIE_TABLE_NAME;
+    private static final String DATABASE_TABLE_2 = TV_TABLE_NAME;
     private final DatabaseHelper databaseHelper;
     private static MovieHelper INSTANCE;
 

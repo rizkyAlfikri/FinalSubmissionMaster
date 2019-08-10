@@ -5,8 +5,11 @@ import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenreRes
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResponse;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieReviewResponse;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieTrailerResponse;
+import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowDetail;
 import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowGenreResponse;
 import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowResponse;
+import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowReviewResponse;
+import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowTrailerResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -38,4 +41,17 @@ public interface ApiService {
 
     @GET("genre/tv/list")
     Call<TvShowGenreResponse> getTvGenreApi(@Query("api_key") String apiKey);
+
+    @GET("search/tv")
+    Call<TvShowResponse> getQueryTv(@Query("api_key") String apiKey, @Query("query") String query);
+
+    @GET("tv/{tv_id}")
+    Call<TvShowDetail> getTvDetailApi(@Path("tv_id") int tvId, @Query("api_key") String apikey);
+
+    @GET("tv/{tv_id}/videos")
+    Call<TvShowTrailerResponse> getTvTrailerApi(@Path("tv_id") int tvId, @Query("api_key") String apiKey);
+
+    @GET("tv/{tv_id}/reviews")
+    Call<TvShowReviewResponse> getTvReviewApi(@Path("tv_id") int tvId, @Query("api_key") String apiKey);
+
 }

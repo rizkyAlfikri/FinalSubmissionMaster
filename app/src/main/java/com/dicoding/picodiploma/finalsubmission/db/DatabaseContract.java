@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 
 public class DatabaseContract {
     public static final String AUTHORITY = "com.dicoding.picodiploma.finalsubmission";
+    public static final String AUTHORITY_2 = "com.dicoding.picodiploma.provider.tv";
     private static final String SCHEME = "content";
     public static final String MOVIE_TABLE_NAME = "tableMovie";
     public static final String TV_TABLE_NAME = "tableTv";
@@ -37,7 +38,7 @@ public class DatabaseContract {
     }
 
     public static final class TvShowColumns implements BaseColumns {
-        static final String TV_TABLE_NAME = "tableTv";
+        public static final String TV_TABLE_NAME = "tableTv";
         public static final String ID = "id";
         public static final String TITLE = "title";
         public static final String OVERVIEW = "overview";

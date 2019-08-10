@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.settings) {
+        if (id == R.id.action_setting) {
             Intent settingIntent = new Intent(getContext(), SettingsActivity.class);
             startActivity(settingIntent);
             return true;

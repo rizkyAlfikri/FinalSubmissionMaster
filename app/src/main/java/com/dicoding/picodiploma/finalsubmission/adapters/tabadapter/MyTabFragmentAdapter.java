@@ -32,7 +32,7 @@ public class MyTabFragmentAdapter extends FragmentPagerAdapter {
             case 1:
                 return new FavoriteTvShowFragment();
         }
-        return PlaceholderFragment.newInstance(position + 1);
+        return PlaceholderFragment.newInstance(position);
     }
 
     @Nullable
