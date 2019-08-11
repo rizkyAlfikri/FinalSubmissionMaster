@@ -124,8 +124,7 @@ public class MovieProvider extends ContentProvider {
             case TV_SHOW_ID:
                 tvShowHelper.open();
                 deleted = tvShowHelper.deleteProvider(uri.getLastPathSegment());
-                getContext().getContentResolver().notifyChange(CONTENT_URI_TV,
-                        new FavoriteTvShowFragment.DataObserver(new Handler(), getContext()));
+                getContext().getContentResolver().notifyChange(uri, null);
                 break;
             default:
                 deleted = 0;

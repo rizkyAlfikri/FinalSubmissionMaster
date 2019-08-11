@@ -58,8 +58,10 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
         holder.txtRate.setText(String.valueOf(listMovie.get(position).getVoteAverage()));
         holder.txtDate.setText(String.valueOf(listMovie.get(position).getReleaseDate()));
 
-        String genre = holder.getGenres(listMovie.get(position).getGenreIds());
-        holder.txtGenre.setText(genre);
+        if (listGenreMovie != null) {
+            String genre = holder.getGenres(listMovie.get(position).getGenreIds());
+            holder.txtGenre.setText(genre);
+        }
 
         String urlPhoto = Config.IMAGE_URL_BASE_PATH + listMovie.get(position).getPosterPath();
         Glide.with(context)

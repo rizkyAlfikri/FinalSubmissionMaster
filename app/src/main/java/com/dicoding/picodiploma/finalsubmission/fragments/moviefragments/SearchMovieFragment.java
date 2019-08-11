@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +25,6 @@ import com.dicoding.picodiploma.finalsubmission.utils.Config;
 import com.dicoding.picodiploma.finalsubmission.viewmodels.MovieViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,16 +48,10 @@ public class SearchMovieFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_search_movie, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
     }
 
     @Override
@@ -71,6 +63,11 @@ public class SearchMovieFragment extends Fragment {
         searchAdapter = new MovieFavoriteAdapter(getActivity());
         rvSearchMovie.setAdapter(searchAdapter);
         movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            queryBundle = bundle.getString("key_query");
+            searchQueryMovie(queryBundle);
+        }
     }
 
     @Override
@@ -103,13 +100,17 @@ public class SearchMovieFragment extends Fragment {
     }
 
     private void searchQueryMovie(String query) {
-        movieViewModel.getQueryMovie(Config.API_KEY, query).observe(this, new Observer<List<MovieResults>>() {
-            @Override
-            public void onChanged(List<MovieResults> movieResults) {
-                listMovie.addAll(movieResults);
-                searchAdapter.setListMovie(listMovie);
-                searchAdapter.notifyDataSetChanged();
-            }
+        movieViewModel.getQueryMovie(Config.API_KEY, query).observe(this, movieResults -> {
+            listMovie.addAll(movieResults);
+            searchAdapter.setListMovie(listMovie);
+            searchAdapter.notifyDataSetChanged();
         });
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
+
+
 }

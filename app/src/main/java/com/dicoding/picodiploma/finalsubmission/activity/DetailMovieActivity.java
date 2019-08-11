@@ -44,13 +44,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
-import static com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteMovieFragment.RESULT_MOVIE_ADD;
-import static com.dicoding.picodiploma.finalsubmission.fragments.moviefragments.FavoriteMovieFragment.RESULT_MOVIE_DELETE;
 import static com.dicoding.picodiploma.finalsubmission.utils.ContentValueHelper.getContentValueMovie;
 
 public class DetailMovieActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_MOVIE = "extra_movie";
     public static final String EXTRA_POSITION = "extra_position";
+    public static final int REQUEST_MOVIE_UPDATE = 101;
+    public static final int RESULT_MOVIE_ADD = 301;
+    public static final int RESULT_MOVIE_DELETE = 201;
     private MovieResults movieResults;
     private MovieTrailerAdapter trailerAdapter;
     private MovieReviewAdapter reviewAdapter;

@@ -11,12 +11,14 @@ import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieReview;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieTrailer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieViewModel extends ViewModel {
     private MutableLiveData<List<MovieResults>> listMovie;
     private MutableLiveData<List<MovieGenres>> listMovieGenre;
     private MovieRepository movieRepository;
+    private MutableLiveData<ArrayList<MovieResults>> listCursorMovie;
 
     public MovieViewModel() {
         movieRepository = MovieRepository.getInstance();

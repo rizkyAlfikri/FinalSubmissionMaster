@@ -1,16 +1,23 @@
 package com.dicoding.picodiploma.finalsubmission.fragments.tvshowfragments;
 
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -18,6 +25,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicoding.picodiploma.finalsubmission.R;
+import com.dicoding.picodiploma.finalsubmission.SearchActivity;
 import com.dicoding.picodiploma.finalsubmission.activity.DetailTvShowActivity;
 import com.dicoding.picodiploma.finalsubmission.adapters.tvshowadapter.TvShowAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowGenres;
@@ -56,17 +64,21 @@ public class TvShowFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
+        init(view.getContext());
 
-        rvTvShow.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
-        rvTvShow.setHasFixedSize(true);
-        tvShowAdapter = new TvShowAdapter(getContext());
-        rvTvShow.setAdapter(tvShowAdapter);
-        progressBar.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.main_movie, menu);
+        searchTvShow(menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
-        TvShowViewModel tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
-        tvShowViewModel.getTvFromRetrofit().observe(this, getTvData);
-        tvShowViewModel.getTvGenre().observe(this, getTvGenre);
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     private final Observer<List<TvShowResults>> getTvData = new Observer<List<TvShowResults>>() {
@@ -93,4 +105,64 @@ public class TvShowFragment extends Fragment {
         }
     };
 
+    private void init(Context context) {
+        rvTvShow.setLayoutManager(new GridLayoutManager(context, 2));
+        rvTvShow.setHasFixedSize(true);
+        tvShowAdapter = new TvShowAdapter(getContext());
+        rvTvShow.setAdapter(tvShowAdapter);
+        progressBar.setVisibility(View.VISIBLE);
+
+        TvShowViewModel tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
+        tvShowViewModel.getTvFromRetrofit().observe(this, getTvData);
+        tvShowViewModel.getTvGenre().observe(this, getTvGenre);
+    }
+
+    private void searchTvShow(Menu menu) {
+        SearchManager searchManager;
+        if (getContext() != null) {
+            searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+            if (searchManager != null) {
+                SearchView searchView =
+                        (SearchView) (menu.findItem(R.id.action_movie_search)).getActionView();
+                if (getActivity() != null) {
+                    searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+                }
+
+                searchView.setIconifiedByDefault(true);
+                searchView.setFocusable(true);
+                searchView.setIconified(false);
+                searchView.requestFocusFromTouch();
+                searchView.setQueryHint(getString(R.string.search_tv_hint));
+
+                SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        Intent searchIntent = new Intent(getContext(), SearchActivity.class);
+                        searchIntent.putExtra(SearchActivity.EXTRA_SEARCH, query);
+                        searchIntent.setAction(SearchActivity.TV_SEARCH);
+                        startActivity(searchIntent);
+                        hidekeyboard(searchView);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        return false;
+                    }
+                };
+
+                searchView.setOnQueryTextListener(queryTextListener);
+            }
+        }
+    }
+
+    private void hidekeyboard(SearchView searchView) {
+        if (getContext() != null) {
+            InputMethodManager methodManager = (InputMethodManager)
+                    getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            methodManager.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+        }
+    }
 }
+
+

@@ -53,6 +53,7 @@
     <string name="release_today">is release today</string>
     <string name="search">Search</string>
     <string name="search_movie_hint">Search Movie</string>
+    <string name="search_tv_hint">Search Tv Show</string>
     <string name="SearchMovieActivity">SearchMovieActivity</string>
     <string name="submit">Submit</string>
     <string name="overview_test">"A ticking-time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy. Their concept catches on, with underground \"fight clubs\" forming in every town, until an eccentric gets in the way  and ignites an out-of-control spiral toward oblivion.",</string>
@@ -78,4 +79,6 @@
     <string name="no_movie_review">There are still no reviews for this movie</string>
     <string name="no_tv_review">There are still no reviews for this tv show</string>
     <string name="delete_item">One item successfully deleted</string>
+    <string name="movie_search_result">Movie Search Result</string>
+    <string name="tv_search_result">Tv Show Search Result</string>
 </resources>

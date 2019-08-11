@@ -2,7 +2,6 @@ package com.dicoding.picodiploma.finalsubmission.fragments.moviefragments;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -23,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicoding.picodiploma.finalsubmission.LoadCallback;
 import com.dicoding.picodiploma.finalsubmission.R;
-import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieFavoriteAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 
@@ -34,17 +32,13 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity.EXTRA_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCursorToArrayListMovie;
 
 
 public class FavoriteMovieFragment extends Fragment implements LoadCallback {
+    private static final String EXTRA_STATE = "extra_state";
     private MovieFavoriteAdapter favoriteAdapter;
-    private ArrayList<MovieResults> listMovie;
-    public static final int REQUEST_MOVIE_UPDATE = 101;
-    public static final int RESULT_MOVIE_ADD = 301;
-    public static final int RESULT_MOVIE_DELETE = 201;
     @BindView(R.id.rv_movie)
     RecyclerView rvMovie;
     @BindView(R.id.progress_bar)
@@ -86,7 +80,14 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         favoriteAdapter = new MovieFavoriteAdapter(getActivity());
         rvMovie.setAdapter(favoriteAdapter);
 
-        new LoadMovieAsynTask(getContext(), this).execute();
+        if (savedInstanceState == null) {
+            new LoadMovieAsynTask(getContext(), this).execute();
+        } else {
+            ArrayList<MovieResults> movieResults = savedInstanceState.getParcelableArrayList(EXTRA_STATE);
+            if (movieResults != null) {
+                favoriteAdapter.setListMovie(movieResults);
+            }
+        }
 
 
 //        ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
@@ -98,20 +99,30 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
 //        });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_MOVIE_UPDATE) {
-            if (resultCode == RESULT_MOVIE_DELETE) {
-                int position = data.getIntExtra(DetailMovieActivity.EXTRA_POSITION, 0);
-                favoriteAdapter.removeItem(position);
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == REQUEST_MOVIE_UPDATE) {
+//            if (resultCode == RESULT_MOVIE_DELETE) {
+//                int position = data.getIntExtra(DetailMovieActivity.EXTRA_POSITION, 0);
+//                favoriteAdapter.removeItem(position);
+//                Toast.makeText(getContext(), getString(R.string.delete_item), Toast.LENGTH_SHORT).show();
+//            } else if (resultCode == RESULT_MOVIE_ADD) {
+//                MovieResults movieResults = data.getParcelableExtra(EXTRA_MOVIE);
+//                favoriteAdapter.addItem(movieResults);
+//            }
+//        } else {
+//            int position = data.getIntExtra(DetailMovieActivity.EXTRA_POSITION, 0);
+//            favoriteAdapter.removeItem(position);
+//            Toast.makeText(getContext(),    "delete", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
-                Toast.makeText(getContext(), getString(R.string.delete_item), Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_MOVIE_ADD) {
-                MovieResults movieResults = data.getParcelableExtra(EXTRA_MOVIE);
-                favoriteAdapter.addItem(movieResults);
-            }
-        }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(EXTRA_STATE, favoriteAdapter.getListMovie());
     }
 
     @Override
@@ -125,11 +136,12 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     @Override
     public void postExecute(Cursor cursor) {
         progressBar.setVisibility(View.GONE);
-        listMovie = mapCursorToArrayListMovie(cursor);
+        ArrayList<MovieResults> listMovie = mapCursorToArrayListMovie(cursor);
         if (listMovie.size() > 0) {
             favoriteAdapter.setListMovie(listMovie);
 
         } else {
+            favoriteAdapter.setListMovie(new ArrayList<>());
             showToastMessage();
         }
     }
