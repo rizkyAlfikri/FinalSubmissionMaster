@@ -1,8 +1,6 @@
 package com.dicoding.picodiploma.finalsubmission.adapters.movieadapter;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dicoding.picodiploma.finalsubmission.R;
-import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.utils.Config;
-import com.dicoding.picodiploma.finalsubmission.utils.CustomOnItemClickListener;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity.REQUEST_MOVIE_UPDATE;
-import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 
 public class MovieFavoriteAdapter extends RecyclerView.Adapter<MovieFavoriteAdapter.MovieViewHolder> {
     private Activity activity;
@@ -57,8 +50,12 @@ public class MovieFavoriteAdapter extends RecyclerView.Adapter<MovieFavoriteAdap
         this.listMovie.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, this.listMovie.size());
-        notifyItemRangeRemoved(position, listMovie.size());
-        notifyDataSetChanged();
+
+//        notifyDataSetChanged();
+    }
+
+    public MovieResults getMovieAtPosition(int position) {
+        return listMovie.get(position);
     }
 
 
@@ -81,17 +78,17 @@ public class MovieFavoriteAdapter extends RecyclerView.Adapter<MovieFavoriteAdap
                 .into(holder.imgPhoto);
         holder.txtGenre.setText(listMovie.get(position).getGenre());
 
-        holder.cardView.setOnClickListener(new CustomOnItemClickListener(position, new CustomOnItemClickListener.OnItemClickCallback() {
-            @Override
-            public void onItemClicked(View view, int position) {
-                Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + listMovie.get(position).getId());
-                Intent intent = new Intent(activity, DetailMovieActivity.class);
-                intent.setData(uri);
-                intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, listMovie.get(position));
-                intent.putExtra(DetailMovieActivity.EXTRA_POSITION, holder.getAdapterPosition());
-                activity.startActivityForResult(intent, REQUEST_MOVIE_UPDATE);
-            }
-        }));
+//        holder.cardView.setOnClickListener(new CustomOnItemClickListener(position, new CustomOnItemClickListener.OnItemClickCallback() {
+//            @Override
+//            public void onItemClicked(View view, int position) {
+//                Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + listMovie.get(position).getId());
+//                Intent intent = new Intent(activity, DetailMovieActivity.class);
+//                intent.setData(uri);
+//                intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, listMovie.get(position));
+//                intent.putExtra(DetailMovieActivity.EXTRA_POSITION, holder.getAdapterPosition());
+//                activity.startActivityForResult(intent, REQUEST_MOVIE_UPDATE);
+//            }
+//        }));
 
     }
 

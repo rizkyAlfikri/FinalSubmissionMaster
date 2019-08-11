@@ -2,8 +2,10 @@ package com.dicoding.picodiploma.finalsubmission.fragments.moviefragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,21 +19,27 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicoding.picodiploma.finalsubmission.LoadCallback;
 import com.dicoding.picodiploma.finalsubmission.R;
+import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieFavoriteAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
+import com.dicoding.picodiploma.finalsubmission.utils.ItemClickSupport;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity.EXTRA_MOVIE;
+import static com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity.REQUEST_MOVIE_UPDATE;
+import static com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity.RESULT_MOVIE_ADD;
+import static com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity.RESULT_MOVIE_DELETE;
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCursorToArrayListMovie;
 
@@ -39,14 +47,12 @@ import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCu
 public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     private static final String EXTRA_STATE = "extra_state";
     private MovieFavoriteAdapter favoriteAdapter;
+    private ArrayList<MovieResults> listMovie;
     @BindView(R.id.rv_movie)
     RecyclerView rvMovie;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-    @BindString(R.string.snackbar_delete)
-    String snackbarDelete;
-    @BindString(R.string.undo)
-    String undo;
+
 
     public FavoriteMovieFragment() {
         // Required empty public constructor
@@ -89,34 +95,53 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
             }
         }
 
+        ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
+            Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + listMovie.get(position).getId());
+            Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
+            intent.setData(uri);
+            intent.putExtra(EXTRA_MOVIE, listMovie.get(position));
+            intent.putExtra(DetailMovieActivity.EXTRA_POSITION, position);
+            startActivityForResult(intent, REQUEST_MOVIE_UPDATE);
+        });
 
-//        ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
-//            Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + listMovie.get(position).getId());
-//            Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
-//            intent.setData(uri);
-//            intent.putExtra(DetailMovieActivity.EXTRA_POSITION, position);
-//            startActivityForResult(intent, REQUEST_MOVIE_UPDATE);
-//        });
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                MovieResults movieResults;
+                movieResults = favoriteAdapter.getMovieAtPosition(position);
+                favoriteAdapter.removeItem(position);
+                favoriteAdapter.notifyDataSetChanged();
+                Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + movieResults.getId());
+                if (getContext() != null) {
+                    getContext().getContentResolver().delete(uri, null, null);
+                }
+
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(rvMovie);
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_MOVIE_UPDATE) {
-//            if (resultCode == RESULT_MOVIE_DELETE) {
-//                int position = data.getIntExtra(DetailMovieActivity.EXTRA_POSITION, 0);
-//                favoriteAdapter.removeItem(position);
-//                Toast.makeText(getContext(), getString(R.string.delete_item), Toast.LENGTH_SHORT).show();
-//            } else if (resultCode == RESULT_MOVIE_ADD) {
-//                MovieResults movieResults = data.getParcelableExtra(EXTRA_MOVIE);
-//                favoriteAdapter.addItem(movieResults);
-//            }
-//        } else {
-//            int position = data.getIntExtra(DetailMovieActivity.EXTRA_POSITION, 0);
-//            favoriteAdapter.removeItem(position);
-//            Toast.makeText(getContext(),    "delete", Toast.LENGTH_SHORT).show();
-//        }
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_MOVIE_UPDATE) {
+            if (resultCode == RESULT_MOVIE_DELETE) {
+                int position = data.getIntExtra(DetailMovieActivity.EXTRA_POSITION, 0);
+                favoriteAdapter.removeItem(position);
+                Toast.makeText(getContext(), getString(R.string.delete_item), Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_MOVIE_ADD) {
+                MovieResults movieResults = data.getParcelableExtra(EXTRA_MOVIE);
+                favoriteAdapter.addItem(movieResults);
+            }
+        }
+    }
 
 
     @Override
@@ -136,7 +161,7 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     @Override
     public void postExecute(Cursor cursor) {
         progressBar.setVisibility(View.GONE);
-        ArrayList<MovieResults> listMovie = mapCursorToArrayListMovie(cursor);
+        listMovie = mapCursorToArrayListMovie(cursor);
         if (listMovie.size() > 0) {
             favoriteAdapter.setListMovie(listMovie);
 
