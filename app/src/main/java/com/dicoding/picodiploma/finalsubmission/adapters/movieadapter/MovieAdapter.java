@@ -34,6 +34,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         this.context = context;
     }
 
+    // mengset data movie dan movie genre, lalu melakukan notifikasi ke adapter
     public void setListMovie(List<MovieResults> listMovie, List<MovieGenres> listGenreMovie) {
         this.listMovie = listMovie;
         this.listGenreMovie = listGenreMovie;
@@ -43,20 +44,28 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @NonNull
     @Override
     public MovieAdapter.MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // inflate layout yang akan digunakan oleh adapter
         View view = LayoutInflater.from(context).inflate(R.layout.item_movie, parent, false);
         return new MovieViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MovieAdapter.MovieViewHolder holder, int position) {
+        // menampilkan / mengload data yang telah di tangkap melalui method setListMovie
         holder.txtTitle.setText(listMovie.get(position).getTitle());
         holder.txtRate.setText(String.valueOf(listMovie.get(position).getVoteAverage()));
-        float rating = (float) (listMovie.get(position).getVoteAverage() / 2);
-        holder.ratingBar.setRating(rating);
+
+        // jika listGenreMovie tidak null, maka jalankan method get genre dan hasilnya di load ke txtGenre
         if (listGenreMovie != null) {
             String genre = holder.getGenres(listMovie.get(position).getGenreIds());
             holder.txtGenre.setText(genre);
         }
+
+        // mengatur 5 start rating bar agar bisa menampilkan  data movie vote average
+        float rating = (float) (listMovie.get(position).getVoteAverage() / 2);
+        holder.ratingBar.setRating(rating);
+
+        // load image data
         String urlPhoto = Config.IMAGE_URL_BASE_PATH + listMovie.get(position).getPosterPath();
         Glide.with(context).load(urlPhoto).apply(new RequestOptions()).into(holder.imgPhoto);
 
@@ -64,6 +73,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public int getItemCount() {
+        // jika listMovie tidak null, maka adapter akan menampilkan data yang jumlahnya sama dengan jumlah data listmovie
+        // jika listMovie null, maka adapter tidak akan menampikan data
         if (listMovie != null) {
             return listMovie.size();
         } else {
@@ -72,6 +83,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder {
+        // inisialisasi objek TextView, ImageView dan Ratting Bar
         @BindView(R.id.txt_title)
         TextView txtTitle;
         @BindView(R.id.txt_genre)
@@ -82,11 +94,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         ImageView imgPhoto;
         @BindView(R.id.ratingBar)
         RatingBar ratingBar;
+
         MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
+        // data dari listMovieGenre berupa code integer dari genre movie,
+        // sehingga perlu di diubah terlebih dahulu sebelum ditampilkan
         private String getGenres(List<Integer> genreIds) {
             List<String> movieGenres = new ArrayList<>();
             for (Integer genreId : genreIds) {

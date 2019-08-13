@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicoding.picodiploma.finalsubmission.R;
 
-
+// kelas ini berguna supaya data yang ditampikan pada recyclerview dapat di akses / manipulasi satu per satu
 public class ItemClickSupport {
     private final RecyclerView mRecyclerView;
     private OnItemClickListener mOnItemClickListener;

@@ -81,4 +81,5 @@
     <string name="delete_item">One item successfully deleted</string>
     <string name="movie_search_result">Movie Search Result</string>
     <string name="tv_search_result">Tv Show Search Result</string>
+    <string name="no_release_today">There is no movie in release today</string>
 </resources>

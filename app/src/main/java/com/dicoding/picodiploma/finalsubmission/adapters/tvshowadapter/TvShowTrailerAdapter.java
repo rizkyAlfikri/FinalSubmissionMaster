@@ -28,6 +28,7 @@ public class TvShowTrailerAdapter extends RecyclerView.Adapter<TvShowTrailerAdap
         this.context = context;
     }
 
+    // mengset data tv show lalu melakukan notifikasi ke adapter
     public void setListTvTrailer(List<TvShowTrailer> listTvTrailer) {
         this.listTvTrailer = listTvTrailer;
         notifyDataSetChanged();
@@ -36,12 +37,14 @@ public class TvShowTrailerAdapter extends RecyclerView.Adapter<TvShowTrailerAdap
     @NonNull
     @Override
     public TvShowTrailerAdapter.TvViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // inflate layout yang akan digunakan oleh adapter
         View view = LayoutInflater.from(context).inflate(R.layout.item_movie_trailer, parent, false);
         return new TvViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TvShowTrailerAdapter.TvViewHolder holder, int position) {
+        // mengload data yang telah di tangkap melalui method setListTvTrailer
         holder.txtName.setText(listTvTrailer.get(position).getName());
         String trailerPhoto = "https://img.youtube.com/vi/" + listTvTrailer.get(position).getKey() + "/mqdefault.jpg";
         Glide.with(context).load(trailerPhoto).apply(new RequestOptions()).into(holder.imgTrailer);
@@ -49,6 +52,10 @@ public class TvShowTrailerAdapter extends RecyclerView.Adapter<TvShowTrailerAdap
 
     @Override
     public int getItemCount() {
+        // jika listTvTrailer tidak null dan jumlah datanya tidak lebih sama dengan dari 5,
+        // maka adapter akan menampilkan data yang jumlahnya sama dengan jumlah data listTvTrailer
+        // jika jumlah data di listTvTrailer lebih dari 5, maka adapter akan menampilkan 5 buah data
+        // jika listTvTrailer null, maka adapter tidak akan menampikan data
         if (listTvTrailer != null) {
             if (listTvTrailer.size() >= 5) {
                 return 5;
@@ -61,6 +68,7 @@ public class TvShowTrailerAdapter extends RecyclerView.Adapter<TvShowTrailerAdap
     }
 
     class TvViewHolder extends RecyclerView.ViewHolder {
+        // inisialisasi objek TextView dan ImageView
         @BindView(R.id.txt_name)
         TextView txtName;
         @BindView(R.id.img_trailer)

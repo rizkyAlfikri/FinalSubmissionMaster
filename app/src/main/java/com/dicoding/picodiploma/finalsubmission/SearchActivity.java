@@ -24,7 +24,6 @@ import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenres;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowGenres;
 import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowResults;
-import com.dicoding.picodiploma.finalsubmission.utils.Config;
 import com.dicoding.picodiploma.finalsubmission.utils.ItemClickSupport;
 import com.dicoding.picodiploma.finalsubmission.viewmodels.MovieViewModel;
 import com.dicoding.picodiploma.finalsubmission.viewmodels.TvShowViewModel;
@@ -65,6 +64,7 @@ public class SearchActivity extends AppCompatActivity {
 
         String query = getIntent().getStringExtra(EXTRA_SEARCH);
 
+        // satement dibawah ini berfungsi untuk memisahkan penggunaan search pada masimg masing data
         if (setAction != null) {
             if (setAction.equals(MOVIE_SEARCH)) {
                 initMovie(query);
@@ -77,12 +77,15 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setIconified(false);
         searchView.clearFocus();
 
+        // statement ini befungsi supaya keyboard langsung menghilang setelah user melakukan pencarian pada searc view
         InputMethodManager in = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         in.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
+        // method ini berfungsi untuk melakukan aksi ketika searchview digunakan
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                // apa yang diketika oleh user bisa menjadi query key pada saat request data pencarian ke web service
                 if (setAction != null) {
                     if (setAction.equals(MOVIE_SEARCH)) {
                         queryMovie(query);
@@ -118,7 +121,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
-
+    // statement ini berfungsi untuk menangkap data movie genre dari webservice movieDb,
     private final Observer<List<MovieGenres>> getMovieGenreData = new Observer<List<MovieGenres>>() {
         @Override
         public void onChanged(List<MovieGenres> movieGenres) {
@@ -127,13 +130,15 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
-
+    // statement ini berfungsi untuk menangkap data hasil pencarian tvshow dari webservice movieDb,
     private final Observer<List<TvShowResults>> getTvQueryData = new Observer<List<TvShowResults>>() {
         @Override
         public void onChanged(List<TvShowResults> tvShowResults) {
             tvShowSearchAdapter.setListTv(tvShowResults);
             tvShowSearchAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
+
+            // statement ini membuat data yang ditampilkan dalam recyclerview dapat di access satu persatu
             ItemClickSupport.addTo(rvSearch).setOnItemClickListener((recyclerView, position, v) -> {
                 Uri uri = Uri.parse(CONTENT_URI_TV + "/" + tvShowResults.get(position).getId());
                 Intent intent = new Intent(recyclerView.getContext(), DetailTvShowActivity.class);
@@ -145,7 +150,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
-
+    // statement ini berfungsi untuk menangkap data tv show genre dari webservice movieDb,
     private final Observer<List<TvShowGenres>> getTvGenreData = new Observer<List<TvShowGenres>>() {
         @Override
         public void onChanged(List<TvShowGenres> tvShowGenres) {
@@ -153,7 +158,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
-
+    // inisialisasi adapter movie dan judul action bar
     private void initMovie(String query) {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -166,11 +171,13 @@ public class SearchActivity extends AppCompatActivity {
     }
 
 
+    // method ini berfungsi untuk melakukan request movie ke web service
     private void queryMovie(String query) {
-        movieViewModel.getQueryMovie(Config.API_KEY, query).observe(this, getMovieQueryData);
+        movieViewModel.getQueryMovie(query).observe(this, getMovieQueryData);
         movieViewModel.getMovieGenre().observe(this, getMovieGenreData);
     }
 
+    // inisialisasi adapter tv show dan judul action bar
     private void initTvShow(String query) {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -183,7 +190,7 @@ public class SearchActivity extends AppCompatActivity {
         queryTvShow(query);
     }
 
-
+    // method ini berfungsi untuk melakukan request tv show ke web service
     private void queryTvShow(String query) {
         tvShowViewModel.getTvQuery(query).observe(this, getTvQueryData);
         tvShowViewModel.getTvGenre().observe(this, getTvGenreData);

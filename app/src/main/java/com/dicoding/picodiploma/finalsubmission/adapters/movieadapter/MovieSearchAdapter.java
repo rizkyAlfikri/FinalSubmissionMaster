@@ -34,11 +34,13 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
         this.context = context;
     }
 
+    // mengset data movie  lalu melakukan notifikasi ke adapter
     public void setListMovie(List<MovieResults> listMovie) {
         this.listMovie = listMovie;
         notifyDataSetChanged();
     }
 
+    // mengset data movie genre, lalu melakukan notifikasi ke adapter
     public void setListGenreMovie(List<MovieGenres> listGenreMovie) {
         this.listGenreMovie = listGenreMovie;
         notifyDataSetChanged();
@@ -48,21 +50,25 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // inflate layout yang akan digunakan oleh adapter
         View view = LayoutInflater.from(context).inflate(R.layout.item_search_movie, parent, false);
         return new MovieViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
+        // mengload data yang telah di tangkap melalui method setListMovie
         holder.txtTitle.setText(listMovie.get(position).getTitle());
         holder.txtRate.setText(String.valueOf(listMovie.get(position).getVoteAverage()));
         holder.txtDate.setText(String.valueOf(listMovie.get(position).getReleaseDate()));
 
+        // mengload data movie genre jika listMovieGenre tidak null
         if (listGenreMovie != null) {
             String genre = holder.getGenres(listMovie.get(position).getGenreIds());
             holder.txtGenre.setText(genre);
         }
 
+        // load image data
         String urlPhoto = Config.IMAGE_URL_BASE_PATH + listMovie.get(position).getPosterPath();
         Glide.with(context)
                 .load(urlPhoto)
@@ -72,6 +78,8 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
 
     @Override
     public int getItemCount() {
+        // jika listMovie tidak null, maka adapter akan menampilkan data yang jumlahnya sama dengan jumlah data listmovie
+        // jika listMovie null, maka adapter tidak akan menampikan data
         if (listMovie != null) {
             return listMovie.size();
         } else {
@@ -80,6 +88,7 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder {
+        // inisialisasi objek TextView, ImageView
         @BindView(R.id.txt_title)
         TextView txtTitle;
         @BindView(R.id.txt_date)
@@ -96,6 +105,8 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
             ButterKnife.bind(this, itemView);
         }
 
+        // data dari listMovieGenre berupa code integer dari genre movie,
+        // sehingga perlu di diubah terlebih dahulu sebelum ditampilkan
         private String getGenres(List<Integer> genreIds) {
             List<String> movieGenres = new ArrayList<>();
             for (Integer genreId : genreIds) {

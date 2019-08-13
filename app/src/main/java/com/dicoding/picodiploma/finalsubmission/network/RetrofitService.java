@@ -6,8 +6,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitService {
+    // construct kelas RetrofitService dibuat private, karena akan menggunakan pola singleton
     private static Retrofit retrofit;
 
+    // method dibawah ini berguna untuk pembuatan construct pada kelas ini
     public static <S> S createService(Class<S> serviceClass) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()

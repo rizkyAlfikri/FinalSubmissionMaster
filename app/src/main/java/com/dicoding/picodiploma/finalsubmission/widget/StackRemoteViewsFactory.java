@@ -20,22 +20,23 @@ import java.util.concurrent.ExecutionException;
 
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.widget.MovieFavoriteWidget.EXTRA_ITEM;
+import static com.dicoding.picodiploma.finalsubmission.widget.MovieFavoriteWidget.EXTRA_MOVIE;
 
 public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private final Context context;
-    private int mAppWidgetid;
     private Cursor cursor;
 
     StackRemoteViewsFactory(Context context, Intent intent) {
         this.context = context;
-        this.mAppWidgetid = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+        int mAppWidgetid = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
     }
 
 
     @Override
     public void onCreate() {
-
+        // ketika widget dibuat pertmakali maka data defaultnya yaitu data yang di query / di ambil
+        // di database
         cursor = context.getContentResolver().query(CONTENT_URI_MOVIE
                 , null
                 , null
@@ -46,6 +47,7 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
 
     @Override
     public void onDataSetChanged() {
+        // method ini berguna ketika ada perubahan data di database
         if (cursor != null) {
             cursor.close();
         }
@@ -70,6 +72,7 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
 
     @Override
     public int getCount() {
+        // statement ini berfungsi untuk menampilkan jumlah data yang sesuai dengan jumlah data yang ada di database
         if (cursor != null) {
             return cursor.getCount();
         } else {
@@ -79,6 +82,7 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
 
     @Override
     public RemoteViews getViewAt(int position) {
+        // statement dibawah ini berfungsi untuk mengatur data yang akan di tampilkan di widget
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.movie_widget_item);
         MovieResults movieResults = getMoviePosition(position);
         String urlPhoto = Config.IMAGE_URL_BASE_PATH + movieResults.getPosterPath();
@@ -100,6 +104,7 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
 
         Bundle bundle = new Bundle();
         bundle.putInt(EXTRA_ITEM, position);
+        bundle.putParcelable(EXTRA_MOVIE, movieResults);
         Intent fillIntent = new Intent();
         fillIntent.putExtras(bundle);
 

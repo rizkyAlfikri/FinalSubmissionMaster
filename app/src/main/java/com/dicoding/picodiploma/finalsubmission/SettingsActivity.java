@@ -1,8 +1,6 @@
 package com.dicoding.picodiploma.finalsubmission;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -10,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity implements
         PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -39,10 +36,6 @@ public class SettingsActivity extends AppCompatActivity implements
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean swiftPref = preferences.getBoolean("reminder_movie", false);
-        Toast.makeText(this, Boolean.toString(swiftPref), Toast.LENGTH_SHORT).show();
     }
 
     @Override

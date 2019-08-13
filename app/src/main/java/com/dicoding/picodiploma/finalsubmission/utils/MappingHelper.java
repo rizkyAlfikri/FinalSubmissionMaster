@@ -19,8 +19,11 @@ import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.Movie
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.VOTE_AVERAGE;
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.VOTE_COUNT;
 
+// kelas ini berfungsi untuk mengkonversi data yang diambil dari database
+// karena data yang diambil tersebut berbentuk Cursor, sehingga harus diubah terlebih dahulu ke Object masing - masing
 public class MappingHelper {
 
+    // method ini berfungsi untuk mengubah data cursor movie menjadi data array list movie
     public static ArrayList<MovieResults> mapCursorToArrayListMovie(Cursor movieCursor) {
         ArrayList<MovieResults> movieList = new ArrayList<>();
 
@@ -42,6 +45,7 @@ public class MappingHelper {
         return movieList;
     }
 
+    // method ini berfungsi untuk mengubah data cursor movie menjadi data array list tv show
     public static ArrayList<TvShowResults> mapCursorToArrayListTv(Cursor tvCursor) {
         ArrayList<TvShowResults> tvList = new ArrayList<>();
 

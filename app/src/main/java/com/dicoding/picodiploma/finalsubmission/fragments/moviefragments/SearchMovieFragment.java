@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieFavoriteAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
-import com.dicoding.picodiploma.finalsubmission.utils.Config;
 import com.dicoding.picodiploma.finalsubmission.viewmodels.MovieViewModel;
 
 import java.util.ArrayList;
@@ -33,7 +32,6 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class SearchMovieFragment extends Fragment {
-    public static final String MOVIE_QUERY_EXTRA = "movie_query_extra";
     private String queryBundle;
     private MovieViewModel movieViewModel;
     private MovieFavoriteAdapter searchAdapter;
@@ -100,7 +98,7 @@ public class SearchMovieFragment extends Fragment {
     }
 
     private void searchQueryMovie(String query) {
-        movieViewModel.getQueryMovie(Config.API_KEY, query).observe(this, movieResults -> {
+        movieViewModel.getQueryMovie(query).observe(this, movieResults -> {
             listMovie.addAll(movieResults);
             searchAdapter.setListMovie(listMovie);
             searchAdapter.notifyDataSetChanged();

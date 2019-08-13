@@ -25,14 +25,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TvShowRepository {
+    // inisialisasi ApiService, dan membuat construct movie repository ke dalam
+    // visibility private karena akan menggunakan pola singleton
     private String apiKey = Config.API_KEY;
     private ApiService apiService;
     private static TvShowRepository repository;
 
+    // method constract ini menginisialisasi apiService
     private TvShowRepository(ApiService apiService) {
         this.apiService = apiService;
     }
 
+    // method ini membantu movie reposity melakukan construct
     public static TvShowRepository getInstance() {
         if (repository == null) {
             repository = new TvShowRepository(RetrofitService.createService(ApiService.class));
@@ -40,6 +44,7 @@ public class TvShowRepository {
         return repository;
     }
 
+    // method ini berfungsi untuk mengrequest data tv show ke web service movieDB
     public MutableLiveData<List<TvShowResults>> getTvFromRetrofit() {
         MutableLiveData<List<TvShowResults>> listTv = new MutableLiveData<>();
         apiService.getTvFromApi(apiKey).enqueue(new Callback<TvShowResponse>() {
@@ -50,7 +55,6 @@ public class TvShowRepository {
                         listTv.setValue(response.body().getResults());
                     }
                 }
-                Log.d("Failure Get Tv 1", response.message());
             }
 
             @Override
@@ -59,8 +63,10 @@ public class TvShowRepository {
             }
         });
         return listTv;
+
     }
 
+    // method ini berfungsi untuk mengrequest data tv show genre ke web service movieDB
     public MutableLiveData<List<TvShowGenres>> getTvGenre() {
         MutableLiveData<List<TvShowGenres>> listTvGenre = new MutableLiveData<>();
         apiService.getTvGenreApi(apiKey).enqueue(new Callback<TvShowGenreResponse>() {
@@ -71,7 +77,6 @@ public class TvShowRepository {
                         listTvGenre.setValue(response.body().getGenres());
                     }
                 }
-                Log.d("Failure Get Tv Genre 1", response.message());
             }
 
             @Override
@@ -80,8 +85,10 @@ public class TvShowRepository {
             }
         });
         return listTvGenre;
+
     }
 
+    // method ini berfungsi untuk mengrequest data tv show detail ke web service movieDB
     public MutableLiveData<TvShowDetail> getTvDetail(int tvId) {
         MutableLiveData<TvShowDetail> listTvDetail = new MutableLiveData<>();
         apiService.getTvDetailApi(tvId, apiKey).enqueue(new Callback<TvShowDetail>() {
@@ -92,7 +99,6 @@ public class TvShowRepository {
                         listTvDetail.setValue(response.body());
                     }
                 }
-                Log.d("Failure Get Tv Detail 1", response.message());
             }
 
             @Override
@@ -102,8 +108,10 @@ public class TvShowRepository {
             }
         });
         return listTvDetail;
+
     }
 
+    // method ini berfungsi untuk mengrequest data tv show hasil pencarian user ke web service movieDB
     public MutableLiveData<List<TvShowResults>> getTvQuery(String query) {
         MutableLiveData<List<TvShowResults>> listTvQuery = new MutableLiveData<>();
         apiService.getQueryTv(apiKey, query).enqueue(new Callback<TvShowResponse>() {
@@ -114,7 +122,6 @@ public class TvShowRepository {
                         listTvQuery.setValue(response.body().getResults());
                     }
                 }
-                Log.d("Failure Get Tv Query 1", response.message());
             }
 
             @Override
@@ -123,8 +130,10 @@ public class TvShowRepository {
             }
         });
         return listTvQuery;
+
     }
 
+    // method ini berfungsi untuk mengrequest data tv show video trailer ke web service movieDB
     public MutableLiveData<List<TvShowTrailer>> getTvTrailer(int tvId) {
         MutableLiveData<List<TvShowTrailer>> listTvTrailer = new MutableLiveData<>();
         apiService.getTvTrailerApi(tvId, apiKey).enqueue(new Callback<TvShowTrailerResponse>() {
@@ -145,8 +154,10 @@ public class TvShowRepository {
             }
         });
         return listTvTrailer;
+
     }
 
+    // method ini berfungsi untuk mengrequest data tv show review ke web service movieDB
     public MutableLiveData<List<TvShowReview>> getTvReview(int tvId) {
         MutableLiveData<List<TvShowReview>> listTvReview = new MutableLiveData<>();
         apiService.getTvReviewApi(tvId, apiKey).enqueue(new Callback<TvShowReviewResponse>() {
@@ -166,5 +177,6 @@ public class TvShowRepository {
             }
         });
         return listTvReview;
+
     }
 }

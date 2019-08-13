@@ -25,23 +25,30 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieRepository {
+    // inisialisasi ApiService, dan membuat construct movie repository ke dalam
+    // visibility private karena akan menggunakan pola singleton
     private ApiService apiService;
     private static MovieRepository repository;
+    private String apiKey = Config.API_KEY;
 
+    // method constract ini menginisialisasi apiService
     private MovieRepository(ApiService apiService) {
         this.apiService = apiService;
     }
 
+    // method ini membantu movie reposity melakukan construct
     public static MovieRepository getInstance() {
         if (repository == null) {
             repository = new MovieRepository(RetrofitService.createService(ApiService.class));
         }
         return repository;
+
     }
 
+    // method ini berfungsi untuk mengrequest data movie ke web service movieDB
     public MutableLiveData<List<MovieResults>> getMovieFromRetrofit() {
         MutableLiveData<List<MovieResults>> listMovie = new MutableLiveData<>();
-        apiService.getMovieFromApi(Config.API_KEY).enqueue(new Callback<MovieResponse>() {
+        apiService.getMovieFromApi(apiKey).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
@@ -49,20 +56,21 @@ public class MovieRepository {
                         listMovie.setValue(response.body().getResults());
                     }
                 }
-                Log.d("Failure Get Movie 1", response.message());
             }
 
             @Override
             public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
-                Log.e("Failure Get Movie 2", t.getMessage());
+                Log.e("Failure Get Movie", t.getMessage());
             }
         });
         return listMovie;
+
     }
 
+    // method ini berfungsi untuk mengrequest data movie genre ke web service movieDB
     public MutableLiveData<List<MovieGenres>> getMovieGenre() {
         MutableLiveData<List<MovieGenres>> listGenreMovie = new MutableLiveData<>();
-        apiService.getMovieGenreApi(Config.API_KEY).enqueue(new Callback<MovieGenreResponse>() {
+        apiService.getMovieGenreApi(apiKey).enqueue(new Callback<MovieGenreResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieGenreResponse> call,
                                    @NonNull Response<MovieGenreResponse> response) {
@@ -71,18 +79,19 @@ public class MovieRepository {
                         listGenreMovie.setValue(response.body().getGenres());
                     }
                 }
-                Log.d("Failure Genre Movie 1", response.message());
             }
 
             @Override
             public void onFailure(@NonNull Call<MovieGenreResponse> call, @NonNull Throwable t) {
-                Log.e("Failure Genre Movie 2", t.getMessage());
+                Log.e("Failure Genre Movie", t.getMessage());
             }
         });
         return listGenreMovie;
+
     }
 
-    public MutableLiveData<MovieDetail> getMovieDetail(int movieId, String apiKey) {
+    // method ini berfungsi untuk mengrequest data movie detail ke web service movieDB
+    public MutableLiveData<MovieDetail> getMovieDetail(int movieId) {
         MutableLiveData<MovieDetail> listDetailMovie = new MutableLiveData<>();
         apiService.getMovieDetailApi(movieId, apiKey).enqueue(new Callback<MovieDetail>() {
             @Override
@@ -92,7 +101,6 @@ public class MovieRepository {
                         listDetailMovie.setValue(response.body());
                     }
                 }
-                Log.d("Failure Detail Movie 1", response.message());
             }
 
             @Override
@@ -101,9 +109,11 @@ public class MovieRepository {
             }
         });
         return listDetailMovie;
+
     }
 
-    public MutableLiveData<List<MovieTrailer>> getMovieTrailer(int movieId, String apiKey) {
+    // method ini berfungsi untuk mengrequest data movie video trailer ke web service movieDB
+    public MutableLiveData<List<MovieTrailer>> getMovieTrailer(int movieId) {
         MutableLiveData<List<MovieTrailer>> listTrailerMovie = new MutableLiveData<>();
         apiService.getMovieTrailerApi(movieId, apiKey).enqueue(new Callback<MovieTrailerResponse>() {
             @Override
@@ -113,7 +123,6 @@ public class MovieRepository {
                         listTrailerMovie.setValue(response.body().getResults());
                     }
                 }
-                Log.d("Failure Trailer Movie 1", response.message());
             }
 
             @Override
@@ -122,9 +131,11 @@ public class MovieRepository {
             }
         });
         return listTrailerMovie;
+
     }
 
-    public MutableLiveData<List<MovieReview>> getMovieReview(int movieId, String apiKey) {
+    // method ini berfungsi untuk mengrequest data movie review ke web service movieDB
+    public MutableLiveData<List<MovieReview>> getMovieReview(int movieId) {
         MutableLiveData<List<MovieReview>> listReviewMovie = new MutableLiveData<>();
         apiService.getMovieReviewApi(movieId, apiKey).enqueue(new Callback<MovieReviewResponse>() {
             @Override
@@ -134,7 +145,6 @@ public class MovieRepository {
                         listReviewMovie.setValue(response.body().getResults());
                     }
                 }
-                Log.d("Failure Review Movie 1", response.message());
             }
 
             @Override
@@ -143,9 +153,11 @@ public class MovieRepository {
             }
         });
         return listReviewMovie;
+
     }
 
-    public MutableLiveData<List<MovieResults>> getQueryMovie(String apiKey, String queryResult) {
+    // method ini berfungsi untuk mengrequest data movie hasil pencarian user ke web service movieDB
+    public MutableLiveData<List<MovieResults>> getQueryMovie(String queryResult) {
         MutableLiveData<List<MovieResults>> listQueryMovie = new MutableLiveData<>();
         apiService.getQueryMovie(apiKey, queryResult).enqueue(new Callback<MovieResponse>() {
             @Override
@@ -155,7 +167,6 @@ public class MovieRepository {
                         listQueryMovie.setValue(response.body().getResults());
                     }
                 }
-                Log.d("Failure Query Movie", response.message());
             }
 
             @Override
@@ -164,5 +175,6 @@ public class MovieRepository {
             }
         });
         return listQueryMovie;
+
     }
 }

@@ -14,7 +14,6 @@ import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieReview;
 
 import java.util.List;
 
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -22,11 +21,11 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     private Context context;
     private List<MovieReview> listMovie;
 
-
     public MovieReviewAdapter(Context context) {
         this.context = context;
     }
 
+    // mengset data movie lalu melakukan notifikasi ke adapter
     public void setListMovie(List<MovieReview> listMovie) {
         this.listMovie = listMovie;
         notifyDataSetChanged();
@@ -35,19 +34,22 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     @NonNull
     @Override
     public MovieReviewAdapter.MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // inflate layout yang akan digunakan oleh adapter
         View view = LayoutInflater.from(context).inflate(R.layout.item_movie_review, parent, false);
         return new MovieViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MovieReviewAdapter.MovieViewHolder holder, int position) {
+        // mengload data yang telah di tangkap melalui method setListMovie
         holder.txtAuthor.setText(listMovie.get(position).getAuthor());
         holder.txtContent.setText(listMovie.get(position).getContent());
-
     }
 
     @Override
     public int getItemCount() {
+        // jika listMovie tidak null, maka adapter akan menampilkan data yang jumlahnya sama dengan jumlah data listmovie
+        // jika listMovie null, maka adapter tidak akan menampikan data
         if (listMovie != null) {
             return listMovie.size();
         } else {
@@ -56,12 +58,11 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder {
+        // inisialisasi objek TextView,
         @BindView(R.id.txt_author)
         TextView txtAuthor;
         @BindView(R.id.txt_content)
         TextView txtContent;
-        @BindString(R.string.no_movie_review)
-        String noReview;
 
         MovieViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -69,23 +69,11 @@ public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        rvTv.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        rvTv.setHasFixedSize(true);
-        HandlerThread handlerThread = new HandlerThread("Data Observer");
-        handlerThread.start();
-        Handler handler = new Handler(handlerThread.getLooper());
-        DataObserver myObserver = new DataObserver(handler, view.getContext());
+        // method ini berfungsi untuk inisialisasi Adapter, Recyclerview
+        init();
 
-        if (getContext() != null) {
-            getContext().getContentResolver()
-                    .registerContentObserver(CONTENT_URI_TV, true, myObserver);
-        }
-
-        favoriteAdapter = new TvShowFavoriteAdapter(view.getContext());
-        rvTv.setAdapter(favoriteAdapter);
-
-        new LoadTvAsynTask(getContext(), this).execute();
-
+        // statement ini berfungsi supaya user dapat mengakses setiap data
+        // ketika data telah dipilih maka detail activity dari data yang dipilih akan ditampilkan
         ItemClickSupport.addTo(rvTv).setOnItemClickListener((recyclerView, position, v) -> {
             Uri uri = Uri.parse(CONTENT_URI_TV + "/" + listTvShow.get(position).getId());
             Intent intent = new Intent(recyclerView.getContext(), DetailTvShowActivity.class);
@@ -98,6 +86,8 @@ public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        // method ini digunakan untuk notifikasi ke adapter setiap kali ada penambahan atau pengurangan data
         if (requestCode == REQUEST_TV_UPDATE) {
             if (resultCode == RESULT_TV_DELETE) {
                 if (data != null) {
@@ -116,7 +106,16 @@ public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // method ini akan dijalankan ketika fragment berada di state onResume
+        // statement ini akan menjalankan query ke database
+        new LoadTvAsynTask(getContext(), this).execute();
+    }
+
+    @Override
     public void preExecute() {
+        // method ini akan menjalankan progress bar, sebagai penanda bahwa data sedang di load dari database
         if (getActivity() != null) {
             getActivity().runOnUiThread(()
                     -> progressBar.setVisibility(View.VISIBLE));
@@ -125,6 +124,8 @@ public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
 
     @Override
     public void postExecute(Cursor cursor) {
+        // method ini merupakan hasil output dari kelas LoadTvAsynTask
+        // statement dibawah ini berfungsi untuk memproses data yang telah di query dari database lalu datanya akan ditampilkan melalui adapter
         progressBar.setVisibility(View.GONE);
         if (cursor != null) {
             listTvShow = mapCursorToArrayListTv(cursor);
@@ -136,6 +137,28 @@ public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
         }
     }
 
+    // method ini berisi inisialisasi RecyclerView, HandlerThread dan Adapter
+    private void init() {
+        rvTv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvTv.setHasFixedSize(true);
+        HandlerThread handlerThread = new HandlerThread("Data Observer");
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        DataObserver myObserver = new DataObserver(handler, getContext());
+
+        if (getContext() != null) {
+            getContext().getContentResolver()
+                    .registerContentObserver(CONTENT_URI_TV, true, myObserver);
+        }
+
+        favoriteAdapter = new TvShowFavoriteAdapter(getContext());
+        rvTv.setAdapter(favoriteAdapter);
+
+        new LoadTvAsynTask(getContext(), this).execute();
+
+    }
+
+    // class ini bertugas untuk melakukan proses query data ke database dengan menggunakan worker thread
     private static class LoadTvAsynTask extends AsyncTask<Void, Void, Cursor> {
         private final WeakReference<Context> weakContext;
         private final WeakReference<LoadCallback> weakCallback;

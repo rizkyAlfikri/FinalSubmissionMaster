@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.SearchActivity;
+import com.dicoding.picodiploma.finalsubmission.SettingsActivity;
 import com.dicoding.picodiploma.finalsubmission.activity.DetailTvShowActivity;
 import com.dicoding.picodiploma.finalsubmission.adapters.tvshowadapter.TvShowAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowGenres;
@@ -71,16 +72,28 @@ public class TvShowFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // inflate menu xml yang akan digunakan
         inflater.inflate(R.menu.main_movie, menu);
+
+        // method ini berfungsi umtuk melakukan pencarian data
         searchTvShow(menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_setting) {
+            // ketika tombol action_setting di tekan, maka akan menampilkan activity pengaturan
+            Intent settingIntent = new Intent(getContext(), SettingsActivity.class);
+            startActivity(settingIntent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
+    // statement ini berfungsi untuk menangkap data tv show dari webservice movieDb,
+    // data yang telah di tangkap akan di masukan ke  tv show adapter yang nantinya akan di tampilkan
     private final Observer<List<TvShowResults>> getTvData = new Observer<List<TvShowResults>>() {
         @Override
         public void onChanged(List<TvShowResults> tvShowResults) {
@@ -97,6 +110,8 @@ public class TvShowFragment extends Fragment {
         }
     };
 
+    // statement ini berfungsi untuk menangkap data tv show genre dari webservice movieDb,
+    // data yang telah di tangkap akan di masukan ke tv show genre adapter yang nantinya akan di tampilkan
     private final Observer<List<TvShowGenres>> getTvGenre = new Observer<List<TvShowGenres>>() {
         @Override
         public void onChanged(List<TvShowGenres> tvShowGenres) {
@@ -105,6 +120,7 @@ public class TvShowFragment extends Fragment {
         }
     };
 
+    // method ini berfungsi untuk meng inisialisasi RecyclerView, Adapter dan ViewModel
     private void init(Context context) {
         rvTvShow.setLayoutManager(new GridLayoutManager(context, 2));
         rvTvShow.setHasFixedSize(true);
@@ -117,6 +133,7 @@ public class TvShowFragment extends Fragment {
         tvShowViewModel.getTvGenre().observe(this, getTvGenre);
     }
 
+    // method ini berfungsi untuk melakukan pencarian data
     private void searchTvShow(Menu menu) {
         SearchManager searchManager;
         if (getContext() != null) {
@@ -156,6 +173,7 @@ public class TvShowFragment extends Fragment {
         }
     }
 
+    // method ini berfungsi untuk menghilangkan keyboard setiap kali user melakukan pencarian data
     private void hidekeyboard(SearchView searchView) {
         if (getContext() != null) {
             InputMethodManager methodManager = (InputMethodManager)

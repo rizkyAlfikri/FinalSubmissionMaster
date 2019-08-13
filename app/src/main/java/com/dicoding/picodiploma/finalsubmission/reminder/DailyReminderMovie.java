@@ -47,19 +47,22 @@ public class DailyReminderMovie extends BroadcastReceiver {
     public DailyReminderMovie() {
     }
 
+    // method ini akan di jalankan ketika pendingIntent.getBroadcast di panggil
     @Override
     public void onReceive(Context context, Intent intent) {
+        // method ini berfungsi untuk mendapatkan data date release movie
         getReleaseDateMovie(context);
     }
 
     private void getReleaseDateMovie(Context context) {
+        // inisialisasi dan menentukan format date untuk tanggal bulan dan tahun hari ini
         Date date = Calendar.getInstance().getTime();
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateToday = sdf.format(date);
 
+        // method ini berfungsi untuk mengrequest data release date movie ke web service
         ApiService apiService = RetrofitService.createService(ApiService.class);
-
         apiService.getMovieFromApi(Config.API_KEY).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
@@ -67,18 +70,22 @@ public class DailyReminderMovie extends BroadcastReceiver {
                     if (response.body() != null) {
                         if (response.body().getResults() != null) {
                             tmpMovie = response.body().getResults();
+                            // looping ini berfungsi adakah move yang waktu release date nya sama waktu sekarang
+                            // jika ada tambahkan movie dengan release date yang sesuai ke listMovie
                             for (MovieResults movieResults : tmpMovie) {
                                 String movieDate = movieResults.getReleaseDate();
                                 if (movieDate.equals(dateToday)) {
                                     listMovie.add(movieResults);
                                 }
                             }
+                            // method ini berfungsi untuk memunculkan notifikasi
                             showReminderNotifcation(context);
                         }
                     }
                 }
             }
 
+            // error ini akan berjalan ketika aplikasi gagal mengrequest data ke web service movie db
             @Override
             public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
                 Log.e("Failure", t.getMessage());
@@ -86,7 +93,9 @@ public class DailyReminderMovie extends BroadcastReceiver {
         });
     }
 
+    // method ini berfungsi untuk memunculkan notifikasi
     private void showReminderNotifcation(Context context) {
+        // inisialisasi channel id, nama channel, judul notifikasi, pesan notifikasi, dan intent
         int REQUST_CODE_MOVIE = 111;
         String CHANNEL_ID = "Channel_2";
         String CHANNEL_NAME = "Reminder Movie Date Channel";
@@ -95,10 +104,12 @@ public class DailyReminderMovie extends BroadcastReceiver {
         Intent intent;
         PendingIntent pendingIntent;
 
+        // statement ini berfungsi supaya notifikasi kita dapat berjalan di sistem android
         NotificationManager notificationManager
                 = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
 
+        // statement ini berfungsi supaya notifikasi yang telah dibuat dapat berjalan di android dengan OS Oreo ke atas
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME,
                     NotificationManager.IMPORTANCE_DEFAULT);
@@ -111,11 +122,16 @@ public class DailyReminderMovie extends BroadcastReceiver {
                 notificationManager.createNotificationChannel(channel);
             }
         }
-
+        // mengset bunyi notifikasi, disini menggunakan bunyi default notifikasi pada sistem android
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        // set bitmap untuk icon besar di notifikasi
         Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.baseline_notification_important_white_48dp);
 
+        // statement ini berfungsi untuk  menentukan jumlah notifikasi yang akan dimunculkan
+        // jumlah notifikasi akan sesuai dengan jumlah data yang ada di listMovie. isi dari setiap notifikasi akan sesuai dengan data movie yang ada di listMovie
+        // jika listMovie = 0, notifikasi akan tetap di munculkan tetapi dengan data yang berbeda
         int numMovie;
         if (listMovie.size() > 0) {
             numMovie = listMovie.size();
@@ -124,24 +140,27 @@ public class DailyReminderMovie extends BroadcastReceiver {
         }
 
         if (numMovie == 0) {
+            // statement dibawah ini akan berjalan jika data dari listMovie = 0
             intent = new Intent(context, MainActivity.class);
             pendingIntent = TaskStackBuilder.create(context)
                     .addNextIntent(intent)
                     .getPendingIntent(REQUST_CODE_MOVIE, PendingIntent.FLAG_UPDATE_CURRENT);
-            message = "There is no movie in release today";
-            builder.setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                    .setLargeIcon(bmp)
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                    .setSound(alarmSound)
-                    .setContentIntent(pendingIntent)
+            message = context.getString(R.string.no_release_today);
+            builder.setSmallIcon(R.drawable.ic_notifications_black_24dp) // set small icon untuk notifikasi
+                    .setLargeIcon(bmp) // set large icon untuk notifikasi
+                    .setContentTitle(title) // set judul untuk notifikasi
+                    .setContentText(message) // set pesan untuk notifikasi
+                    .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000}) // set pola getar ketika notifikasi muncul
+                    .setSound(alarmSound) // set bunyi ketika notifikasi muncul
+                    .setContentIntent(pendingIntent) // set pending intent untuk notifikasi
                     .setAutoCancel(true);
 
+            // statement ini berfungsi supaya notifikasi yang telah dibuat dapat berjalan di bawah android dengan OS Oreo ke bawah
             if (notificationManager != null) {
                 notificationManager.notify(0, builder.build());
             }
         } else {
+            // statement dibawah ini akan berfungsi ketika ada data di dalam listMovie
             intent = new Intent(context, DetailMovieActivity.class);
             for (int i = 0; i < listMovie.size(); i++) {
                 intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, listMovie.get(i));
@@ -164,24 +183,29 @@ public class DailyReminderMovie extends BroadcastReceiver {
         }
     }
 
-
+    // method ini berfungsi untuk mengaktifkan fitur notifikasi release date movie pada aplikasi
     public void setReminderMovie(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, DailyReminderMovie.class);
+
+        // method ini berfungsi untuk mengatur waktu kapan notifikasi akan dimunculkan
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.HOUR_OF_DAY, 8); // waktu yang di set adalah pukul 7 pagi
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
+        // pending intent ini  akan menjalankan fungsi onReceive
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, ID_MOVIE, intent, 0);
+
+        // statement ini berfungsi untuk mengatur jeda waktu notifikasi muncul
+        // jeda waktu yang digunakan adalah sehari
         if (alarmManager != null) {
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pendingIntent);
         }
-
-        Toast.makeText(context, context.getString(R.string.repeating_movie), Toast.LENGTH_SHORT).show();
     }
 
+    // method ini berfungsi untuk mengcancel / mematikan fitur notifikasi pada app
     public void cancelReminderMovie(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, DailyReminderMovie.class);

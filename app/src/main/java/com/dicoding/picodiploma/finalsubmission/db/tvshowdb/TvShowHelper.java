@@ -13,16 +13,19 @@ import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.TvSho
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.TvShowColumns.TV_TABLE_NAME;
 
 public class TvShowHelper {
+    // inisialisasi nama table, database helper, SQLiteDatabase dan tv show helper
     private static final String DATABASE_TABLE = TV_TABLE_NAME;
     private final DatabaseHelper databaseHelper;
     private static TvShowHelper INSTANCE;
 
     private SQLiteDatabase database;
 
+    // contruct movie helper dibuat private supaya menjadi singleton
     private TvShowHelper(Context context) {
         databaseHelper = new DatabaseHelper(context);
     }
 
+    // method ini berfungsi untuk membatu movie helper melakukan inisialisasi
     public static TvShowHelper getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (SQLiteOpenHelper.class) {
@@ -34,10 +37,12 @@ public class TvShowHelper {
         return INSTANCE;
     }
 
+    // method ini berfungsi untuk membuka koneksi ke database
     public void open() throws SQLException {
         database = databaseHelper.getWritableDatabase();
     }
 
+    // method ini berfungsi untuk menutup koneksi ke database
     public void close() {
         database.close();
         if (database.isOpen()) {
@@ -45,6 +50,7 @@ public class TvShowHelper {
         }
     }
 
+    // method ini nantinya digunakan untuk meng-query data berdasarkan id data
     public Cursor queryByIdProvider(String id) {
         return database.query(DATABASE_TABLE, null
                 , ID + " = ?"
@@ -55,6 +61,7 @@ public class TvShowHelper {
                 , null);
     }
 
+    // method ini nantinya digunakan untuk meng-query data
     public Cursor queryProvider() {
         return database.query(DATABASE_TABLE
                 , null
@@ -65,10 +72,12 @@ public class TvShowHelper {
                 , null);
     }
 
+    // method ini berfungsi untuk melakukan insert data ke table
     public long insertProvider(ContentValues values) {
         return database.insert(DATABASE_TABLE, null, values);
     }
 
+    // method ini berfungsi untuk melakukan delete data berdasarkan id data
     public int deleteProvider(String id) {
         return database.delete(DATABASE_TABLE, ID + " = ?", new String[]{id});
     }

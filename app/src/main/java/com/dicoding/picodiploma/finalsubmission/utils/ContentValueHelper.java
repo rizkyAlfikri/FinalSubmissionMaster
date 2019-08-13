@@ -17,7 +17,11 @@ import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.Movie
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.VOTE_AVERAGE;
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.MovieColumns.VOTE_COUNT;
 
+// kelas ini berfungsi untuk mengkonversi movie data dan tv show data menjadi content value
+// dikarenakan data yang tersimpan di database harus ber bentuk content value
 public class ContentValueHelper {
+
+    // method ini berfungsi untuk mengubah data movie menjadi content value
     public static ContentValues getContentValueMovie(MovieResults movieResults) {
         ContentValues values = new ContentValues();
         values.put(ID, movieResults.getId());
@@ -33,6 +37,7 @@ public class ContentValueHelper {
         return values;
     }
 
+    // method ini berfungsi untuk mengubah data tv show menjadi content value
     public static ContentValues getContentValueTv(TvShowResults tvShowResults) {
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.TvShowColumns.ID, tvShowResults.getId());

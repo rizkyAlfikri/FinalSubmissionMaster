@@ -72,7 +72,10 @@ public class MovieFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // inflate menu xml yang akan digunakan
         inflater.inflate(R.menu.main_movie, menu);
+
+        // method ini berfungsi umtuk melakukan pencarian data
         searchMovie(menu);
         super.onCreateOptionsMenu(menu, inflater);
 
@@ -82,13 +85,17 @@ public class MovieFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_setting) {
+            // ketika tombol action_setting di tekan, maka akan menampilkan activity pengaturan
             Intent settingIntent = new Intent(getContext(), SettingsActivity.class);
             startActivity(settingIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);
+
     }
 
+    // statement ini berfungsi untuk menangkap data movie dari webservice movieDb,
+    // data yang telah di tangkap akan di masukan ke  movie adapter yang nantinya akan di tampilkan
     private final Observer<List<MovieResults>> getMovieData = new Observer<List<MovieResults>>() {
         @Override
         public void onChanged(List<MovieResults> movieResults) {
@@ -96,6 +103,9 @@ public class MovieFragment extends Fragment {
             movieAdapter.notifyDataSetChanged();
             rvMovie.setAdapter(movieAdapter);
             progressBar.setVisibility(View.GONE);
+
+            // statement ini berfungsi supaya user dapat mengakses setiap data yang ditampilkan oleh movie adapter
+            // lalu ketika sudah dipilih, maka akan menampilkan detail activity
             ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
                 Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + movieResults.get(position).getId());
                 Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
@@ -106,6 +116,8 @@ public class MovieFragment extends Fragment {
         }
     };
 
+    // statement ini berfungsi untuk menangkap data movie genre dari webservice movieDb,
+    // data yang telah di tangkap akan di masukan ke movie genre adapter yang nantinya akan di tampilkan
     private final Observer<List<MovieGenres>> getGenreMovieData = new Observer<List<MovieGenres>>() {
         @Override
         public void onChanged(List<MovieGenres> movieGenresData) {
@@ -113,6 +125,7 @@ public class MovieFragment extends Fragment {
         }
     };
 
+    // method ini berfungsi untuk meng inisialisasi RecyclerView, Adapter dan ViewModel
     private void init(Context context) {
         progressBar.setVisibility(View.VISIBLE);
         rvMovie.setLayoutManager(new GridLayoutManager(context, 2));
@@ -124,6 +137,7 @@ public class MovieFragment extends Fragment {
         movieViewModel.getMovieFromRetrofit().observe(this, getMovieData);
     }
 
+    // method ini berfungsi untuk menghilangkan keyboard setiap kali user melakukan pencarian data
     private void hidekeyboard(SearchView searchView) {
         if (getContext() != null) {
             InputMethodManager methodManager = (InputMethodManager)
@@ -132,6 +146,7 @@ public class MovieFragment extends Fragment {
         }
     }
 
+    // method ini berfungsi untuk melakukan pencarian data
     private void searchMovie(Menu menu) {
         SearchManager searchManager;
         if (getContext() != null) {

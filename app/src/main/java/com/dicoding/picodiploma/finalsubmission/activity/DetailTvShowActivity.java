@@ -54,7 +54,6 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
     int tvId;
     private StringBuilder genreBuilder = new StringBuilder();
     private Uri uri;
-    private int position;
     private boolean isFavorite = false;
 
     @BindView(R.id.img_trailer)
@@ -110,9 +109,12 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
         ButterKnife.bind(this);
         progressBar.setVisibility(View.VISIBLE);
         progressBar2.setVisibility(View.VISIBLE);
-        position = getIntent().getIntExtra(EXTRA_POSITION, 0);
+
+        // uri ini menangkap data yang dikirim melalui objek intent dari TvShowFragment
         uri = getIntent().getData();
 
+        // cek apakah movie sudah ada di database atau belum, jika sudah ada ambil data yang sesuai yang ada di database
+        // lalu masukan ke tvShowResults
         if (uri != null) {
             Cursor cursor = getContentResolver().query(uri,
                     null, null, null, null);
@@ -122,6 +124,8 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
             }
         }
 
+        // jika belum ada ambil data dari objek intent yang sudah dikirim sebelumnya oleh TvShowFragment
+        // variabel isFavorite digunakan sebagai flag apakah data sudah ada atau belum di database
         if (tvShowResults != null) {
             isFavorite = true;
         } else {
@@ -129,24 +133,24 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
             tvShowResults = getIntent().getParcelableExtra(EXTRA_TV);
         }
 
+        // inisialisasi recycvleview, adapter, dan viewmodel
         init();
 
+        // icon favorite ini berfungsi sebagai petanda apakah data sudah ada atau belum di database
         if (isFavorite) {
+            // jika data sebelumnnya sudah ada di database, maka icon favorite akan  seperti dibawah ini
             Glide.with(this)
                     .load(R.drawable.ic_favorite_black_24dp)
                     .apply(new RequestOptions().override(36, 36))
                     .into(imgFavorite);
         } else {
+            // jika data sebelumnnya tidak ada di database maka  icon favorite akan seperti dibawah ini
             Glide.with(this)
                     .load(R.drawable.ic_favorite_border_black_24dp)
                     .apply(new RequestOptions().override(36, 36))
                     .into(imgFavorite);
         }
 
-        TvShowViewModel tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
-        tvShowViewModel.getTvDetail(tvId).observe(this, getTvDetailData);
-        tvShowViewModel.getTvTrailer(tvId).observe(this, getTvTrailerData);
-        tvShowViewModel.getTvReview(tvId).observe(this, getTvReviewData);
         imgFavorite.setOnClickListener(this);
     }
 
@@ -154,58 +158,83 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.img_favorite) {
+            // menyimpan data position yang dikirim dari TvShowFragment, dimana nantinya data ini akan dikirim ke FavoriteTvShow
+            // menset data genre ke object tvShowResult
+            int position = getIntent().getIntExtra(EXTRA_POSITION, 0);
             tvShowResults.setGenre(genreBuilder.toString());
+
+            // memasukan data movieResult dan  position kedalam object intent
             Intent intent = new Intent();
             intent.putExtra(EXTRA_TV, tvShowResults);
             intent.putExtra(EXTRA_POSITION, position);
 
             if (!isFavorite) {
+                // jika  data belum ada di database, maka akan menjalankan program dibawah ini
                 Glide.with(this)
                         .load(R.drawable.ic_favorite_black_24dp)
                         .apply(new RequestOptions().override(36, 36))
                         .into(imgFavorite);
+
+                // object tvShowsResult akan di konversi menjadi objet Content Value,
+                // object content value inilah yang nantinya akan dimasukan ke database
                 ContentValues values = getContentValueTv(tvShowResults);
+
+                // memasukan object Content value ke database
                 getContentResolver().insert(CONTENT_URI_TV, values);
                 Toast.makeText(this, tvShowResults.getName() + getString(R.string.add_favorite),
                         Toast.LENGTH_SHORT).show();
 
                 isFavorite = true;
+
+                // Intent yang telah dibuat tadi dikirim ke Favorite TvShow dengan Flag RESULT_TV_ADD
+                // statement ini berfungsi untuk animasi penambahan data di recyclerview
                 setResult(RESULT_TV_ADD, intent);
 
             } else {
+                // jika  data belum ada di database, maka akan menjalankan program dibawah ini
                 Glide.with(this)
                         .load(R.drawable.ic_favorite_border_black_24dp)
                         .apply(new RequestOptions().override(36, 36))
                         .into(imgFavorite);
 
+                // mendelete data tvShow  yang telah tersimpan di database
                 getContentResolver().delete(uri, null, null);
                 Toast.makeText(this, tvShowResults.getName() + getString(R.string.delete_favorite),
                         Toast.LENGTH_SHORT).show();
                 isFavorite = false;
+
+                // Intent yang telah dibuat tadi dikirim ke Favorite Movie dengan Flag Movie RESULT_MOVIE_DELETE
+                // statement ini berfungsi untuk animasi penghapusan data di recyclerview
                 setResult(RESULT_TV_DELETE, intent);
 
             }
         }
     }
 
-
+    // statement ini berfungsi untuk menangkap data tv show detail dari webservice movieDb,
+    // data yang telah di tangkap dijadikan parameter oleh method loadTvShowDetail
     private final Observer<TvShowDetail> getTvDetailData = this::loadTvShowDetail;
 
-
+    // statement ini berfungsi untuk menangkap data tv show trailer dari webservice movieDb,
     private final Observer<List<TvShowTrailer>> getTvTrailerData = new Observer<List<TvShowTrailer>>() {
         @Override
         public void onChanged(List<TvShowTrailer> tvShowTrailers) {
+            // load data tvShowTrailer ke adapter tvShowTrailer
             trailerAdapter.setListTvTrailer(tvShowTrailers);
             trailerAdapter.notifyDataSetChanged();
             progressBar2.setVisibility(View.GONE);
+
+            // method ini berfungsi untuk mengload video trailer
             openYoutubeTvTailer(tvShowTrailers.get(0).getKey());
 
+            // statement ini juga sama untuk mengload video trailer
             ItemClickSupport.addTo(rvTvVideo).setOnItemClickListener((recyclerView, position, v)
                     -> openYoutubeTvVideo(tvShowTrailers.get(position).getKey()));
         }
     };
 
-
+    // statement ini berfungsi untuk menangkap data tv show review dari webservice movieDb,
+    // data yang telah di tangkap akan di masukan ke review tv show adapter yang nantinya akan di tampilkan
     private final Observer<List<TvShowReview>> getTvReviewData = new Observer<List<TvShowReview>>() {
         @Override
         public void onChanged(List<TvShowReview> tvShowReviews) {
@@ -214,7 +243,7 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
         }
     };
 
-
+    // inisialisasi RecyclerView, Adapter, dan MovieViewModel
     private void init() {
         tvId = tvShowResults.getId();
 
@@ -229,9 +258,14 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
         rvTvReview.setHasFixedSize(true);
         reviewAdapter = new TvShowReviewAdapter(this);
         rvTvReview.setAdapter(reviewAdapter);
+
+        TvShowViewModel tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
+        tvShowViewModel.getTvDetail(tvId).observe(this, getTvDetailData);
+        tvShowViewModel.getTvTrailer(tvId).observe(this, getTvTrailerData);
+        tvShowViewModel.getTvReview(tvId).observe(this, getTvReviewData);
     }
 
-
+    // method ini berfungsi mengload / menampilkan data tv show detail
     private void loadTvShowDetail(TvShowDetail tvShowDetail) {
         txtTitle.setText(tvShowDetail.getName());
         txtDate.setText(tvShowDetail.getFirstAirDate());
@@ -248,6 +282,9 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
         txtSeason.setText(String.valueOf(tvShowDetail.getNumberOfSeasons()));
         txtEpisode.setText(String.valueOf(tvShowDetail.getNumberOfEpisodes()));
 
+        // looping ini berfungsi untuk membuat data tv show genre dan menampilkannya
+        // data tv shpw genre yang telah dibuat, satu persatu dimasukan kedalam StringBuilder
+        // lalu StringBuilder tersebut ditampilkan melalui txtGenre
         for (int i = 0; i < tvShowDetail.getGenres().size(); i++) {
             TvShowGenres tvShowGenres = tvShowDetail.getGenres().get(i);
             if (i < tvShowDetail.getGenres().size() - 1) {
@@ -259,6 +296,7 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
             }
         }
 
+        // mengload data image
         String urlPhoto = Config.IMAGE_URL_BASE_PATH + tvShowDetail.getPosterPath();
         Glide.with(this)
                 .load(urlPhoto)
@@ -268,7 +306,8 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
         progressBar.setVisibility(View.GONE);
     }
 
-
+    // method ini berfungsi ketika user mengklik image trailer, maka secara otomatis app menjalankan Youtube
+    // untuk menayangkan video trailer
     private void openYoutubeTvTailer(String keyTvTrailer) {
         String urlImage = "https://img.youtube.com/vi/" + keyTvTrailer + "/hqdefault.jpg";
         Glide.with(getApplicationContext())
@@ -294,7 +333,8 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
         frameTvTrailer.addView(view);
     }
 
-
+    // method ini juga berfungsi ketika user mengklik image trailer, maka secara otomatis app menjalankan Youtube
+    // untuk menampilkan video trailer
     private void openYoutubeTvVideo(String keyTvVideo) {
         Intent appVideoIntent = new Intent(Intent.ACTION_VIEW,
                 Uri.parse("vnd.youtube:" + keyTvVideo));
@@ -306,5 +346,4 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
             startActivity(webVideoIntent);
         }
     }
-
 }

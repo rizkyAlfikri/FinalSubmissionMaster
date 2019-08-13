@@ -33,10 +33,12 @@ public class TvShowSearchAdapter extends RecyclerView.Adapter<TvShowSearchAdapte
         this.context = context;
     }
 
+    // mengset data tv show  lalu melakukan notifikasi ke adapter
     public void setListTv(List<TvShowResults> listTv) {
         this.listTv = listTv;
     }
 
+    // mengset data tv show genre, lalu melakukan notifikasi ke adapter
     public void setListGenreTv(List<TvShowGenres> listGenreTv) {
         this.listGenreTv = listGenreTv;
     }
@@ -44,22 +46,25 @@ public class TvShowSearchAdapter extends RecyclerView.Adapter<TvShowSearchAdapte
     @NonNull
     @Override
     public TvShowSearchAdapter.TvViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // inflate layout yang akan digunakan oleh adapter
         View view = LayoutInflater.from(context).inflate(R.layout.item_search_movie, parent, false);
         return new TvViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TvShowSearchAdapter.TvViewHolder holder, int position) {
+        // mengload data yang telah di tangkap melalui method setListTv
         holder.txtTitle.setText(listTv.get(position).getName());
         holder.txtRate.setText(String.valueOf(listTv.get(position).getVoteAverage()));
         holder.txtDate.setText(listTv.get(position).getFirstAirDate());
 
+        // load image data
         String urlPhoto = Config.IMAGE_URL_BASE_PATH + listTv.get(position).getPosterPath();
         Glide.with(context)
                 .load(urlPhoto)
                 .apply(new RequestOptions())
                 .into(holder.imgPhoto);
-
+        // mengload data tv show genre jika setListGenreTv tidak null
         if (listGenreTv != null) {
             String genre = holder.getGenre(listTv.get(position).getGenreIds());
             holder.txtGenre.setText(genre);
@@ -68,6 +73,8 @@ public class TvShowSearchAdapter extends RecyclerView.Adapter<TvShowSearchAdapte
 
     @Override
     public int getItemCount() {
+        // jika listTv tidak null, maka adapter akan menampilkan data yang jumlahnya sama dengan jumlah data listTv
+        // jika listTv null, maka adapter tidak akan menampikan data
         if (listTv != null) {
             return listTv.size();
         } else {
@@ -76,6 +83,7 @@ public class TvShowSearchAdapter extends RecyclerView.Adapter<TvShowSearchAdapte
     }
 
     class TvViewHolder extends RecyclerView.ViewHolder {
+        // inisialisasi objek TextView, ImageView
         @BindView(R.id.txt_title)
         TextView txtTitle;
         @BindView(R.id.txt_date)
@@ -92,6 +100,8 @@ public class TvShowSearchAdapter extends RecyclerView.Adapter<TvShowSearchAdapte
             ButterKnife.bind(this, itemView);
         }
 
+        // data dari setListGenreTv berupa code integer dari genre tv show,
+        // sehingga perlu di diubah terlebih dahulu sebelum ditampilkan
         private String getGenre(List<Integer> genreIds) {
             List<String> tvGenre = new ArrayList<>();
             for (Integer genreId : genreIds) {
