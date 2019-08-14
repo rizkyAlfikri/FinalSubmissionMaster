@@ -20,49 +20,79 @@ public interface ApiService {
 
     // get data movie dari web service movieDB
     @GET("discover/movie")
-    Call<MovieResponse> getMovieFromApi(@Query("api_key") String apiKey);
+    Call<MovieResponse> getMovieDiscovery(@Query("api_key") String apiKey);
 
-    // get data movie genre dari web service movieDB
+    // get data movie populer
+    @GET("movie/popular")
+    Call<MovieResponse> getMoviePopular(@Query("api_key") String apiKey);
+
+    // get data top rated movie
+    @GET("movie/top_rated")
+    Call<MovieResponse> getMovieTopRated(@Query("api_key") String apiKey);
+
+    // get data upcoming movie
+    @GET("movie/upcoming")
+    Call<MovieResponse> getMovieUpcoming(@Query("api_key") String apiKey);
+
+    // get data movie genre
     @GET("genre/movie/list")
     Call<MovieGenreResponse> getMovieGenreApi(@Query("api_key") String apiKey);
 
-    // get data hasil pencarian movie dari web service movieDB
+    // get data hasil search movie
     @GET("search/movie")
     Call<MovieResponse> getQueryMovie(@Query("api_key") String apuKey, @Query("query") String query);
 
-    // get data movie detail dari web service movieDB
+    // get data movie detail
     @GET("movie/{movie_id}")
     Call<MovieDetail> getMovieDetailApi(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 
-    // get data movie video dari web service movieDB
+    // get data movie video
     @GET("movie/{movie_id}/videos")
     Call<MovieTrailerResponse> getMovieTrailerApi(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
 
-    // get data movie review dari web service movieDB
+    // get data movie review
     @GET("movie/{movie_id}/reviews")
     Call<MovieReviewResponse> getMovieReviewApi(@Path("movie_id") int movieId, @Query("api_key") String apiKey);
+
+
+
+//  ================================================================================================================
+
+
 
     // get data tv show dari web service movieDB
     @GET("discover/tv")
     Call<TvShowResponse> getTvFromApi(@Query("api_key") String apiKey);
 
-    // get data tv show genre dari web service movieDB
+    // get data popular tv show
+    @GET("tv/popular")
+    Call<TvShowResponse> getTvPopular(@Query("api_key") String apiKey);
+
+    // get data top rated tv show
+    @GET("tv/top_rated")
+    Call<TvShowResponse> getTvTopRated(@Query("api_key") String apiKey);
+
+    // get data on the air tv
+    @GET("tv/on_the_air")
+    Call<TvShowResponse> getTvOnAir(@Query("api_key") String apiKey);
+
+    // get data tv show genre
     @GET("genre/tv/list")
     Call<TvShowGenreResponse> getTvGenreApi(@Query("api_key") String apiKey);
 
-    // get data hasil pencarian tv show dari web service movieDB
+    // get data hasil search tv show
     @GET("search/tv")
     Call<TvShowResponse> getQueryTv(@Query("api_key") String apiKey, @Query("query") String query);
 
-    // get data tv show detail dari web service movieDB
+    // get data tv show detail
     @GET("tv/{tv_id}")
     Call<TvShowDetail> getTvDetailApi(@Path("tv_id") int tvId, @Query("api_key") String apikey);
 
-    // get data tv show video dari web service movieDB
+    // get data tv show video
     @GET("tv/{tv_id}/videos")
     Call<TvShowTrailerResponse> getTvTrailerApi(@Path("tv_id") int tvId, @Query("api_key") String apiKey);
 
-    // get data tv show review dari web service movieDB
+    // get data tv show review
     @GET("tv/{tv_id}/reviews")
     Call<TvShowReviewResponse> getTvReviewApi(@Path("tv_id") int tvId, @Query("api_key") String apiKey);
 

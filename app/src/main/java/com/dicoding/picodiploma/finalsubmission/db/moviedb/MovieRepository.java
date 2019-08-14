@@ -46,9 +46,9 @@ public class MovieRepository {
     }
 
     // method ini berfungsi untuk mengrequest data movie ke web service movieDB
-    public MutableLiveData<List<MovieResults>> getMovieFromRetrofit() {
+    public MutableLiveData<List<MovieResults>> getMovieDiscovery() {
         MutableLiveData<List<MovieResults>> listMovie = new MutableLiveData<>();
-        apiService.getMovieFromApi(apiKey).enqueue(new Callback<MovieResponse>() {
+        apiService.getMovieDiscovery(apiKey).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
@@ -60,12 +60,78 @@ public class MovieRepository {
 
             @Override
             public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
-                Log.e("Failure Get Movie", t.getMessage());
+                Log.e("Failure Get Movie Data", t.getMessage());
             }
         });
         return listMovie;
 
     }
+
+    // method ini berfungsi untuk mengrequest data popular movie ke web service movieDB
+    public MutableLiveData<List<MovieResults>> getMoviePopular() {
+        MutableLiveData<List<MovieResults>> listMovie = new MutableLiveData<>();
+        apiService.getMoviePopular(apiKey).enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        listMovie.setValue(response.body().getResults());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
+                Log.e("Failure GetPopularMovie", t.getMessage());
+            }
+        });
+        return listMovie;
+
+    }
+
+    // method ini berfungsi untuk mengrequest data top rated movie ke web service movieDB
+    public MutableLiveData<List<MovieResults>> getMovieTopRated() {
+        MutableLiveData<List<MovieResults>> listTopMovie = new MutableLiveData<>();
+        apiService.getMovieTopRated(apiKey).enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        listTopMovie.setValue(response.body().getResults());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
+                Log.e("Failure Get Top Movie", t.getMessage());
+            }
+        });
+        return listTopMovie;
+
+    }
+
+    // method ini berfungsi untuk mengrequest data upcoming movie ke web service movieDB
+    public MutableLiveData<List<MovieResults>> getMovieUpcoming() {
+        MutableLiveData<List<MovieResults>> listUpMovie = new MutableLiveData<>();
+        apiService.getMovieUpcoming(apiKey).enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        listUpMovie.setValue(response.body().getResults());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
+                Log.e("Failure Get Up Movie", t.getMessage());
+            }
+        });
+        return listUpMovie;
+    }
+
 
     // method ini berfungsi untuk mengrequest data movie genre ke web service movieDB
     public MutableLiveData<List<MovieGenres>> getMovieGenre() {
@@ -177,4 +243,5 @@ public class MovieRepository {
         return listQueryMovie;
 
     }
+
 }

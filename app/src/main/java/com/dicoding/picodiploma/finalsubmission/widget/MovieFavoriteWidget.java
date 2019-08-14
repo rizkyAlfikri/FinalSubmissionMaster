@@ -10,7 +10,6 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.dicoding.picodiploma.finalsubmission.R;
-import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 
 
 public class MovieFavoriteWidget extends AppWidgetProvider {
@@ -60,8 +59,7 @@ public class MovieFavoriteWidget extends AppWidgetProvider {
         if (intent.getAction() != null) {
             if (intent.getAction().equals(TOAST_ACTION)) {
                 int viewIndex = intent.getIntExtra(EXTRA_ITEM, 0);
-                MovieResults movieResults = intent.getParcelableExtra(EXTRA_MOVIE);
-                Toast.makeText(context, "Touched View" + movieResults.getTitle(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Touched View" + viewIndex, Toast.LENGTH_SHORT).show();
             }
         }
     }

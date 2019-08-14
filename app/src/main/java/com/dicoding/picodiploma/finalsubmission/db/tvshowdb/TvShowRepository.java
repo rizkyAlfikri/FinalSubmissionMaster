@@ -66,6 +66,66 @@ public class TvShowRepository {
 
     }
 
+    public MutableLiveData<List<TvShowResults>> getTvPopular() {
+        MutableLiveData<List<TvShowResults>> listPopularTv = new MutableLiveData<>();
+        apiService.getTvPopular(apiKey).enqueue(new Callback<TvShowResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<TvShowResponse> call, @NonNull Response<TvShowResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        listPopularTv.setValue(response.body().getResults());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<TvShowResponse> call, @NonNull Throwable t) {
+                Log.e("Failure GetTvPopular", t.getMessage());
+            }
+        });
+        return listPopularTv;
+    }
+
+    public MutableLiveData<List<TvShowResults>> getTvTopRated() {
+        MutableLiveData<List<TvShowResults>> listTvTop = new MutableLiveData<>();
+        apiService.getTvTopRated(apiKey).enqueue(new Callback<TvShowResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<TvShowResponse> call, @NonNull Response<TvShowResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        listTvTop.setValue(response.body().getResults());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<TvShowResponse> call, @NonNull Throwable t) {
+                Log.e("Failure Tv Top", t.getMessage());
+            }
+        });
+        return listTvTop;
+    }
+
+    public MutableLiveData<List<TvShowResults>> getTvOnAir() {
+        MutableLiveData<List<TvShowResults>> listTvAir = new MutableLiveData<>();
+        apiService.getTvOnAir(apiKey).enqueue(new Callback<TvShowResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<TvShowResponse> call, @NonNull Response<TvShowResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        listTvAir.setValue(response.body().getResults());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<TvShowResponse> call, @NonNull Throwable t) {
+                Log.e("Failure get Tv On Air", t.getMessage());
+            }
+        });
+        return listTvAir;
+    }
+
     // method ini berfungsi untuk mengrequest data tv show genre ke web service movieDB
     public MutableLiveData<List<TvShowGenres>> getTvGenre() {
         MutableLiveData<List<TvShowGenres>> listTvGenre = new MutableLiveData<>();

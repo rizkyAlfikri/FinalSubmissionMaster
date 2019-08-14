@@ -13,7 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,12 +45,15 @@ import butterknife.ButterKnife;
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_TV;
 
 
-public class TvShowFragment extends Fragment {
+public class TvShowFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private TvShowAdapter tvShowAdapter;
+    private TvShowViewModel tvShowViewModel;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
     @BindView(R.id.rv_tvshow)
     RecyclerView rvTvShow;
+    @BindView(R.id.spinner_tv)
+    Spinner spinnerTv;
 
     public TvShowFragment() {
         // Required empty public constructor
@@ -67,7 +73,7 @@ public class TvShowFragment extends Fragment {
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         init(view.getContext());
-
+        selectedTvByCategory();
     }
 
     @Override
@@ -75,7 +81,7 @@ public class TvShowFragment extends Fragment {
         // inflate menu xml yang akan digunakan
         inflater.inflate(R.menu.main_movie, menu);
 
-        // method ini berfungsi umtuk melakukan pencarian data
+        // method ini untuk melakukan pencarian data
         searchTvShow(menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -92,9 +98,28 @@ public class TvShowFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    // statement ini berfungsi untuk menangkap data tv show dari webservice movieDb,
+    // statement ini untuk menangkap data tv show dari webservice movieDb,
     // data yang telah di tangkap akan di masukan ke  tv show adapter yang nantinya akan di tampilkan
     private final Observer<List<TvShowResults>> getTvData = new Observer<List<TvShowResults>>() {
+        @Override
+        public void onChanged(List<TvShowResults> tvShowResults) {
+            tvShowAdapter.setListTv(tvShowResults);
+            tvShowAdapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
+
+            // statement ini berfungsi supaya user dapat mengakses setiap data yang ditampilkan oleh tv show adapter
+            // lalu ketika sudah dipilih, maka akan menampilkan detail activity
+            ItemClickSupport.addTo(rvTvShow).setOnItemClickListener((recyclerView, position, v) -> {
+                Uri uri = Uri.parse(CONTENT_URI_TV + "/" + tvShowResults.get(position).getId());
+                Intent intent = new Intent(recyclerView.getContext(), DetailTvShowActivity.class);
+                intent.setData(uri);
+                intent.putExtra(DetailTvShowActivity.EXTRA_TV, tvShowResults.get(position));
+                startActivity(intent);
+            });
+        }
+    };
+
+    private final Observer<List<TvShowResults>> getTvPopularData = new Observer<List<TvShowResults>>() {
         @Override
         public void onChanged(List<TvShowResults> tvShowResults) {
             tvShowAdapter.setListTv(tvShowResults);
@@ -110,7 +135,39 @@ public class TvShowFragment extends Fragment {
         }
     };
 
-    // statement ini berfungsi untuk menangkap data tv show genre dari webservice movieDb,
+    private final Observer<List<TvShowResults>> getTvTopData = new Observer<List<TvShowResults>>() {
+        @Override
+        public void onChanged(List<TvShowResults> tvShowResults) {
+            tvShowAdapter.setListTv(tvShowResults);
+            tvShowAdapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
+            ItemClickSupport.addTo(rvTvShow).setOnItemClickListener((recyclerView, position, v) -> {
+                Uri uri = Uri.parse(CONTENT_URI_TV + "/" + tvShowResults.get(position).getId());
+                Intent intent = new Intent(recyclerView.getContext(), DetailTvShowActivity.class);
+                intent.setData(uri);
+                intent.putExtra(DetailTvShowActivity.EXTRA_TV, tvShowResults.get(position));
+                startActivity(intent);
+            });
+        }
+    };
+
+    private final Observer<List<TvShowResults>> getTvOnAir = new Observer<List<TvShowResults>>() {
+        @Override
+        public void onChanged(List<TvShowResults> tvShowResults) {
+            tvShowAdapter.setListTv(tvShowResults);
+            tvShowAdapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
+            ItemClickSupport.addTo(rvTvShow).setOnItemClickListener((recyclerView, position, v) -> {
+                Uri uri = Uri.parse(CONTENT_URI_TV + "/" + tvShowResults.get(position).getId());
+                Intent intent = new Intent(recyclerView.getContext(), DetailTvShowActivity.class);
+                intent.setData(uri);
+                intent.putExtra(DetailTvShowActivity.EXTRA_TV, tvShowResults.get(position));
+                startActivity(intent);
+            });
+        }
+    };
+
+    // statement ini untuk menangkap data tv show genre dari webservice movieDb,
     // data yang telah di tangkap akan di masukan ke tv show genre adapter yang nantinya akan di tampilkan
     private final Observer<List<TvShowGenres>> getTvGenre = new Observer<List<TvShowGenres>>() {
         @Override
@@ -120,7 +177,7 @@ public class TvShowFragment extends Fragment {
         }
     };
 
-    // method ini berfungsi untuk meng inisialisasi RecyclerView, Adapter dan ViewModel
+    // method ini untuk meng inisialisasi RecyclerView, Adapter dan ViewModel
     private void init(Context context) {
         rvTvShow.setLayoutManager(new GridLayoutManager(context, 2));
         rvTvShow.setHasFixedSize(true);
@@ -128,12 +185,10 @@ public class TvShowFragment extends Fragment {
         rvTvShow.setAdapter(tvShowAdapter);
         progressBar.setVisibility(View.VISIBLE);
 
-        TvShowViewModel tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
-        tvShowViewModel.getTvFromRetrofit().observe(this, getTvData);
-        tvShowViewModel.getTvGenre().observe(this, getTvGenre);
+        tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
     }
 
-    // method ini berfungsi untuk melakukan pencarian data
+    // method ini untuk melakukan pencarian data
     private void searchTvShow(Menu menu) {
         SearchManager searchManager;
         if (getContext() != null) {
@@ -173,13 +228,61 @@ public class TvShowFragment extends Fragment {
         }
     }
 
-    // method ini berfungsi untuk menghilangkan keyboard setiap kali user melakukan pencarian data
+    // method ini untuk menghilangkan keyboard setiap kali user melakukan pencarian data
     private void hidekeyboard(SearchView searchView) {
         if (getContext() != null) {
             InputMethodManager methodManager = (InputMethodManager)
                     getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             methodManager.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
         }
+    }
+
+    // method ini untuk menampilkan category tv show
+    private void selectedTvByCategory() {
+        if (getActivity() != null) {
+            ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+                    getActivity(), R.array.spinner_tv, android.R.layout.simple_spinner_item);
+
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerTv.setAdapter(spinnerAdapter);
+            spinnerTv.setOnItemSelectedListener(this);
+        }
+    }
+
+    // method ini berfungsi untuk memilih category tv show
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String selectCategory = getString(R.string.select_category_movie);
+
+        if (parent.getItemAtPosition(position).equals(selectCategory)) {
+
+            tvShowViewModel.getTvFromRetrofit().observe(this, getTvData);
+            tvShowViewModel.getTvGenre().observe(this, getTvGenre);
+
+        } else {
+            switch (position) {
+                case 1:
+                    progressBar.setVisibility(View.VISIBLE);
+                    tvShowViewModel.getTvPopular().observe(this, getTvPopularData);
+                    tvShowViewModel.getTvGenre().observe(this, getTvGenre);
+                    break;
+                case 2:
+                    progressBar.setVisibility(View.VISIBLE);
+                    tvShowViewModel.getTvTopRated().observe(this, getTvTopData);
+                    tvShowViewModel.getTvGenre().observe(this, getTvGenre);
+                    break;
+                case 3:
+                    progressBar.setVisibility(View.VISIBLE);
+                    tvShowViewModel.getTvOnAir().observe(this, getTvOnAir);
+                    tvShowViewModel.getTvGenre().observe(this, getTvGenre);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
 

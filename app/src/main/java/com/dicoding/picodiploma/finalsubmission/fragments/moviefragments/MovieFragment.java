@@ -12,7 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,11 +44,14 @@ import butterknife.ButterKnife;
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 
 
-public class MovieFragment extends Fragment {
+public class MovieFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private MovieAdapter movieAdapter;
     private List<MovieGenres> movieGenres;
+    private MovieViewModel movieViewModel;
     @BindView(R.id.rv_movie)
     RecyclerView rvMovie;
+    @BindView(R.id.spinner_movie)
+    Spinner spinnerMovie;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
@@ -67,6 +73,7 @@ public class MovieFragment extends Fragment {
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         init(view.getContext());
+        selectMovieByCategory();
 
     }
 
@@ -94,15 +101,16 @@ public class MovieFragment extends Fragment {
 
     }
 
-    // statement ini berfungsi untuk menangkap data movie dari webservice movieDb,
-    // data yang telah di tangkap akan di masukan ke  movie adapter yang nantinya akan di tampilkan
-    private final Observer<List<MovieResults>> getMovieData = new Observer<List<MovieResults>>() {
+    // statement ini berfungsi supaya user dapat mengakses setiap data yang ditampilkan oleh movie adapter
+    // lalu ketika sudah dipilih, maka akan menampilkan detail activity
+    private final Observer<List<MovieResults>> getMovieDiscoveryData = new Observer<List<MovieResults>>() {
         @Override
         public void onChanged(List<MovieResults> movieResults) {
             movieAdapter.setListMovie(movieResults, movieGenres);
             movieAdapter.notifyDataSetChanged();
             rvMovie.setAdapter(movieAdapter);
             progressBar.setVisibility(View.GONE);
+
 
             // statement ini berfungsi supaya user dapat mengakses setiap data yang ditampilkan oleh movie adapter
             // lalu ketika sudah dipilih, maka akan menampilkan detail activity
@@ -116,6 +124,64 @@ public class MovieFragment extends Fragment {
         }
     };
 
+
+    private final Observer<List<MovieResults>> getMoviePopularData = new Observer<List<MovieResults>>() {
+        @Override
+        public void onChanged(List<MovieResults> movieResults) {
+            movieAdapter.setListMovie(movieResults, movieGenres);
+            movieAdapter.notifyDataSetChanged();
+            rvMovie.setAdapter(movieAdapter);
+            progressBar.setVisibility(View.GONE);
+
+            ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
+                Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + movieResults.get(position).getId());
+                Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
+                intent.setData(uri);
+                intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, movieResults.get(position));
+                startActivityForResult(intent, DetailMovieActivity.REQUEST_MOVIE_UPDATE);
+            });
+        }
+    };
+
+
+    private final Observer<List<MovieResults>> getMovieTopData = new Observer<List<MovieResults>>() {
+        @Override
+        public void onChanged(List<MovieResults> movieResults) {
+            movieAdapter.setListMovie(movieResults, movieGenres);
+            movieAdapter.notifyDataSetChanged();
+            rvMovie.setAdapter(movieAdapter);
+            progressBar.setVisibility(View.GONE);
+
+            ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
+                Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + movieResults.get(position).getId());
+                Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
+                intent.setData(uri);
+                intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, movieResults.get(position));
+                startActivityForResult(intent, DetailMovieActivity.REQUEST_MOVIE_UPDATE);
+            });
+        }
+    };
+
+
+    private final Observer<List<MovieResults>> getMovieUpComingData = new Observer<List<MovieResults>>() {
+        @Override
+        public void onChanged(List<MovieResults> movieResults) {
+            movieAdapter.setListMovie(movieResults, movieGenres);
+            movieAdapter.notifyDataSetChanged();
+            rvMovie.setAdapter(movieAdapter);
+            progressBar.setVisibility(View.GONE);
+
+            ItemClickSupport.addTo(rvMovie).setOnItemClickListener((recyclerView, position, v) -> {
+                Uri uri = Uri.parse(CONTENT_URI_MOVIE + "/" + movieResults.get(position).getId());
+                Intent intent = new Intent(recyclerView.getContext(), DetailMovieActivity.class);
+                intent.setData(uri);
+                intent.putExtra(DetailMovieActivity.EXTRA_MOVIE, movieResults.get(position));
+                startActivityForResult(intent, DetailMovieActivity.REQUEST_MOVIE_UPDATE);
+            });
+        }
+    };
+
+
     // statement ini berfungsi untuk menangkap data movie genre dari webservice movieDb,
     // data yang telah di tangkap akan di masukan ke movie genre adapter yang nantinya akan di tampilkan
     private final Observer<List<MovieGenres>> getGenreMovieData = new Observer<List<MovieGenres>>() {
@@ -125,6 +191,7 @@ public class MovieFragment extends Fragment {
         }
     };
 
+
     // method ini berfungsi untuk meng inisialisasi RecyclerView, Adapter dan ViewModel
     private void init(Context context) {
         progressBar.setVisibility(View.VISIBLE);
@@ -132,10 +199,9 @@ public class MovieFragment extends Fragment {
         rvMovie.setHasFixedSize(true);
         movieAdapter = new MovieAdapter(context);
 
-        MovieViewModel movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-        movieViewModel.getMovieGenre().observe(this, getGenreMovieData);
-        movieViewModel.getMovieFromRetrofit().observe(this, getMovieData);
+        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
     }
+
 
     // method ini berfungsi untuk menghilangkan keyboard setiap kali user melakukan pencarian data
     private void hidekeyboard(SearchView searchView) {
@@ -145,6 +211,7 @@ public class MovieFragment extends Fragment {
             methodManager.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
         }
     }
+
 
     // method ini berfungsi untuk melakukan pencarian data
     private void searchMovie(Menu menu) {
@@ -185,6 +252,57 @@ public class MovieFragment extends Fragment {
                 searchView.setOnQueryTextListener(queryTextListener);
             }
         }
+    }
+
+    // method ini untuk menampilkan category movie
+    private void selectMovieByCategory() {
+        if (getActivity() != null) {
+            ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
+                    R.array.spinner_movie, android.R.layout.simple_spinner_item);
+
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerMovie.setAdapter(spinnerAdapter);
+            spinnerMovie.setOnItemSelectedListener(this);
+        }
+    }
+
+    // method ini berfungsi untuk memilih category movie
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String selectCategory = getString(R.string.select_category_movie);
+
+        if (parent.getItemAtPosition(position).equals(selectCategory)) {
+
+            movieViewModel.getMovieDiscovery().observe(this, getMovieDiscoveryData);
+            movieViewModel.getMovieGenre().observe(this, getGenreMovieData);
+
+        } else {
+            switch (position) {
+                case 1:
+                    progressBar.setVisibility(View.VISIBLE);
+                    movieViewModel.getMoviePopular().observe(this, getMoviePopularData);
+                    movieViewModel.getMovieGenre().observe(this, getGenreMovieData);
+                    break;
+                case 2:
+                    progressBar.setVisibility(View.VISIBLE);
+                    movieViewModel.getMovieGenre().observe(this, getGenreMovieData);
+                    movieViewModel.getMovieTop().observe(this, getMovieTopData);
+                    break;
+                case 3:
+                    progressBar.setVisibility(View.VISIBLE);
+                    movieViewModel.getMovieGenre().observe(this, getGenreMovieData);
+                    movieViewModel.getMovieUpcoming().observe(this, getMovieUpComingData);
+                    break;
+            }
+        }
+
+
+    }
+
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
 

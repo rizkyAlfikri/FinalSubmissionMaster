@@ -63,7 +63,7 @@ public class DailyReminderMovie extends BroadcastReceiver {
 
         // method ini berfungsi untuk mengrequest data release date movie ke web service
         ApiService apiService = RetrofitService.createService(ApiService.class);
-        apiService.getMovieFromApi(Config.API_KEY).enqueue(new Callback<MovieResponse>() {
+        apiService.getMoviePopular(Config.API_KEY).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
