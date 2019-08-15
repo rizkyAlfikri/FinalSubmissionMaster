@@ -86,6 +86,11 @@
     <string name="top_movie">Top Rated Movie</string>
     <string name="up_movie">Upcoming Movie</string>
     <string name="select_category_movie">Select Category</string>
+    <string name="data_not_found">Data Not Found</string>
+    <string name="dicoding_movie">Dicoding Movie</string>
+    <string name="detail_activity">DetailActivity</string>
+    <string name="search_activity">SearchAvtivity</string>
+    <string name="detail_tv">DetailTvShow</string>
 
     <string-array name="spinner_movie">
         <item>Select Category</item>

@@ -231,7 +231,14 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
             progressBar2.setVisibility(View.GONE);
 
             // method ini berfungsi untuk mengload video trailer
-            openYoutubeTrailer(movieTrailers.get(0).getKey());
+            if (!movieTrailers.isEmpty()) {
+                openYoutubeTrailer(movieTrailers.get(0).getKey());
+            } else {
+                Glide.with(getApplicationContext())
+                        .load(R.drawable.no_img1)
+                        .apply(new RequestOptions().override(125, 125))
+                        .into(imgTrailer);
+            }
 
             // statement ini juga sama untuk mengload video trailer
             ItemClickSupport.addTo(rvMovieVideo).setOnItemClickListener((recyclerView, position, v)
@@ -332,7 +339,7 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
         String urlImage = "https://img.youtube.com/vi/" + keyMovie + "/hqdefault.jpg";
         Glide.with(getApplicationContext())
                 .load(urlImage)
-                .apply(new RequestOptions())
+                .apply(new RequestOptions().centerCrop())
                 .into(imgTrailer);
 
         View view = LayoutInflater.from(this)

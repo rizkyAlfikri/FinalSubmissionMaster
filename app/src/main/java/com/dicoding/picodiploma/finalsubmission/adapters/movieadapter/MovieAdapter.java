@@ -35,10 +35,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     // mengset data movie dan movie genre, lalu melakukan notifikasi ke adapter
-    public void setListMovie(List<MovieResults> listMovie, List<MovieGenres> listGenreMovie) {
+    public void setListMovie(List<MovieResults> listMovie) {
         this.listMovie = listMovie;
-        this.listGenreMovie = listGenreMovie;
         notifyDataSetChanged();
+    }
+
+    public void setListGenreMovie(List<MovieGenres> listGenreMovie) {
+        this.listGenreMovie = listGenreMovie;
     }
 
     @NonNull

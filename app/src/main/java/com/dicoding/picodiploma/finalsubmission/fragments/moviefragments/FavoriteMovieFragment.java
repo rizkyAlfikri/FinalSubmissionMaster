@@ -13,6 +13,7 @@ import android.os.HandlerThread;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     RecyclerView rvMovie;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
+    @BindView(R.id.img_no_data)
+    ImageView imgNoData;
 
 
     public FavoriteMovieFragment() {
@@ -131,9 +134,9 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         listMovie = mapCursorToArrayListMovie(cursor);
         if (listMovie.size() > 0) {
             favoriteAdapter.setListMovie(listMovie);
+            imgNoData.setVisibility(View.GONE);
         } else {
-            favoriteAdapter.setListMovie(new ArrayList<>());
-            showToastMessage();
+            imgNoData.setVisibility(View.VISIBLE);
         }
     }
 
@@ -184,10 +187,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
             super.onPostExecute(cursor);
             weakCallback.get().postExecute(cursor);
         }
-    }
-
-    private void showToastMessage() {
-        Toast.makeText(rvMovie.getContext(), getString(R.string.no_data), Toast.LENGTH_LONG).show();
     }
 
     public static class DataObserver extends ContentObserver {

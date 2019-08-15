@@ -7,7 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -40,11 +42,18 @@ public class SearchActivity extends AppCompatActivity {
     public static final String EXTRA_SEARCH = "extra_search";
     public static final String MOVIE_SEARCH = "movie_search";
     public static final String TV_SEARCH = "tv_search";
-    private String setAction;
+    private int pageNum = 1;
+    private boolean isMovie = false;
     private MovieSearchAdapter movieSearchAdapter;
     private TvShowSearchAdapter tvShowSearchAdapter;
     private MovieViewModel movieViewModel;
     private TvShowViewModel tvShowViewModel;
+    @BindView(R.id.txt_page)
+    TextView txtPage;
+    @BindView(R.id.img_next)
+    ImageView imgNext;
+    @BindView(R.id.img_back)
+    ImageView imgBack;
     @BindView(R.id.rv_search_movie)
     RecyclerView rvSearch;
     @BindView(R.id.progress_bar)
@@ -58,7 +67,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
         progressBar.setVisibility(View.VISIBLE);
-        setAction = getIntent().getAction();
+        String setAction = getIntent().getAction();
         rvSearch.setLayoutManager(new LinearLayoutManager(this));
         rvSearch.setHasFixedSize(true);
 
@@ -68,40 +77,15 @@ public class SearchActivity extends AppCompatActivity {
         if (setAction != null) {
             if (setAction.equals(MOVIE_SEARCH)) {
                 initMovie(query);
+                isMovie = true;
             } else if (setAction.equals(TV_SEARCH)) {
                 initTvShow(query);
+                isMovie = false;
             }
         }
+        searchInit(query);
+        txtPage.setText(String.valueOf(pageNum));
 
-        searchView.setQuery(query, false);
-        searchView.setIconified(false);
-        searchView.clearFocus();
-
-        // statement ini befungsi supaya keyboard langsung menghilang setelah user melakukan pencarian pada searc view
-        InputMethodManager in = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        in.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-
-        // method ini berfungsi untuk melakukan aksi ketika searchview digunakan
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // apa yang diketika oleh user bisa menjadi query key pada saat request data pencarian ke web service
-                if (setAction != null) {
-                    if (setAction.equals(MOVIE_SEARCH)) {
-                        queryMovie(query);
-                    } else if (setAction.equals(TV_SEARCH)) {
-                        queryTvShow(query);
-                    }
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                return false;
-            }
-        });
     }
 
 
@@ -121,6 +105,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
+
     // statement ini berfungsi untuk menangkap data movie genre dari webservice movieDb,
     private final Observer<List<MovieGenres>> getMovieGenreData = new Observer<List<MovieGenres>>() {
         @Override
@@ -129,6 +114,7 @@ public class SearchActivity extends AppCompatActivity {
 
         }
     };
+
 
     // statement ini berfungsi untuk menangkap data hasil pencarian tvshow dari webservice movieDb,
     private final Observer<List<TvShowResults>> getTvQueryData = new Observer<List<TvShowResults>>() {
@@ -150,6 +136,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
+
     // statement ini berfungsi untuk menangkap data tv show genre dari webservice movieDb,
     private final Observer<List<TvShowGenres>> getTvGenreData = new Observer<List<TvShowGenres>>() {
         @Override
@@ -157,6 +144,7 @@ public class SearchActivity extends AppCompatActivity {
             tvShowSearchAdapter.setListGenreTv(tvShowGenres);
         }
     };
+
 
     // inisialisasi adapter movie dan judul action bar
     private void initMovie(String query) {
@@ -173,9 +161,31 @@ public class SearchActivity extends AppCompatActivity {
 
     // method ini berfungsi untuk melakukan request movie ke web service
     private void queryMovie(String query) {
-        movieViewModel.getQueryMovie(query).observe(this, getMovieQueryData);
+        imgNext.setOnClickListener(v -> {
+            pageNum += 1;
+            txtPage.setText(String.valueOf(pageNum));
+            progressBar.setVisibility(View.VISIBLE);
+
+            movieViewModel.getQueryMovie(query, pageNum).observe(SearchActivity.this, getMovieQueryData);
+            movieViewModel.getMovieGenre().observe(SearchActivity.this, getMovieGenreData);
+
+        });
+
+        imgBack.setOnClickListener(v -> {
+            if (pageNum > 1) {
+                pageNum -= 1;
+                txtPage.setText(String.valueOf(pageNum));
+                progressBar.setVisibility(View.VISIBLE);
+
+                movieViewModel.getQueryMovie(query, pageNum).observe(SearchActivity.this, getMovieQueryData);
+                movieViewModel.getMovieGenre().observe(SearchActivity.this, getMovieGenreData);
+            }
+        });
+
+        movieViewModel.getQueryMovie(query, pageNum).observe(this, getMovieQueryData);
         movieViewModel.getMovieGenre().observe(this, getMovieGenreData);
     }
+
 
     // inisialisasi adapter tv show dan judul action bar
     private void initTvShow(String query) {
@@ -190,18 +200,78 @@ public class SearchActivity extends AppCompatActivity {
         queryTvShow(query);
     }
 
-    // method ini berfungsi untuk melakukan request tv show ke web service
+
+    // method ini untuk mengrequest tv show ke web service
     private void queryTvShow(String query) {
-        tvShowViewModel.getTvQuery(query).observe(this, getTvQueryData);
+        imgNext.setOnClickListener(v -> {
+            pageNum += 1;
+            txtPage.setText(String.valueOf(pageNum));
+            progressBar.setVisibility(View.VISIBLE);
+
+            tvShowViewModel.getTvQuery(query, pageNum).observe(this, getTvQueryData);
+            tvShowViewModel.getTvGenre().observe(this, getTvGenreData);
+
+        });
+
+        imgBack.setOnClickListener(v -> {
+            if (pageNum > 1) {
+                pageNum -= 1;
+                txtPage.setText(String.valueOf(pageNum));
+                progressBar.setVisibility(View.VISIBLE);
+
+                tvShowViewModel.getTvQuery(query, pageNum).observe(this, getTvQueryData);
+                tvShowViewModel.getTvGenre().observe(this, getTvGenreData);
+            }
+        });
+
+
+        tvShowViewModel.getTvQuery(query, pageNum).observe(this, getTvQueryData);
         tvShowViewModel.getTvGenre().observe(this, getTvGenreData);
     }
 
+
+    private void searchInit(String query) {
+
+        searchView.setQuery(query, false);
+        searchView.setIconified(false);
+        searchView.clearFocus();
+
+        // statement ini untuk menghilangkan keyboard setelah user mengetikan query
+        InputMethodManager in = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        in.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+
+        // method ini berfungsi untuk melakukan aksi ketika searchview digunakan
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // apa yang diketika oleh user bisa menjadi query key pada saat request data pencarian ke web service
+                if (isMovie) {
+                    queryMovie(query);
+                    pageNum = 1;
+                    txtPage.setText(String.valueOf(pageNum));
+                } else {
+                    queryTvShow(query);
+                    pageNum = 1;
+                    txtPage.setText(String.valueOf(pageNum));
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -213,4 +283,32 @@ public class SearchActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+//    @Override
+//    public void onClick(View v) {
+//        if (v.getId() == R.id.img_next) {
+//            pageNum += 1;
+//            txtPage.setText(String.valueOf(pageNum));
+//            progressBar.setVisibility(View.VISIBLE);
+//
+//            if (isMovie) {
+//                queryMovie(setQuery, pageNum);
+//            } else {
+//                queryTvShow(setQuery);
+//            }
+//
+//        } else if (v.getId() == R.id.img_back) {
+//            if (pageNum > 1) {
+//                pageNum -= 1;
+//                txtPage.setText(String.valueOf(pageNum));
+//                progressBar.setVisibility(View.VISIBLE);
+//
+//                if (isMovie) {
+//                    queryMovie(setQuery, pageNum);
+//                } else {
+//                    queryTvShow(setQuery);
+//                }
+//            }
+//        }
+//    }
 }

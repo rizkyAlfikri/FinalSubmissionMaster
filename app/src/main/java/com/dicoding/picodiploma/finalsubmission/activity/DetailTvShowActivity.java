@@ -225,7 +225,14 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
             progressBar2.setVisibility(View.GONE);
 
             // method ini berfungsi untuk mengload video trailer
-            openYoutubeTvTailer(tvShowTrailers.get(0).getKey());
+            if (!tvShowTrailers.isEmpty()) {
+                openYoutubeTvTailer(tvShowTrailers.get(0).getKey());
+            } else {
+                Glide.with(getApplicationContext())
+                        .load(R.drawable.no_img1)
+                        .apply(new RequestOptions().override(125, 125))
+                        .into(imgTrailer);
+            }
 
             // statement ini juga sama untuk mengload video trailer
             ItemClickSupport.addTo(rvTvVideo).setOnItemClickListener((recyclerView, position, v)
@@ -312,7 +319,7 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
         String urlImage = "https://img.youtube.com/vi/" + keyTvTrailer + "/hqdefault.jpg";
         Glide.with(getApplicationContext())
                 .load(urlImage)
-                .apply(new RequestOptions())
+                .apply(new RequestOptions().centerCrop())
                 .into(imgTrailer);
 
         View view = LayoutInflater.from(this)

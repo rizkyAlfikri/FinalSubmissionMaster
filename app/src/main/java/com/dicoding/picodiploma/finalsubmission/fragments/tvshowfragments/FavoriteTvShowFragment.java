@@ -13,6 +13,7 @@ import android.os.HandlerThread;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
     RecyclerView rvTv;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
+    @BindView(R.id.img_no_data)
+    ImageView imgNoData;
 
 
     public FavoriteTvShowFragment() {
@@ -131,8 +134,9 @@ public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
             listTvShow = mapCursorToArrayListTv(cursor);
             if (listTvShow.size() > 0) {
                 favoriteAdapter.setListTv(listTvShow);
+                imgNoData.setVisibility(View.GONE);
             } else {
-                showToastMessage();
+                imgNoData.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -186,10 +190,6 @@ public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
             super.onPostExecute(cursor);
             weakCallback.get().postExecute(cursor);
         }
-    }
-
-    private void showToastMessage() {
-        Toast.makeText(rvTv.getContext(), getString(R.string.no_data_tv), Toast.LENGTH_SHORT).show();
     }
 
     public static class DataObserver extends ContentObserver {

@@ -20,19 +20,19 @@ public interface ApiService {
 
     // get data movie dari web service movieDB
     @GET("discover/movie")
-    Call<MovieResponse> getMovieDiscovery(@Query("api_key") String apiKey);
+    Call<MovieResponse> getMovieDiscovery(@Query("api_key") String apiKey, @Query("page") int page);
 
     // get data movie populer
     @GET("movie/popular")
-    Call<MovieResponse> getMoviePopular(@Query("api_key") String apiKey);
+    Call<MovieResponse> getMoviePopular(@Query("api_key") String apiKey, @Query("page") int page);
 
     // get data top rated movie
     @GET("movie/top_rated")
-    Call<MovieResponse> getMovieTopRated(@Query("api_key") String apiKey);
+    Call<MovieResponse> getMovieTopRated(@Query("api_key") String apiKey, @Query("page") int page);
 
     // get data upcoming movie
     @GET("movie/upcoming")
-    Call<MovieResponse> getMovieUpcoming(@Query("api_key") String apiKey);
+    Call<MovieResponse> getMovieUpcoming(@Query("api_key") String apiKey, @Query("page") int page);
 
     // get data movie genre
     @GET("genre/movie/list")
@@ -40,7 +40,8 @@ public interface ApiService {
 
     // get data hasil search movie
     @GET("search/movie")
-    Call<MovieResponse> getQueryMovie(@Query("api_key") String apuKey, @Query("query") String query);
+    Call<MovieResponse> getQueryMovie(@Query("api_key") String apuKey, @Query("query") String query,
+                                      @Query("page") int page);
 
     // get data movie detail
     @GET("movie/{movie_id}")
@@ -62,19 +63,19 @@ public interface ApiService {
 
     // get data tv show dari web service movieDB
     @GET("discover/tv")
-    Call<TvShowResponse> getTvFromApi(@Query("api_key") String apiKey);
+    Call<TvShowResponse> getTvFromApi(@Query("api_key") String apiKey, @Query("page") int page);
 
     // get data popular tv show
     @GET("tv/popular")
-    Call<TvShowResponse> getTvPopular(@Query("api_key") String apiKey);
+    Call<TvShowResponse> getTvPopular(@Query("api_key") String apiKey, @Query("page") int page);
 
     // get data top rated tv show
     @GET("tv/top_rated")
-    Call<TvShowResponse> getTvTopRated(@Query("api_key") String apiKey);
+    Call<TvShowResponse> getTvTopRated(@Query("api_key") String apiKey, @Query("page") int page);
 
     // get data on the air tv
     @GET("tv/on_the_air")
-    Call<TvShowResponse> getTvOnAir(@Query("api_key") String apiKey);
+    Call<TvShowResponse> getTvOnAir(@Query("api_key") String apiKey, @Query("page") int page);
 
     // get data tv show genre
     @GET("genre/tv/list")
@@ -82,7 +83,8 @@ public interface ApiService {
 
     // get data hasil search tv show
     @GET("search/tv")
-    Call<TvShowResponse> getQueryTv(@Query("api_key") String apiKey, @Query("query") String query);
+    Call<TvShowResponse> getQueryTv(@Query("api_key") String apiKey, @Query("query") String query,
+                                    @Query("page") int page);
 
     // get data tv show detail
     @GET("tv/{tv_id}")

@@ -46,9 +46,9 @@ public class MovieRepository {
     }
 
     // method ini berfungsi untuk mengrequest data movie ke web service movieDB
-    public MutableLiveData<List<MovieResults>> getMovieDiscovery() {
+    public MutableLiveData<List<MovieResults>> getMovieDiscovery(int page) {
         MutableLiveData<List<MovieResults>> listMovie = new MutableLiveData<>();
-        apiService.getMovieDiscovery(apiKey).enqueue(new Callback<MovieResponse>() {
+        apiService.getMovieDiscovery(apiKey, page).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
@@ -68,9 +68,9 @@ public class MovieRepository {
     }
 
     // method ini berfungsi untuk mengrequest data popular movie ke web service movieDB
-    public MutableLiveData<List<MovieResults>> getMoviePopular() {
+    public MutableLiveData<List<MovieResults>> getMoviePopular(int page) {
         MutableLiveData<List<MovieResults>> listMovie = new MutableLiveData<>();
-        apiService.getMoviePopular(apiKey).enqueue(new Callback<MovieResponse>() {
+        apiService.getMoviePopular(apiKey, page).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
@@ -90,9 +90,9 @@ public class MovieRepository {
     }
 
     // method ini berfungsi untuk mengrequest data top rated movie ke web service movieDB
-    public MutableLiveData<List<MovieResults>> getMovieTopRated() {
+    public MutableLiveData<List<MovieResults>> getMovieTopRated(int page) {
         MutableLiveData<List<MovieResults>> listTopMovie = new MutableLiveData<>();
-        apiService.getMovieTopRated(apiKey).enqueue(new Callback<MovieResponse>() {
+        apiService.getMovieTopRated(apiKey, page).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
@@ -112,9 +112,9 @@ public class MovieRepository {
     }
 
     // method ini berfungsi untuk mengrequest data upcoming movie ke web service movieDB
-    public MutableLiveData<List<MovieResults>> getMovieUpcoming() {
+    public MutableLiveData<List<MovieResults>> getMovieUpcoming(int page) {
         MutableLiveData<List<MovieResults>> listUpMovie = new MutableLiveData<>();
-        apiService.getMovieUpcoming(apiKey).enqueue(new Callback<MovieResponse>() {
+        apiService.getMovieUpcoming(apiKey, page).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
@@ -223,9 +223,9 @@ public class MovieRepository {
     }
 
     // method ini berfungsi untuk mengrequest data movie hasil pencarian user ke web service movieDB
-    public MutableLiveData<List<MovieResults>> getQueryMovie(String queryResult) {
+    public MutableLiveData<List<MovieResults>> getQueryMovie(String queryResult, int page) {
         MutableLiveData<List<MovieResults>> listQueryMovie = new MutableLiveData<>();
-        apiService.getQueryMovie(apiKey, queryResult).enqueue(new Callback<MovieResponse>() {
+        apiService.getQueryMovie(apiKey, queryResult, page).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful()) {

@@ -29,64 +29,51 @@ public class MovieViewModel extends ViewModel {
         listMovieGenre = movieRepository.getMovieGenre();
     }
 
-    // method ini berfungsi untuk mendapatkan data movie yang telah di request ke web service
-    // oleh movie repository
-    public LiveData<List<MovieResults>> getMovieDiscovery() {
-        return movieRepository.getMovieDiscovery();
+    // get LiveData movie from repository
+    public LiveData<List<MovieResults>> getMovieDiscovery(int page) {
+        return movieRepository.getMovieDiscovery(page);
     }
 
-    // method ini berfungsi untuk mendapatkan data popular movie yang telah di request ke web service
-    // oleh movie repository
-    public LiveData<List<MovieResults>> getMoviePopular() {
-        return movieRepository.getMoviePopular();
+    // get LiveData popular movie from repository
+    public LiveData<List<MovieResults>> getMoviePopular(int page) {
+        return movieRepository.getMoviePopular(page);
     }
 
+    // get LiveData top rated movie from repository
+    public LiveData<List<MovieResults>> getMovieTop(int page) {
+        return movieRepository.getMovieTopRated(page);
+    }
 
-    // method ini berfungsi untuk mendapatkan data movie genre yang telah di request ke web service
-    // oleh movie repository
+    // get LiveData upcoming movie from repository
+    public LiveData<List<MovieResults>> getMovieUpcoming(int page) {
+        return movieRepository.getMovieUpcoming(page);
+    }
+
+    // get LiveData genre movie from repository
     public LiveData<List<MovieGenres>> getMovieGenre() {
         return listMovieGenre;
     }
 
-
-    // method ini berfungsi untuk mendapatkan data movie detail yang telah di request ke web service
-    // oleh movie repository
+    // get LiveData detail movie from repository
     public LiveData<MovieDetail> getMovieDetail(int movieId) {
         return movieRepository.getMovieDetail(movieId);
     }
 
 
-    // method ini berfungsi untuk mendapatkan data movie trailer yang telah di request ke web service
-    // oleh movie repository
+    // get LiveData trailer movie from repository
     public LiveData<List<MovieTrailer>> getMovieTrailer(int movieId) {
         return movieRepository.getMovieTrailer(movieId);
     }
 
 
-    // method ini berfungsi untuk mendapatkan data movie review yang telah di request ke web service
-    // oleh movie repository
+    // get LiveData review movie from repository
     public LiveData<List<MovieReview>> getMovieReview(int movieId) {
         return movieRepository.getMovieReview(movieId);
     }
 
 
-    // method ini berfungsi untuk mendapatkan data movie hasil pencarian yang telah di request ke
-    // web service oleh movie repository
-    public LiveData<List<MovieResults>> getQueryMovie(String query) {
-        return movieRepository.getQueryMovie(query);
-    }
-
-
-    // method ini berfungsi untuk mendapatkan data top rated movie yang telah di request ke web service
-    // oleh movie repository
-    public LiveData<List<MovieResults>> getMovieTop() {
-        return movieRepository.getMovieTopRated();
-    }
-
-
-    // method ini berfungsi untuk mendapatkan data movie review yang telah di request ke web service
-    // oleh movie repository
-    public LiveData<List<MovieResults>> getMovieUpcoming() {
-        return movieRepository.getMovieUpcoming();
+    // get LiveData search movie from repository
+    public LiveData<List<MovieResults>> getQueryMovie(String query, int page) {
+        return movieRepository.getQueryMovie(query, page);
     }
 }

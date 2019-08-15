@@ -29,4 +29,15 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_favorite_movie" />
 
+    <ImageView
+        android:id="@+id/img_no_data"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        android:src="@drawable/nodata"
+        app:layout_constraintBottom_toBottomOf="@+id/rv_movie"
+        app:layout_constraintTop_toTopOf="@+id/rv_movie"
+        tools:ignore="ContentDescription" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

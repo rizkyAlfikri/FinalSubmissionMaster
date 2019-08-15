@@ -45,9 +45,9 @@ public class TvShowRepository {
     }
 
     // method ini berfungsi untuk mengrequest data tv show ke web service movieDB
-    public MutableLiveData<List<TvShowResults>> getTvFromRetrofit() {
+    public MutableLiveData<List<TvShowResults>> getTvFromRetrofit(int page) {
         MutableLiveData<List<TvShowResults>> listTv = new MutableLiveData<>();
-        apiService.getTvFromApi(apiKey).enqueue(new Callback<TvShowResponse>() {
+        apiService.getTvFromApi(apiKey, page).enqueue(new Callback<TvShowResponse>() {
             @Override
             public void onResponse(@NonNull Call<TvShowResponse> call, @NonNull Response<TvShowResponse> response) {
                 if (response.isSuccessful()) {
@@ -66,9 +66,9 @@ public class TvShowRepository {
 
     }
 
-    public MutableLiveData<List<TvShowResults>> getTvPopular() {
+    public MutableLiveData<List<TvShowResults>> getTvPopular(int page) {
         MutableLiveData<List<TvShowResults>> listPopularTv = new MutableLiveData<>();
-        apiService.getTvPopular(apiKey).enqueue(new Callback<TvShowResponse>() {
+        apiService.getTvPopular(apiKey, page).enqueue(new Callback<TvShowResponse>() {
             @Override
             public void onResponse(@NonNull Call<TvShowResponse> call, @NonNull Response<TvShowResponse> response) {
                 if (response.isSuccessful()) {
@@ -86,9 +86,9 @@ public class TvShowRepository {
         return listPopularTv;
     }
 
-    public MutableLiveData<List<TvShowResults>> getTvTopRated() {
+    public MutableLiveData<List<TvShowResults>> getTvTopRated(int page) {
         MutableLiveData<List<TvShowResults>> listTvTop = new MutableLiveData<>();
-        apiService.getTvTopRated(apiKey).enqueue(new Callback<TvShowResponse>() {
+        apiService.getTvTopRated(apiKey, page).enqueue(new Callback<TvShowResponse>() {
             @Override
             public void onResponse(@NonNull Call<TvShowResponse> call, @NonNull Response<TvShowResponse> response) {
                 if (response.isSuccessful()) {
@@ -106,9 +106,9 @@ public class TvShowRepository {
         return listTvTop;
     }
 
-    public MutableLiveData<List<TvShowResults>> getTvOnAir() {
+    public MutableLiveData<List<TvShowResults>> getTvOnAir(int page) {
         MutableLiveData<List<TvShowResults>> listTvAir = new MutableLiveData<>();
-        apiService.getTvOnAir(apiKey).enqueue(new Callback<TvShowResponse>() {
+        apiService.getTvOnAir(apiKey, page).enqueue(new Callback<TvShowResponse>() {
             @Override
             public void onResponse(@NonNull Call<TvShowResponse> call, @NonNull Response<TvShowResponse> response) {
                 if (response.isSuccessful()) {
@@ -172,9 +172,9 @@ public class TvShowRepository {
     }
 
     // method ini berfungsi untuk mengrequest data tv show hasil pencarian user ke web service movieDB
-    public MutableLiveData<List<TvShowResults>> getTvQuery(String query) {
+    public MutableLiveData<List<TvShowResults>> getTvQuery(String query, int page) {
         MutableLiveData<List<TvShowResults>> listTvQuery = new MutableLiveData<>();
-        apiService.getQueryTv(apiKey, query).enqueue(new Callback<TvShowResponse>() {
+        apiService.getQueryTv(apiKey, query, page).enqueue(new Callback<TvShowResponse>() {
             @Override
             public void onResponse(@NonNull Call<TvShowResponse> call, @NonNull Response<TvShowResponse> response) {
                 if (response.isSuccessful()) {

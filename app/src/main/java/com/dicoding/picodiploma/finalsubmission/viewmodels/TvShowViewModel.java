@@ -20,20 +20,19 @@ import java.util.List;
 public class TvShowViewModel extends ViewModel {
 
     // inisialisasi variabe; listTv, listTvGenre, dan tv repository
-    private MutableLiveData<List<TvShowResults>> listTv;
+
     private MutableLiveData<List<TvShowGenres>> listTvGenre;
     private TvShowRepository tvShowRepository;
 
     // construct ini akan membuat TvShowViewModel dapat mengakses data dan method yang ada di tv show repository
     public TvShowViewModel() {
         tvShowRepository = TvShowRepository.getInstance();
-        listTv = tvShowRepository.getTvFromRetrofit();
         listTvGenre = tvShowRepository.getTvGenre();
     }
 
     // get LiveData tv show from repository
-    public LiveData<List<TvShowResults>> getTvFromRetrofit() {
-        return listTv;
+    public LiveData<List<TvShowResults>> getTvFromRetrofit(int page) {
+        return tvShowRepository.getTvFromRetrofit(page);
     }
 
     // get LiveData tv show genre from repository
@@ -47,8 +46,8 @@ public class TvShowViewModel extends ViewModel {
     }
 
     // get LiveData tv show search result from repository
-    public LiveData<List<TvShowResults>> getTvQuery(String query) {
-        return tvShowRepository.getTvQuery(query);
+    public LiveData<List<TvShowResults>> getTvQuery(String query, int page) {
+        return tvShowRepository.getTvQuery(query, page);
     }
 
     // get LiveData tv show trailer from repository
@@ -62,17 +61,17 @@ public class TvShowViewModel extends ViewModel {
     }
 
     // get LiveData tv show popular from repository
-    public LiveData<List<TvShowResults>> getTvPopular() {
-        return tvShowRepository.getTvPopular();
+    public LiveData<List<TvShowResults>> getTvPopular(int page) {
+        return tvShowRepository.getTvPopular(page);
     }
 
     // get LiveData tv show top rated from repository
-    public LiveData<List<TvShowResults>> getTvTopRated() {
-        return tvShowRepository.getTvTopRated();
+    public LiveData<List<TvShowResults>> getTvTopRated(int page) {
+        return tvShowRepository.getTvTopRated(page);
     }
 
     // get LiveData tv show on air from repository
-    public LiveData<List<TvShowResults>> getTvOnAir() {
-        return tvShowRepository.getTvOnAir();
+    public LiveData<List<TvShowResults>> getTvOnAir(int page) {
+        return tvShowRepository.getTvOnAir(page);
     }
 }
