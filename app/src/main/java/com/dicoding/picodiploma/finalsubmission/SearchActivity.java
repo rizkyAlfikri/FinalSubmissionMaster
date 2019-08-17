@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_MOVIE;
 import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTENT_URI_TV;
 
-public class SearchActivity extends AppCompatActivity {
+public class  SearchActivity extends AppCompatActivity {
     public static final String EXTRA_SEARCH = "extra_search";
     public static final String MOVIE_SEARCH = "movie_search";
     public static final String TV_SEARCH = "tv_search";
@@ -88,7 +88,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-
+    // get data search movie from ViewModel
     private final Observer<List<MovieResults>> getMovieQueryData = new Observer<List<MovieResults>>() {
         @Override
         public void onChanged(List<MovieResults> movieResults) {
@@ -105,8 +105,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
-
-    // statement ini berfungsi untuk menangkap data movie genre dari webservice movieDb,
+    // get data search movie from ViewModel
     private final Observer<List<MovieGenres>> getMovieGenreData = new Observer<List<MovieGenres>>() {
         @Override
         public void onChanged(List<MovieGenres> movieGenres) {
@@ -115,8 +114,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
-
-    // statement ini berfungsi untuk menangkap data hasil pencarian tvshow dari webservice movieDb,
+    // get data search tv show from ViewModel
     private final Observer<List<TvShowResults>> getTvQueryData = new Observer<List<TvShowResults>>() {
         @Override
         public void onChanged(List<TvShowResults> tvShowResults) {
@@ -136,15 +134,13 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
-
-    // statement ini berfungsi untuk menangkap data tv show genre dari webservice movieDb,
+    // get data genre tv show from ViewModel
     private final Observer<List<TvShowGenres>> getTvGenreData = new Observer<List<TvShowGenres>>() {
         @Override
         public void onChanged(List<TvShowGenres> tvShowGenres) {
             tvShowSearchAdapter.setListGenreTv(tvShowGenres);
         }
     };
-
 
     // inisialisasi adapter movie dan judul action bar
     private void initMovie(String query) {
@@ -157,7 +153,6 @@ public class SearchActivity extends AppCompatActivity {
         movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
         queryMovie(query);
     }
-
 
     // method ini berfungsi untuk melakukan request movie ke web service
     private void queryMovie(String query) {
@@ -186,7 +181,6 @@ public class SearchActivity extends AppCompatActivity {
         movieViewModel.getMovieGenre().observe(this, getMovieGenreData);
     }
 
-
     // inisialisasi adapter tv show dan judul action bar
     private void initTvShow(String query) {
         if (getSupportActionBar() != null) {
@@ -199,7 +193,6 @@ public class SearchActivity extends AppCompatActivity {
         tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
         queryTvShow(query);
     }
-
 
     // method ini untuk mengrequest tv show ke web service
     private void queryTvShow(String query) {
@@ -229,7 +222,7 @@ public class SearchActivity extends AppCompatActivity {
         tvShowViewModel.getTvGenre().observe(this, getTvGenreData);
     }
 
-
+    // inisialisasi komponen SearchView
     private void searchInit(String query) {
 
         searchView.setQuery(query, false);
@@ -283,32 +276,4 @@ public class SearchActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-//    @Override
-//    public void onClick(View v) {
-//        if (v.getId() == R.id.img_next) {
-//            pageNum += 1;
-//            txtPage.setText(String.valueOf(pageNum));
-//            progressBar.setVisibility(View.VISIBLE);
-//
-//            if (isMovie) {
-//                queryMovie(setQuery, pageNum);
-//            } else {
-//                queryTvShow(setQuery);
-//            }
-//
-//        } else if (v.getId() == R.id.img_back) {
-//            if (pageNum > 1) {
-//                pageNum -= 1;
-//                txtPage.setText(String.valueOf(pageNum));
-//                progressBar.setVisibility(View.VISIBLE);
-//
-//                if (isMovie) {
-//                    queryMovie(setQuery, pageNum);
-//                } else {
-//                    queryTvShow(setQuery);
-//                }
-//            }
-//        }
-//    }
 }

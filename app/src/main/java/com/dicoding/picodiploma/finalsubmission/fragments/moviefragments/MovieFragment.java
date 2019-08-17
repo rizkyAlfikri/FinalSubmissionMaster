@@ -69,14 +69,12 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_movie, container, false);
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -86,9 +84,7 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         init(getContext());
         initPage();
         selectMovieByCategory();
-
     }
-
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -96,9 +92,7 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         // method ini berfungsi umtuk melakukan pencarian data
         searchMovie(menu);
         super.onCreateOptionsMenu(menu, inflater);
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -113,7 +107,7 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
 
     }
 
-
+    // method ini untuk memilih movie category
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String selectCategory = getString(R.string.select_category_movie);
@@ -174,7 +168,6 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         }
     }
 
-
     // method ini berfungsi untuk meng inisialisasi komponen yang akan digunakan
     private void init(Context context) {
         progressBar.setVisibility(View.VISIBLE);
@@ -185,13 +178,11 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
     }
 
-
     private void initPage() {
         txtPage.setText(String.valueOf(pageNum));
         imgNext.setOnClickListener(this);
         imgBack.setOnClickListener(this);
     }
-
 
     // method ini untuk menampilkan category movie
     private void selectMovieByCategory() {
@@ -204,7 +195,6 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
             spinnerMovie.setOnItemSelectedListener(this);
         }
     }
-
 
     // method ini untuk memilih category movie
     private void getCategoryMovie(int position) {
@@ -227,8 +217,7 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         }
     }
 
-
-    // method dibawah ini untuk mendapatkan data dari ViewModel
+    // get data discovery movie from ViewModel
     private final Observer<List<MovieResults>> getMovieDiscoveryData = new Observer<List<MovieResults>>() {
         @Override
         public void onChanged(List<MovieResults> movieResults) {
@@ -248,7 +237,7 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         }
     };
 
-
+    // get data popular movie from ViewModel
     private final Observer<List<MovieResults>> getMoviePopularData = new Observer<List<MovieResults>>() {
         @Override
         public void onChanged(List<MovieResults> movieResults) {
@@ -267,7 +256,7 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         }
     };
 
-
+    // get data top rated movie from ViewModel
     private final Observer<List<MovieResults>> getMovieTopData = new Observer<List<MovieResults>>() {
         @Override
         public void onChanged(List<MovieResults> movieResults) {
@@ -286,7 +275,7 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         }
     };
 
-
+    // get data upcoming movie from ViewModel
     private final Observer<List<MovieResults>> getMovieUpComingData = new Observer<List<MovieResults>>() {
         @Override
         public void onChanged(List<MovieResults> movieResults) {
@@ -305,7 +294,7 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         }
     };
 
-
+    // get data genre movie from ViewModel
     private final Observer<List<MovieGenres>> getGenreMovieData = new Observer<List<MovieGenres>>() {
         @Override
         public void onChanged(List<MovieGenres> movieGenresData) {

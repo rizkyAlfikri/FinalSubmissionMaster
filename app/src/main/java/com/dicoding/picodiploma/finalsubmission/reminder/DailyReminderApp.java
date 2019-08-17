@@ -12,7 +12,6 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
@@ -67,7 +66,8 @@ public class DailyReminderApp extends BroadcastReceiver {
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000}) // set pola getar saat notifikasi
                 .setSound(alarmSound); // set bunyi notifikasi yang akan digunakan
 
-        // statement ini berfungsi supaya notifikasi yang telah dibuat dapat berjalan di android dengan OS Oreo ke atas
+        // statement ini berfungsi supaya notifikasi yang telah dibuat dapat berjalan di android
+        // dengan OS Oreo ke atas
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME,
@@ -82,21 +82,23 @@ public class DailyReminderApp extends BroadcastReceiver {
             }
         }
 
-        // statement ini berfungsi supaya notifikasi yang telah dibuat dapat berjalan di bawah android dengan OS Oreo ke bawah
+        // statement ini berfungsi supaya notifikasi yang telah dibuat dapat berjalan di bawah
+        // android dengan OS Oreo ke bawah
         Notification notification = builder.build();
         if (notificationManager != null) {
             notificationManager.notify(ID_APP, notification);
         }
     }
 
-    // method ini berfungsi untuk mengatur waktu kapan notifikasi akan dikeluarkan, dan menyalakan fitur notifikasi yang telah dibuat
+    // method ini berfungsi untuk mengatur waktu kapan notifikasi akan dikeluarkan, dan menyalakan
+    // fitur notifikasi yang telah dibuat
     public void setReminderApp(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, DailyReminderApp.class);
 
         // setting waktu, kapan notifikasi akan di keluarkan
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 7); // waktu yang di set adalah pukul 7 pagi
+        calendar.set(Calendar.HOUR_OF_DAY, 8); // waktu yang di set adalah pukul 7 pagi
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
@@ -108,6 +110,8 @@ public class DailyReminderApp extends BroadcastReceiver {
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pendingIntent);
         }
+
+
     }
 
     // method ini berfungsi untuk mematikan fitur notifikasi
@@ -119,7 +123,5 @@ public class DailyReminderApp extends BroadcastReceiver {
         if (alarmManager != null) {
             alarmManager.cancel(pendingIntent);
         }
-
-        Toast.makeText(context, context.getString(R.string.cancel_repeating_app), Toast.LENGTH_SHORT).show();
     }
 }

@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <permission
         android:name="com.dicoding.picodiploma.finalsubmission.READ_DATABASE"
@@ -32,7 +33,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".activity.DetailTvShowActivity"
             android:label="@string/detail_tv"
@@ -41,7 +41,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -50,7 +49,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dicoding.picodiploma.finalsubmission.MainActivity" />
         </activity>
-
         <activity
             android:name=".activity.DetailMovieActivity"
             android:label="@string/detail_activity"
@@ -59,13 +57,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -85,13 +83,19 @@
         <receiver
             android:name=".reminder.DailyReminderApp"
             android:enabled="true"
-            android:exported="false" />
-
+            android:exported="false">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+            <!--</intent-filter>-->
+        </receiver>
         <receiver
             android:name=".reminder.DailyReminderMovie"
             android:enabled="true"
-            android:exported="false" />
-
+            android:exported="false">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+            <!--</intent-filter>-->
+        </receiver>
         <receiver android:name=".widget.MovieFavoriteWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

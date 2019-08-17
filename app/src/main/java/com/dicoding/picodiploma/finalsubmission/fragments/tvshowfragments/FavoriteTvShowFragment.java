@@ -192,6 +192,7 @@ public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
         }
     }
 
+    // kelas ini unuk mengobservasi perubahan data dari database yang sedang ditampilkan
     public static class DataObserver extends ContentObserver {
         final Context context;
 

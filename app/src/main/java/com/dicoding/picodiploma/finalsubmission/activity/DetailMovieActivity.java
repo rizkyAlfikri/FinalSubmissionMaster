@@ -140,12 +140,14 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
 
         // icon favorite ini berfungsi sebagai petanda apakah data sudah ada atau belum di database
         if (isFavorite) {
+
             // jika data sebelumnnya sudah ada di database, maka icon favorite akan  seperti dibawah ini
             Glide.with(this)
                     .load(R.drawable.ic_favorite_black_24dp)
                     .apply(new RequestOptions().override(36, 36))
                     .into(imgFavorite);
         } else {
+
             // jika data sebelumnnya tidak ada di database maka  icon favorite akan seperti dibawah ini
             Glide.with(this)
                     .load(R.drawable.ic_favorite_border_black_24dp)
@@ -155,7 +157,6 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
 
         imgFavorite.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v) {
@@ -217,11 +218,10 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    // statement ini berfungsi untuk menangkap data movie detail dari webservice movieDb,
-    // data yang telah di tangkap dijadikan parameter oleh method loadMovieDetail
+    // get data movie detail from ViewModel
     private final Observer<MovieDetail> getMovieDetailData = this::loadMovieDetail;
 
-    // statement ini berfungsi untuk menangkap data movie trailer dari webservice movieDb,
+    // get data movie trailer from ViewModel
     private final Observer<List<MovieTrailer>> getMovieTrailerData = new Observer<List<MovieTrailer>>() {
         @Override
         public void onChanged(List<MovieTrailer> movieTrailers) {
@@ -230,8 +230,9 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
             trailerAdapter.notifyDataSetChanged();
             progressBar2.setVisibility(View.GONE);
 
-            // method ini berfungsi untuk mengload video trailer
+            // cek jika data tidak null
             if (!movieTrailers.isEmpty()) {
+                // method ini berfungsi untuk mengload video trailer
                 openYoutubeTrailer(movieTrailers.get(0).getKey());
             } else {
                 Glide.with(getApplicationContext())
@@ -246,8 +247,7 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
         }
     };
 
-    // statement ini berfungsi untuk menangkap data movie review dari webservice movieDb,
-    // data yang telah di tangkap akan di masukan ke review movie adapter yang nantinya akan di tampilkan
+    // get data movie review from ViewModel
     private final Observer<List<MovieReview>> getMovieReviewData = new Observer<List<MovieReview>>() {
         @Override
         public void onChanged(List<MovieReview> movieReviews) {
@@ -258,6 +258,10 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
 
     // inisialisasi RecyclerView, Adapter, dan MovieViewModel
     private void init() {
+        // hide action bar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         movieId = movieResults.getId();
         rvMovieVideo.setLayoutManager(new LinearLayoutManager(this,
                 RecyclerView.HORIZONTAL,

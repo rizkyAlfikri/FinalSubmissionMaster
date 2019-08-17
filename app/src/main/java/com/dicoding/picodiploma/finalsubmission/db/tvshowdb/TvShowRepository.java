@@ -66,6 +66,7 @@ public class TvShowRepository {
 
     }
 
+    // method ini berfungsi untuk mengrequest data popular tv show ke web service movieDB
     public MutableLiveData<List<TvShowResults>> getTvPopular(int page) {
         MutableLiveData<List<TvShowResults>> listPopularTv = new MutableLiveData<>();
         apiService.getTvPopular(apiKey, page).enqueue(new Callback<TvShowResponse>() {
@@ -86,6 +87,7 @@ public class TvShowRepository {
         return listPopularTv;
     }
 
+    // method ini berfungsi untuk mengrequest data top rated tv show ke web service movieDB
     public MutableLiveData<List<TvShowResults>> getTvTopRated(int page) {
         MutableLiveData<List<TvShowResults>> listTvTop = new MutableLiveData<>();
         apiService.getTvTopRated(apiKey, page).enqueue(new Callback<TvShowResponse>() {
@@ -106,6 +108,7 @@ public class TvShowRepository {
         return listTvTop;
     }
 
+    // method ini berfungsi untuk mengrequest data on the air tv show ke web service movieDB
     public MutableLiveData<List<TvShowResults>> getTvOnAir(int page) {
         MutableLiveData<List<TvShowResults>> listTvAir = new MutableLiveData<>();
         apiService.getTvOnAir(apiKey, page).enqueue(new Callback<TvShowResponse>() {

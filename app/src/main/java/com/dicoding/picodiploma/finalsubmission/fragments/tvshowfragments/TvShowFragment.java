@@ -69,13 +69,11 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_tv_show, container, false);
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -87,7 +85,6 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
         selectedTvByCategory();
     }
 
-
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.main_movie, menu);
@@ -95,7 +92,6 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
         searchTvShow(menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -108,7 +104,6 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     // method ini berfungsi untuk memilih category tv show
     @Override
@@ -147,12 +142,10 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
         }
     }
 
-
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -170,7 +163,6 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
             }
         }
     }
-
 
     // method ini untuk meng inisialisasi komponen  yang akan digunakan
     private void init(Context context) {
@@ -202,8 +194,7 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
             spinnerTv.setOnItemSelectedListener(this);
         }
     }
-
-
+    // method ini untuk memilih category tv show
     private void getCategoryTv(int position) {
         switch (position) {
             case 1:
@@ -225,7 +216,7 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
 
-    // method dibawah ini untuk mendapatkan data dari ViewModel
+    // get data discovery tv show from ViewModel
     private final Observer<List<TvShowResults>> getTvData = new Observer<List<TvShowResults>>() {
         @Override
         public void onChanged(List<TvShowResults> tvShowResults) {
@@ -244,7 +235,7 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
         }
     };
 
-
+    // get data popular tv show from ViewModel
     private final Observer<List<TvShowResults>> getTvPopularData = new Observer<List<TvShowResults>>() {
         @Override
         public void onChanged(List<TvShowResults> tvShowResults) {
@@ -261,7 +252,7 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
         }
     };
 
-
+    // get data top rated tv show from ViewModel
     private final Observer<List<TvShowResults>> getTvTopData = new Observer<List<TvShowResults>>() {
         @Override
         public void onChanged(List<TvShowResults> tvShowResults) {
@@ -278,7 +269,7 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
         }
     };
 
-
+    // get data on the air tv show from ViewModel
     private final Observer<List<TvShowResults>> getTvOnAir = new Observer<List<TvShowResults>>() {
         @Override
         public void onChanged(List<TvShowResults> tvShowResults) {
@@ -295,7 +286,7 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
         }
     };
 
-
+    // get data genre tv show from ViewModel
     private final Observer<List<TvShowGenres>> getTvGenre = new Observer<List<TvShowGenres>>() {
         @Override
         public void onChanged(List<TvShowGenres> tvShowGenres) {
@@ -303,7 +294,6 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
             tvShowAdapter.notifyDataSetChanged();
         }
     };
-
 
     // method ini untuk melakukan pencarian data
     private void searchTvShow(Menu menu) {
@@ -344,7 +334,6 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
             }
         }
     }
-
 
     // method ini untuk menghilangkan keyboard setiap kali user melakukan pencarian data
     private void hidekeyboard(SearchView searchView) {

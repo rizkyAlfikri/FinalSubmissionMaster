@@ -63,7 +63,7 @@ public class DailyReminderMovie extends BroadcastReceiver {
 
         // method ini berfungsi untuk mengrequest data release date movie ke web service
         ApiService apiService = RetrofitService.createService(ApiService.class);
-        apiService.getMoviePopular(Config.API_KEY, 1).enqueue(new Callback<MovieResponse>() {
+        apiService.getMovieUpcoming(Config.API_KEY, 1).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
@@ -109,7 +109,8 @@ public class DailyReminderMovie extends BroadcastReceiver {
                 = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
 
-        // statement ini berfungsi supaya notifikasi yang telah dibuat dapat berjalan di android dengan OS Oreo ke atas
+        // statement ini berfungsi supaya notifikasi yang telah dibuat dapat berjalan di android
+        // dengan OS Oreo ke atas
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME,
                     NotificationManager.IMPORTANCE_DEFAULT);
@@ -130,7 +131,8 @@ public class DailyReminderMovie extends BroadcastReceiver {
                 R.drawable.baseline_notification_important_white_48dp);
 
         // statement ini berfungsi untuk  menentukan jumlah notifikasi yang akan dimunculkan
-        // jumlah notifikasi akan sesuai dengan jumlah data yang ada di listMovie. isi dari setiap notifikasi akan sesuai dengan data movie yang ada di listMovie
+        // jumlah notifikasi akan sesuai dengan jumlah data yang ada di listMovie. isi dari setiap
+        // notifikasi akan sesuai dengan data movie yang ada di listMovie
         // jika listMovie = 0, notifikasi akan tetap di munculkan tetapi dengan data yang berbeda
         int numMovie;
         if (listMovie.size() > 0) {
@@ -150,12 +152,14 @@ public class DailyReminderMovie extends BroadcastReceiver {
                     .setLargeIcon(bmp) // set large icon untuk notifikasi
                     .setContentTitle(title) // set judul untuk notifikasi
                     .setContentText(message) // set pesan untuk notifikasi
-                    .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000}) // set pola getar ketika notifikasi muncul
+                    .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000}) // set pola getar ketika
+                    // notifikasi muncul
                     .setSound(alarmSound) // set bunyi ketika notifikasi muncul
                     .setContentIntent(pendingIntent) // set pending intent untuk notifikasi
                     .setAutoCancel(true);
 
-            // statement ini berfungsi supaya notifikasi yang telah dibuat dapat berjalan di bawah android dengan OS Oreo ke bawah
+            // statement ini berfungsi supaya notifikasi yang telah dibuat dapat berjalan di bawah
+            // android dengan OS Oreo ke bawah
             if (notificationManager != null) {
                 notificationManager.notify(0, builder.build());
             }
@@ -190,7 +194,7 @@ public class DailyReminderMovie extends BroadcastReceiver {
 
         // method ini berfungsi untuk mengatur waktu kapan notifikasi akan dimunculkan
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 8); // waktu yang di set adalah pukul 7 pagi
+        calendar.set(Calendar.HOUR_OF_DAY, 8); // waktu yang di set adalah pukul 8 pagi
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 

@@ -154,7 +154,6 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
         imgFavorite.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.img_favorite) {
@@ -211,11 +210,10 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    // statement ini berfungsi untuk menangkap data tv show detail dari webservice movieDb,
-    // data yang telah di tangkap dijadikan parameter oleh method loadTvShowDetail
+    // get data tv show detail from ViewModel
     private final Observer<TvShowDetail> getTvDetailData = this::loadTvShowDetail;
 
-    // statement ini berfungsi untuk menangkap data tv show trailer dari webservice movieDb,
+    // get data tv show trailer from ViewModel
     private final Observer<List<TvShowTrailer>> getTvTrailerData = new Observer<List<TvShowTrailer>>() {
         @Override
         public void onChanged(List<TvShowTrailer> tvShowTrailers) {
@@ -240,8 +238,7 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
         }
     };
 
-    // statement ini berfungsi untuk menangkap data tv show review dari webservice movieDb,
-    // data yang telah di tangkap akan di masukan ke review tv show adapter yang nantinya akan di tampilkan
+    // get data tv show review from ViewModel
     private final Observer<List<TvShowReview>> getTvReviewData = new Observer<List<TvShowReview>>() {
         @Override
         public void onChanged(List<TvShowReview> tvShowReviews) {
@@ -252,6 +249,10 @@ public class DetailTvShowActivity extends AppCompatActivity implements View.OnCl
 
     // inisialisasi RecyclerView, Adapter, dan MovieViewModel
     private void init() {
+        // hide action bar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         tvId = tvShowResults.getId();
 
         rvTvVideo.setLayoutManager(new LinearLayoutManager(this,

@@ -91,6 +91,11 @@
     <string name="detail_activity">DetailActivity</string>
     <string name="search_activity">SearchAvtivity</string>
     <string name="detail_tv">DetailTvShow</string>
+    <string name="by">by</string>
+    <string name="peoples">peoples</string>
+    <string name="fame">fame</string>
+    <string name="region">Region</string>
+    <string name="language_setting">Change Language Setting</string>
 
     <string-array name="spinner_movie">
         <item>Select Category</item>
