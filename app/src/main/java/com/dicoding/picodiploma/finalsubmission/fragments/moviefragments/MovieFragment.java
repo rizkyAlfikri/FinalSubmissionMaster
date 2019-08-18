@@ -29,8 +29,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicoding.picodiploma.finalsubmission.R;
-import com.dicoding.picodiploma.finalsubmission.SearchActivity;
-import com.dicoding.picodiploma.finalsubmission.SettingsActivity;
+import com.dicoding.picodiploma.finalsubmission.activity.SearchActivity;
+import com.dicoding.picodiploma.finalsubmission.activity.SettingsActivity;
 import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenres;
@@ -51,6 +51,7 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
     private MovieViewModel movieViewModel;
     private int newPosition;
     private int pageNum = 1;
+    private boolean isStillSelectCatgory = false;
     @BindView(R.id.txt_page)
     TextView txtPage;
     @BindView(R.id.img_next)
@@ -113,11 +114,12 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         String selectCategory = getString(R.string.select_category_movie);
         this.newPosition = position;
         if (parent.getItemAtPosition(position).equals(selectCategory)) {
-
+            isStillSelectCatgory = true;
             movieViewModel.getMovieDiscovery(pageNum).observe(this, getMovieDiscoveryData);
             movieViewModel.getMovieGenre().observe(this, getGenreMovieData);
 
         } else {
+            isStillSelectCatgory = false;
             switch (position) {
                 case 1:
                     progressBar.setVisibility(View.VISIBLE);
@@ -153,12 +155,12 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.img_next) {
+        if (v.getId() == R.id.img_next & !isStillSelectCatgory) {
             pageNum += 1;
             progressBar.setVisibility(View.VISIBLE);
             txtPage.setText(String.valueOf(pageNum));
             getCategoryMovie(newPosition);
-        } else if (v.getId() == R.id.img_back) {
+        } else if (v.getId() == R.id.img_back & !isStillSelectCatgory) {
             if (pageNum > 1) {
                 pageNum -= 1;
                 progressBar.setVisibility(View.VISIBLE);

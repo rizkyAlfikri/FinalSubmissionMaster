@@ -23,7 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dicoding.picodiploma.finalsubmission.LoadCallback;
+import com.dicoding.picodiploma.finalsubmission.utils.LoadCallback;
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.activity.DetailTvShowActivity;
 import com.dicoding.picodiploma.finalsubmission.adapters.tvshowadapter.TvShowFavoriteAdapter;

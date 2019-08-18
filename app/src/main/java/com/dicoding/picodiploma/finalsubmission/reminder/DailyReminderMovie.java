@@ -14,13 +14,12 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
-import com.dicoding.picodiploma.finalsubmission.MainActivity;
+import com.dicoding.picodiploma.finalsubmission.activity.MainActivity;
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResponse;
@@ -218,7 +217,5 @@ public class DailyReminderMovie extends BroadcastReceiver {
         if (alarmManager != null) {
             alarmManager.cancel(pendingIntent);
         }
-
-        Toast.makeText(context, context.getString(R.string.cancel_repeating_movie), Toast.LENGTH_SHORT).show();
     }
 }

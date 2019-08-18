@@ -23,7 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dicoding.picodiploma.finalsubmission.LoadCallback;
+import com.dicoding.picodiploma.finalsubmission.utils.LoadCallback;
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieFavoriteAdapter;
@@ -45,10 +45,8 @@ import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCu
 
 
 public class FavoriteMovieFragment extends Fragment implements LoadCallback {
-    private static final String EXTRA_STATE = "extra_state";
     private MovieFavoriteAdapter favoriteAdapter;
     private ArrayList<MovieResults> listMovie;
-    private Bundle mBundle = new Bundle();
     @BindView(R.id.rv_movie)
     RecyclerView rvMovie;
     @BindView(R.id.progress_bar)
@@ -98,7 +96,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
             if (resultCode == RESULT_MOVIE_DELETE) {
                 int position = data.getIntExtra(DetailMovieActivity.EXTRA_POSITION, 0);
                 favoriteAdapter.removeItem(position);
-                mBundle.putParcelableArrayList(EXTRA_STATE, favoriteAdapter.getListMovie());
 
                 Toast.makeText(getContext(), getString(R.string.delete_item), Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_MOVIE_ADD) {
@@ -129,7 +126,8 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
     @Override
     public void postExecute(Cursor cursor) {
         // method ini merupakan hasil output dari kelas LoadTvAsynTask
-        // statement dibawah ini berfungsi untuk memproses data yang telah di query dari database lalu datanya akan ditampilkan melalui adapter
+        // statement dibawah ini berfungsi untuk memproses data yang telah di query dari database
+        // lalu datanya akan ditampilkan melalui adapter
         progressBar.setVisibility(View.GONE);
         listMovie = mapCursorToArrayListMovie(cursor);
         if (listMovie.size() > 0) {

@@ -16,7 +16,7 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
-import com.dicoding.picodiploma.finalsubmission.MainActivity;
+import com.dicoding.picodiploma.finalsubmission.activity.MainActivity;
 import com.dicoding.picodiploma.finalsubmission.R;
 
 import java.util.Calendar;
@@ -98,7 +98,7 @@ public class DailyReminderApp extends BroadcastReceiver {
 
         // setting waktu, kapan notifikasi akan di keluarkan
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 8); // waktu yang di set adalah pukul 7 pagi
+        calendar.set(Calendar.HOUR_OF_DAY, 7); // waktu yang di set adalah pukul 7 pagi
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 

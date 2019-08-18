@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -38,10 +37,6 @@ public class MovieFavoriteAdapter extends RecyclerView.Adapter<MovieFavoriteAdap
 
     }
 
-
-    public ArrayList<MovieResults> getListMovie() {
-        return listMovie;
-    }
 
     // adapter melakukan notifikasi ketika ada penambahan data
     public void addItem(MovieResults movieResults) {
@@ -104,8 +99,6 @@ public class MovieFavoriteAdapter extends RecyclerView.Adapter<MovieFavoriteAdap
         TextView txtGenre;
         @BindView(R.id.img_photo)
         ImageView imgPhoto;
-        @BindView(R.id.card_view)
-        CardView cardView;
         MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

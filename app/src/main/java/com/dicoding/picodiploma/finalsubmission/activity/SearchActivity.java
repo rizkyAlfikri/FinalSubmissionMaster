@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.finalsubmission;
+package com.dicoding.picodiploma.finalsubmission.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -18,8 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
-import com.dicoding.picodiploma.finalsubmission.activity.DetailTvShowActivity;
+import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.adapters.movieadapter.MovieSearchAdapter;
 import com.dicoding.picodiploma.finalsubmission.adapters.tvshowadapter.TvShowSearchAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieGenres;

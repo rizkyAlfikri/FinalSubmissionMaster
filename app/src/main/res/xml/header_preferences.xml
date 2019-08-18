@@ -18,15 +18,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
-        app:fragment="com.dicoding.picodiploma.finalsubmission.SettingsActivity$MessagesFragment"
+        app:fragment="com.dicoding.picodiploma.finalsubmission.activity.SettingsActivity$MessagesFragment"
         app:icon="@drawable/ic_settings_black_24dp"
-        app:key="notif"
+        app:key="general"
         app:title="@string/general" />
 
     <Preference
-        app:fragment="com.dicoding.picodiploma.finalsubmission.SettingsActivity$SyncFragment"
+        app:fragment="com.dicoding.picodiploma.finalsubmission.activity.SettingsActivity$SyncFragment"
         app:icon="@drawable/ic_notifications_black_24dp"
-        app:key="general"
+        app:key="notif"
         app:title="@string/notifications" />
 
 </androidx.preference.PreferenceScreen>

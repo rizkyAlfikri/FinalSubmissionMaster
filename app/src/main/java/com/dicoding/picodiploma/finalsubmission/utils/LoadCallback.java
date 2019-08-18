@@ -1,5 +1,5 @@
 
-package com.dicoding.picodiploma.finalsubmission;
+package com.dicoding.picodiploma.finalsubmission.utils;
 
 import android.database.Cursor;
 

@@ -30,8 +30,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dicoding.picodiploma.finalsubmission.R;
-import com.dicoding.picodiploma.finalsubmission.SearchActivity;
-import com.dicoding.picodiploma.finalsubmission.SettingsActivity;
+import com.dicoding.picodiploma.finalsubmission.activity.SearchActivity;
+import com.dicoding.picodiploma.finalsubmission.activity.SettingsActivity;
 import com.dicoding.picodiploma.finalsubmission.activity.DetailTvShowActivity;
 import com.dicoding.picodiploma.finalsubmission.adapters.tvshowadapter.TvShowAdapter;
 import com.dicoding.picodiploma.finalsubmission.models.tvshowmodels.TvShowGenres;

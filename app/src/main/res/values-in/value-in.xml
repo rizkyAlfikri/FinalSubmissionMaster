@@ -1,0 +1,114 @@
+<resources>
+    <string name="app_name">FinalSubmission</string>
+    <string name="movie">Film</string>
+    <string name="tv_shows">Acara TV</string>
+    <string name="favorites">Favorit</string>
+
+    <string name="poster_movie">Gambar Film</string>
+    <string name="release_date">Tanggal Rilis :</string>
+    <string name="action_horror_comedy">Aksi, Horor, Komedi</string>
+    <string name="favorite_tv">TV Favorit</string>
+    <string name="favorite_movies">Film Favorit</string>
+    <string name="overview">Ikhtisar</string>
+    <string name="original_language">Bahasa Asli </string>
+    <string name="no_data">Tidak ada data film untuk saat ini</string>
+    <string name="no_data_tv">Tidak ada data acara TV untuk saat ini</string>
+    <string name="snackbar_delete">Apakah kamu yakin akan menghapus ini</string>
+    <string name="undo">Batalkan </string>
+    <string name="add_favorite">telah ditambahkan ke daftar favorite anda </string>
+    <string name="delete_favorite">telah dihapus dari daftar favorite anda</string>
+    <string name="appwidget_text">CONTOH</string>
+    <string name="add_widget">Tambah widget</string>
+    <string name="movie_favorite_widget">WIDGET FILM FAVORIT</string>
+    <string name="favorite_no_data">Daftar film favorite anda kosong untuk saat ini</string>
+    <string name="title_activity_settings">Pengaturan</string>
+
+    <!-- Preference Titles -->
+    <string name="notifications">Notifikasi</string>
+    <string name="general">Umum</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Tanda tangan anda</string>
+    <string name="reply_title"> Tindakan balasan default</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sinkronkan email secara berkala</string>
+    <string name="daily_date">Pengingat film harian</string>
+    <string name="daily_reminder">Pengingat aplikasi harian</string>
+    <string name="summary_app">Aplikasi akan selalu mengirimkan pemberitahuan kepada Anda setiap
+        jam 8 pagi</string>
+    <string name="summary_date">Aplikasi ini akan selalu mengirimkan pemberitahuan kepada Anda
+        tentang film yang akan tayang hari ini pukul 7 pagi"</string>
+    <string name="settings">Pengaturan</string>
+    <string name="reminder_app_title">Pengingat Aplikasi Harian</string>
+    <string name="reminder_app_message">Periksa Katalog Film Untuk Hari Ini</string>
+    <string name="reminder_movie_title">Pengingat Film Harian</string>
+    <string name="repeating_app">Pengulangan Set App</string>
+    <string name="cancel_repeating_app">Aplikasi Berulang Dibatalkan</string>
+    <string name="repeating_movie">Mengulang Set Film</string>
+    <string name="cancel_repeating_movie">Film Berulang Dibatalkan</string>
+    <string name="release_today">telah dirilis hari ini</string>
+    <string name="search">Pencarian</string>
+    <string name="search_movie_hint">Pencarian Film</string>
+    <string name="search_tv_hint">Pencarian Acara TV</string>
+    <string name="SearchMovieActivity">AktivitasPencarianFilm</string>
+    <string name="submit">Kirim</string>
+    <string name="overview_test">" Insomnia bom waktu dan seorang penjual sabun yang licin
+        menyalurkan agresi laki-laki ke bentuk terapi baru yang mengejutkan. Konsep mereka menarik,
+        dengan \ "klub perkelahian \" terbentuk di setiap kota, sampai eksentrik menghalangi dan
+        memicu spiral di luar kendali menuju terlupakan.",</string>
+    <string name="duration">Durasi :</string>
+    <string name="vote_average">Suara Rata – Rata :</string>
+    <string name="review">Ulasan</string>
+    <string name="videos">Video</string>
+    <string name="detail">Detil</string>
+    <string name="video_trailer">Trailer Video</string>
+    <string name="author">Penulis :</string>
+    <string name="url">Url :</string>
+    <string name="content">Konten :</string>
+    <string name="homepage">Beranda :</string>
+    <string name="status">Status :</string>
+    <string name="tagline">Kutipan :</string>
+    <string name="popularity">Kepopuleran :</string>
+    <string name="details">Detil</string>
+    <string name="image_trailer">Trailer Gambar</string>
+    <string name="see_all">Lihat Semua</string>
+    <string name="number_of_seasons">Jumlah Seri :</string>
+    <string name="number_of_episodes">Jumlah Episode :</string>
+    <string name="language">Bahasa :</string>
+    <string name="no_movie_review">Masih belum ada ulasan untuk film ini</string>
+    <string name="no_tv_review">Masih belum ada ulasan untuk acara TV ini</string>
+    <string name="delete_item">Satu item berhasil dihapus</string>
+    <string name="movie_search_result">Hasil Pencariam Film</string>
+    <string name="tv_search_result">Hasil Pencarian Acara TV</string>
+    <string name="no_release_today">Tidak ada film yang dirilis hari ini</string>
+    <string name="popular_movie">Film Paling Populer</string>
+    <string name="top_movie">Film Peringkat Teratas</string>
+    <string name="up_movie">Film Yang Akan Tayang</string>
+    <string name="select_category_movie">Pilih Kategori</string>
+    <string name="data_not_found">Data Tidak Ditemukan</string>
+    <string name="dicoding_movie">Dicoding Movie</string>
+    <string name="detail_activity">AktivitasDetail</string>
+    <string name="search_activity">AktivitasPencarian</string>
+    <string name="detail_tv">DetilAcaraTV</string>
+    <string name="by">oleh</string>
+    <string name="peoples">orang</string>
+    <string name="fame">ketenaran</string>
+    <string name="region">Wilayah</string>
+    <string name="language_setting">Ubah Setelan Bahasa</string>
+
+    <string-array name="spinner_movie">
+        <item>Pilih Kategori</item>
+        <item>Film Paling Populer</item>
+        <item>Film Peringkat Teratas</item>
+        <item>Film Yang Akan Tayang</item>
+    </string-array>
+
+    <string-array name="spinner_tv">
+        <item>Pilih Kategori</item>
+        <item>Acara TV Terpopuler</item>
+        <item>Acara TV Peringkat Teratas</item>
+        <item>Acara TV Yang Tayang</item>
+    </string-array>
+</resources>
+

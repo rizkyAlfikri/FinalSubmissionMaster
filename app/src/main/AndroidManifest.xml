@@ -12,13 +12,13 @@
         android:name="com.dicoding.picodiploma.finalsubmission.READ_DATABASE"
         android:protectionLevel="normal" />
 
-    <uses-permission
+    <permission
         android:name="com.dicoding.picodiploma.finalsubmission.WRITE_DATABASE"
         android:protectionLevel="normal" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -26,39 +26,39 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".SearchActivity"
+            android:name=".activity.SearchActivity"
             android:label="@string/search_activity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activity.MainActivity" />
         </activity>
         <activity
             android:name=".activity.DetailTvShowActivity"
             android:label="@string/detail_tv"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activity.MainActivity" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dicoding.picodiploma.finalsubmission.MainActivity" />
+                android:value="com.dicoding.picodiploma.finalsubmission.activity.MainActivity" />
         </activity>
         <activity
             android:name=".activity.DetailMovieActivity"
             android:label="@string/detail_activity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activity.MainActivity" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop">
             <intent-filter>
@@ -71,8 +71,7 @@
         <provider
             android:name=".providers.MovieProvider"
             android:authorities="com.dicoding.picodiploma.finalsubmission"
-            android:exported="false"
-            android:multiprocess="true"
+            android:exported="true"
             android:readPermission="com.dicoding.picodiploma.finalsubmission.READ_DATABASE"
             android:writePermission="com.dicoding.picodiploma.finalsubmission.WRITE_DATABASE" />
 
@@ -83,19 +82,13 @@
         <receiver
             android:name=".reminder.DailyReminderApp"
             android:enabled="true"
-            android:exported="false">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
-            <!--</intent-filter>-->
-        </receiver>
+            android:exported="false"/>
+
         <receiver
             android:name=".reminder.DailyReminderMovie"
             android:enabled="true"
-            android:exported="false">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
-            <!--</intent-filter>-->
-        </receiver>
+            android:exported="false"/>
+
         <receiver android:name=".widget.MovieFavoriteWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
