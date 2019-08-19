@@ -20,7 +20,9 @@ public interface ApiService {
 
     // get data movie dari web service movieDB
     @GET("discover/movie")
-    Call<MovieResponse> getMovieDiscovery(@Query("api_key") String apiKey, @Query("page") int page);
+    Call<MovieResponse> getMovieDiscovery(@Query("api_key") String apiKey,
+                                          @Query("primary_release_date.gte") String dateGte,
+                                          @Query("primary_release_date.lte") String dateLte);
 
     // get data movie populer
     @GET("movie/popular")

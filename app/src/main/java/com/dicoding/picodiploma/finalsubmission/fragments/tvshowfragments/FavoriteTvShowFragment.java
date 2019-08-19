@@ -42,6 +42,7 @@ import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCu
 
 
 public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
+    private static final String EXTRA_STATE = "extra_state";
     private TvShowFavoriteAdapter favoriteAdapter;
     private ArrayList<TvShowResults> listTvShow;
     private static final int REQUEST_TV_UPDATE = 102;
@@ -84,6 +85,18 @@ public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
             intent.putExtra(DetailTvShowActivity.EXTRA_POSITION, position);
             startActivityForResult(intent, REQUEST_TV_UPDATE);
         });
+
+        if (savedInstanceState == null) {
+            new LoadTvAsynTask(getContext(), this).execute();
+        } else {
+            listTvShow = savedInstanceState.getParcelableArrayList(EXTRA_STATE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(EXTRA_STATE, listTvShow);
     }
 
     @Override
@@ -157,9 +170,6 @@ public class FavoriteTvShowFragment extends Fragment implements LoadCallback {
 
         favoriteAdapter = new TvShowFavoriteAdapter(getContext());
         rvTv.setAdapter(favoriteAdapter);
-
-        new LoadTvAsynTask(getContext(), this).execute();
-
     }
 
     // class ini bertugas untuk melakukan proses query data ke database dengan menggunakan worker thread

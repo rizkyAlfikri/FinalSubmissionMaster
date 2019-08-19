@@ -45,6 +45,7 @@ import static com.dicoding.picodiploma.finalsubmission.utils.MappingHelper.mapCu
 
 
 public class FavoriteMovieFragment extends Fragment implements LoadCallback {
+    private static final String EXTRA_STATE = "extra_state";
     private MovieFavoriteAdapter favoriteAdapter;
     private ArrayList<MovieResults> listMovie;
     @BindView(R.id.rv_movie)
@@ -85,6 +86,12 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
             intent.putExtra(DetailMovieActivity.EXTRA_POSITION, position);
             startActivityForResult(intent, REQUEST_MOVIE_UPDATE);
         });
+
+        if (savedInstanceState == null) {
+            new LoadMovieAsynTask(getContext(), this).execute();
+        } else {
+            listMovie = savedInstanceState.getParcelableArrayList(EXTRA_STATE);
+        }
     }
 
     @Override
@@ -96,7 +103,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
             if (resultCode == RESULT_MOVIE_DELETE) {
                 int position = data.getIntExtra(DetailMovieActivity.EXTRA_POSITION, 0);
                 favoriteAdapter.removeItem(position);
-
                 Toast.makeText(getContext(), getString(R.string.delete_item), Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_MOVIE_ADD) {
                 MovieResults movieResults = data.getParcelableExtra(EXTRA_MOVIE);
@@ -112,6 +118,12 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
         // statement ini akan menjalankan query ke database
         new LoadMovieAsynTask(getContext(), this).execute();
 
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(EXTRA_STATE, listMovie);
     }
 
     @Override
@@ -154,7 +166,6 @@ public class FavoriteMovieFragment extends Fragment implements LoadCallback {
 
         favoriteAdapter = new MovieFavoriteAdapter(getActivity());
         rvMovie.setAdapter(favoriteAdapter);
-
     }
 
     // class ini bertugas untuk melakukan proses query data ke database dengan menggunakan worker thread

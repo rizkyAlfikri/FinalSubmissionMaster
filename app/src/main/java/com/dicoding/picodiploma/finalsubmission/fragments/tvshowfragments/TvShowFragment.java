@@ -50,6 +50,7 @@ import static com.dicoding.picodiploma.finalsubmission.db.DatabaseContract.CONTE
 public class TvShowFragment extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
     private TvShowAdapter tvShowAdapter;
     private TvShowViewModel tvShowViewModel;
+    private boolean isStillSelectCatgory = false;
     private int newPosition;
     private int pageNum = 1;
     @BindView(R.id.txt_page)
@@ -111,11 +112,12 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
         String selectCategory = getString(R.string.select_category_movie);
         this.newPosition = position;
         if (parent.getItemAtPosition(position).equals(selectCategory)) {
-
+            isStillSelectCatgory = true;
             tvShowViewModel.getTvFromRetrofit(pageNum).observe(this, getTvData);
             tvShowViewModel.getTvGenre().observe(this, getTvGenre);
 
         } else {
+            isStillSelectCatgory = false;
             switch (position) {
                 case 1:
                     progressBar.setVisibility(View.VISIBLE);
@@ -149,12 +151,12 @@ public class TvShowFragment extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.img_next) {
+        if (v.getId() == R.id.img_next & !isStillSelectCatgory) {
             pageNum += 1;
             progressBar.setVisibility(View.VISIBLE);
             txtPage.setText(String.valueOf(pageNum));
             getCategoryTv(newPosition);
-        } else if (v.getId() == R.id.img_back) {
+        } else if (v.getId() == R.id.img_back & !isStillSelectCatgory) {
             if (pageNum > 1) {
                 pageNum -= 1;
                 progressBar.setVisibility(View.VISIBLE);

@@ -26,7 +26,7 @@ public class TvShowViewModel extends ViewModel {
 
     // construct ini akan membuat TvShowViewModel dapat mengakses data dan method yang ada di tv show repository
     public TvShowViewModel() {
-        tvShowRepository = TvShowRepository.getInstance();
+        tvShowRepository = new TvShowRepository();
         listTvGenre = tvShowRepository.getTvGenre();
     }
 

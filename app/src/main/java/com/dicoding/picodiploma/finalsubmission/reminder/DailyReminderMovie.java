@@ -19,9 +19,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
-import com.dicoding.picodiploma.finalsubmission.activity.MainActivity;
 import com.dicoding.picodiploma.finalsubmission.R;
 import com.dicoding.picodiploma.finalsubmission.activity.DetailMovieActivity;
+import com.dicoding.picodiploma.finalsubmission.activity.MainActivity;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResponse;
 import com.dicoding.picodiploma.finalsubmission.models.moviemodels.MovieResults;
 import com.dicoding.picodiploma.finalsubmission.network.ApiService;
@@ -32,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +40,6 @@ import retrofit2.Response;
 public class DailyReminderMovie extends BroadcastReceiver {
     private final int ID_MOVIE = 101;
     private ArrayList<MovieResults> listMovie = new ArrayList<>();
-    private List<MovieResults> tmpMovie = new ArrayList<>();
 
     public DailyReminderMovie() {
     }
@@ -62,21 +60,13 @@ public class DailyReminderMovie extends BroadcastReceiver {
 
         // method ini berfungsi untuk mengrequest data release date movie ke web service
         ApiService apiService = RetrofitService.createService(ApiService.class);
-        apiService.getMovieUpcoming(Config.API_KEY, 1).enqueue(new Callback<MovieResponse>() {
+        apiService.getMovieDiscovery(Config.API_KEY, dateToday, dateToday).enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
                         if (response.body().getResults() != null) {
-                            tmpMovie = response.body().getResults();
-                            // looping ini berfungsi adakah move yang waktu release date nya sama waktu sekarang
-                            // jika ada tambahkan movie dengan release date yang sesuai ke listMovie
-                            for (MovieResults movieResults : tmpMovie) {
-                                String movieDate = movieResults.getReleaseDate();
-                                if (movieDate.equals(dateToday)) {
-                                    listMovie.add(movieResults);
-                                }
-                            }
+                            listMovie.addAll(response.body().getResults());
                             // method ini berfungsi untuk memunculkan notifikasi
                             showReminderNotifcation(context);
                         }

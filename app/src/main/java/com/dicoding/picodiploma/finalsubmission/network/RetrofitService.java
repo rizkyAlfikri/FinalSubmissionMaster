@@ -19,4 +19,6 @@ public class RetrofitService {
         }
         return retrofit.create(serviceClass);
     }
+
+
 }

@@ -115,7 +115,7 @@ public class MovieFragment extends Fragment implements AdapterView.OnItemSelecte
         this.newPosition = position;
         if (parent.getItemAtPosition(position).equals(selectCategory)) {
             isStillSelectCatgory = true;
-            movieViewModel.getMovieDiscovery(pageNum).observe(this, getMovieDiscoveryData);
+            movieViewModel.getMoviePopular(pageNum).observe(this, getMovieDiscoveryData);
             movieViewModel.getMovieGenre().observe(this, getGenreMovieData);
 
         } else {

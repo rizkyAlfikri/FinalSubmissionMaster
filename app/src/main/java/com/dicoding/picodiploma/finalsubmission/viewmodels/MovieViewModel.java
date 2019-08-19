@@ -25,13 +25,8 @@ public class MovieViewModel extends ViewModel {
 
     // construct ini akan membuat MovieViewModel dapat mengakses data dan method yang ada di movie repository
     public MovieViewModel() {
-        movieRepository = MovieRepository.getInstance();
+        movieRepository = new MovieRepository();
         listMovieGenre = movieRepository.getMovieGenre();
-    }
-
-    // get LiveData movie from repository
-    public LiveData<List<MovieResults>> getMovieDiscovery(int page) {
-        return movieRepository.getMovieDiscovery(page);
     }
 
     // get LiveData popular movie from repository

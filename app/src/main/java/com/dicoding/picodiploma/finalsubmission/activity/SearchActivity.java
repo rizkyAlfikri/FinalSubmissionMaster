@@ -92,6 +92,7 @@ public class  SearchActivity extends AppCompatActivity {
         @Override
         public void onChanged(List<MovieResults> movieResults) {
             movieSearchAdapter.setListMovie(movieResults);
+            rvSearch.setAdapter(movieSearchAdapter);
             movieSearchAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
             ItemClickSupport.addTo(rvSearch).setOnItemClickListener((recyclerView, position, v) -> {
@@ -118,6 +119,7 @@ public class  SearchActivity extends AppCompatActivity {
         @Override
         public void onChanged(List<TvShowResults> tvShowResults) {
             tvShowSearchAdapter.setListTv(tvShowResults);
+            rvSearch.setAdapter(tvShowSearchAdapter);
             tvShowSearchAdapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
 
@@ -147,8 +149,8 @@ public class  SearchActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setTitle(getString(R.string.movie_search_result));
         }
+
         movieSearchAdapter = new MovieSearchAdapter(this);
-        rvSearch.setAdapter(movieSearchAdapter);
         movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
         queryMovie(query);
     }
@@ -188,7 +190,6 @@ public class  SearchActivity extends AppCompatActivity {
         }
 
         tvShowSearchAdapter = new TvShowSearchAdapter(this);
-        rvSearch.setAdapter(tvShowSearchAdapter);
         tvShowViewModel = ViewModelProviders.of(this).get(TvShowViewModel.class);
         queryTvShow(query);
     }

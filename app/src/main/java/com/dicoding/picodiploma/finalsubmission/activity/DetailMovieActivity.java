@@ -281,6 +281,15 @@ public class DetailMovieActivity extends AppCompatActivity implements View.OnCli
         movieViewModel.getMovieDetail(movieId).observe(this, getMovieDetailData);
         movieViewModel.getMovieTrailer(movieId).observe(this, getMovieTrailerData);
         movieViewModel.getMovieReview(movieId).observe(this, getMovieReviewData);
+
+//        MovieDetailViewModel movieDetailViewModel = ViewModelProviders.of(this).get(MovieDetailViewModel.class);
+//        movieDetailViewModel.getMovieDetail(movieId).observe(this, getMovieDetailData);
+//
+//        MovieTrailerViewModel movieTrailerViewModel = ViewModelProviders.of(this).get(MovieTrailerViewModel.class);
+//        movieTrailerViewModel.getMovieTrailer(movieId).observe(this, getMovieTrailerData);
+//
+//        MovieReviewViewModel movieReviewViewModel = ViewModelProviders.of(this).get(MovieReviewViewModel.class);
+//        movieReviewViewModel.getMovieReview(movieId).observe(this, getMovieReviewData);
     }
 
     // method ini berfungsi mengload / menampilkan data movie detail
